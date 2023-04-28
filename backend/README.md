@@ -3,7 +3,7 @@
 ## Development
 ### Starting the server
 ```
-    ./vendor/bin/sail up
+./vendor/bin/sail up
 ```
 
 Look into ``composer.json``, the scripts section provides for an easy way of executing 
