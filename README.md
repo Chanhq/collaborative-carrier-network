@@ -9,7 +9,7 @@ come in very handy.
 ***Remark:*** directory changes are given assuming no other directory changes are performed whilst following this guide
 
 ### 1. Prerequisites
-- Docker Desktop installed
+- Docker installed (Win, MacOs: Docker Desktop; Linux: Docker compose)
 - ``npm`` installed (see official documentation)
 - ``ssh`` setup and linked with your tuhh gitlab account 
 
@@ -57,4 +57,4 @@ When accessing the following urls via your browser you should see
 the dummy landing pages of the respective project
 
 - http://localhost:3000 (React frontend)
-- http://localhost:80 (Laravel backend)
+- http://localhost:80 (Laravel backend - should return a 404)
