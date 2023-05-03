@@ -14,9 +14,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/test', function () {
-    return new \Illuminate\Http\JsonResponse([
-        'status' => 'success',
-        'greeting' => 'The laravel backend greets the react frontend! :)'
-    ]);
-});
+Route::post('/register', [\App\Http\Controllers\AuthenticationController::class, 'register']);
