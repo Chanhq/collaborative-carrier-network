@@ -38,7 +38,7 @@ class AuthenticationController extends Controller
         if($this->authenticationService->doesUserAlreadyExist($validated['username'])) {
             return new JsonResponse([
                 'status' => 'error',
-                'message' => 'User trying to register already exists',
+                'message' => 'User already exists',
                 'data' => []
             ], Response::HTTP_CONFLICT);
         }
@@ -58,14 +58,12 @@ class AuthenticationController extends Controller
             'is_auctioneer' => $validated['isAuctioneerRegistration']
         ]);
 
-        dd($user);
-
         return new JsonResponse([
             'status' => 'success',
             'message' => 'Successfully created user',
             'data' => [
-                $user->username,
-                $user->password
+                'username' => $user->username,
+                'api_token' => $user->api_token
             ]
         ]);
     }
