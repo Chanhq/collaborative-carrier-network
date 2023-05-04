@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\BusinessDomain\Exception\InvalidCredentialsException;
 use App\BusinessDomain\Service\AuthenticationService;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -35,18 +36,18 @@ class AuthenticationController extends Controller
             'isAuctioneerRegistration' => 'required|boolean'
         ]);
 
-        if($this->authenticationService->doesUserAlreadyExist($validated['username'])) {
+        if($this->authenticationService->doesUserExist($validated['username'])) {
             return new JsonResponse([
                 'status' => 'error',
-                'message' => 'User already exists',
+                'message' => 'User already exists!',
                 'data' => []
             ], Response::HTTP_CONFLICT);
         }
 
-        if($validated['isAuctioneerRegistration'] && $this->authenticationService->doesAnAuctioneerAgentAlreadyExist()) {
+        if($validated['isAuctioneerRegistration'] && $this->authenticationService->doesAnAuctioneerAgentExist()) {
             return new JsonResponse([
                 'status' => 'error',
-                'message' => 'Cannot register more than one auctioneer agent',
+                'message' => 'Cannot register more than one auctioneer agent.',
                 'data' => []
             ], Response::HTTP_CONFLICT);
         }
@@ -60,9 +61,8 @@ class AuthenticationController extends Controller
 
         return new JsonResponse([
             'status' => 'success',
-            'message' => 'Successfully created user',
+            'message' => 'Successfully created user!',
             'data' => [
-                'username' => $user->username,
                 'api_token' => $user->api_token
             ]
         ]);
@@ -70,6 +70,41 @@ class AuthenticationController extends Controller
 
     public function login(Request $request): JsonResponse
     {
-        return new JsonResponse($request->toArray());
+        $validated = $request->validate([
+            'username' => [
+                'required',
+                'max:255',
+                'string',
+            ],
+            'password' => 'required|string|min:8|max:255',
+        ]);
+        $username = $validated['username'];
+        $password = $validated['password'];
+
+        if(!$this->authenticationService->doesUserExist($username)) {
+            return new JsonResponse([
+                'status' => 'error',
+                'message' => 'Credentials incorrect!',
+                'data' => [],
+            ], Response::HTTP_UNAUTHORIZED);
+        }
+
+        try {
+            $apiToken = $this->authenticationService->getApiTokenByUsername($username, $password);
+        } catch (InvalidCredentialsException) {
+            return new JsonResponse([
+                'status' => 'error',
+                'message' => 'Credentials incorrect!',
+                'data' => [],
+            ], Response::HTTP_UNAUTHORIZED);
+        }
+
+        return new JsonResponse([
+            'status' => 'success',
+            'message' => 'Login successful!',
+            'data' => [
+                'api_token' => $apiToken,
+            ]
+        ]);
     }
 }

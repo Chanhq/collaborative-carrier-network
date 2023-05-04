@@ -2,22 +2,33 @@
 
 namespace App\BusinessDomain\Service;
 
+use App\BusinessDomain\Exception\InvalidCredentialsException;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class AuthenticationService
 {
-    public function doesUserAlreadyExist(string $username): bool
+    public function doesUserExist(string $username): bool
     {
-        try {
-            User::findOrFail(['username' => $username]);
-            return true;
-        } catch (\Throwable) {
-            return false;
-        }
+        return (bool)User::where(['username' => $username])->first() ?? false;
     }
 
-    public function doesAnAuctioneerAgentAlreadyExist(): bool
+    public function doesAnAuctioneerAgentExist(): bool
     {
         return \count(User::where(['is_auctioneer' => true])->get()) > 0;
+    }
+
+    /**
+     * @throws InvalidCredentialsException
+     */
+    public function getApiTokenByUsername(string $username, string $password): string
+    {
+        $user = User::where(['username' => $username])->first();
+
+        if(Hash::check($password, $user->password)) {
+            return $user->api_token;
+        }
+
+        throw new InvalidCredentialsException();
     }
 }
