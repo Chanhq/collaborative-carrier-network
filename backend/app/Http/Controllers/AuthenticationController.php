@@ -67,4 +67,9 @@ class AuthenticationController extends Controller
             ]
         ]);
     }
+
+    public function login(Request $request): JsonResponse
+    {
+        return new JsonResponse($request->toArray());
+    }
 }
