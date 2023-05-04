@@ -5,6 +5,8 @@ namespace App\BusinessDomain\Service;
 use App\BusinessDomain\Exception\InvalidCredentialsException;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use Laravel\Sanctum\NewAccessToken;
 
 class AuthenticationService
 {
@@ -20,13 +22,15 @@ class AuthenticationService
 
     /**
      * @throws InvalidCredentialsException
+     *
+     * @return NewAccessToken The newly generated and valid api token
      */
-    public function getApiTokenByUsername(string $username, string $password): string
+    public function loginUser(string $username, string $password): NewAccessToken
     {
         $user = User::where(['username' => $username])->first();
 
         if(Hash::check($password, $user->password)) {
-            return $user->api_token;
+            return $user->createToken(Str::random(40));
         }
 
         throw new InvalidCredentialsException();

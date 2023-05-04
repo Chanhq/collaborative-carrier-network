@@ -7,8 +7,8 @@ use App\BusinessDomain\Service\AuthenticationService;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Nette\Utils\Random;
 use Symfony\Component\HttpFoundation\Response;
 
 class AuthenticationController extends Controller
@@ -33,14 +33,14 @@ class AuthenticationController extends Controller
                 'string',
             ],
             'password' => 'required|string|min:8|max:255',
-            'isAuctioneerRegistration' => 'required|boolean'
+            'isAuctioneerRegistration' => 'required|boolean',
         ]);
 
         if($this->authenticationService->doesUserExist($validated['username'])) {
             return new JsonResponse([
                 'status' => 'error',
                 'message' => 'User already exists!',
-                'data' => []
+                'data' => [],
             ], Response::HTTP_CONFLICT);
         }
 
@@ -48,14 +48,13 @@ class AuthenticationController extends Controller
             return new JsonResponse([
                 'status' => 'error',
                 'message' => 'Cannot register more than one auctioneer agent.',
-                'data' => []
+                'data' => [],
             ], Response::HTTP_CONFLICT);
         }
 
         $user = User::create([
             'username' => $validated['username'],
             'password' => Hash::make($validated['password']),
-            'api_token' => Hash::make(Random::generate()),
             'is_auctioneer' => $validated['isAuctioneerRegistration']
         ]);
 
@@ -63,7 +62,7 @@ class AuthenticationController extends Controller
             'status' => 'success',
             'message' => 'Successfully created user!',
             'data' => [
-                'api_token' => $user->api_token
+                'api_token' => $user->api_token,
             ]
         ]);
     }
@@ -90,7 +89,7 @@ class AuthenticationController extends Controller
         }
 
         try {
-            $apiToken = $this->authenticationService->getApiTokenByUsername($username, $password);
+            $apiToken = $this->authenticationService->loginUser($username, $password);
         } catch (InvalidCredentialsException) {
             return new JsonResponse([
                 'status' => 'error',
@@ -103,8 +102,28 @@ class AuthenticationController extends Controller
             'status' => 'success',
             'message' => 'Login successful!',
             'data' => [
-                'api_token' => $apiToken,
-            ]
+                'api_token' => $apiToken->plainTextToken,
+            ],
+        ]);
+    }
+
+    public function logout(): JsonResponse
+    {
+        try {
+            Auth::user()->tokens()->delete();
+        } catch (\Throwable $e) {
+            return new JsonResponse([
+                'status' => 'error',
+                'message' => 'An unknown error occurred.',
+                'data' => $e->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+
+        return new JsonResponse([
+            'status' => 'success',
+            'message' => 'Logout successful!',
+            'data' => [],
         ]);
     }
 }

@@ -14,5 +14,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/register', [\App\Http\Controllers\AuthenticationController::class, 'register']);
-Route::get('/login', [\App\Http\Controllers\AuthenticationController::class, 'login']);
+Route::post('/auth/register', [\App\Http\Controllers\AuthenticationController::class, 'register']);
+Route::post('/auth/login', [\App\Http\Controllers\AuthenticationController::class, 'login']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/logout', [\App\Http\Controllers\AuthenticationController::class, 'logout']);
+});
+
+Route::middleware('auth:sanctum')->prefix('carrier')->group(function () {
+    Route::get('/', [\App\Http\Controllers\TestController::class, 'test']);
+});
+
+Route::middleware('auth:sanctum')->prefix('auctioneer')->group(function () {
+    Route::get('/', [\App\Http\Controllers\TestController::class, 'test']);
+});
