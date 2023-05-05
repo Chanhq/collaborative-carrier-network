@@ -29,7 +29,7 @@ class AuthenticationService
     {
         $user = User::where(['username' => $username])->first();
 
-        if(Hash::check($password, $user->password)) {
+        if (Hash::check($password, $user->password)) {
             return $user->createToken(Str::random(40));
         }
 

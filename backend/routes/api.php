@@ -24,10 +24,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/auth/logout', [AuthenticationController::class, 'logout']);
 });
 
-Route::middleware(['auth:sanctum', EnsureUserIsCarrierMiddleware::class])->prefix('carrier-frontend')->group(function () {
-    Route::get('/', [DummyController::class, 'test']);
-});
+Route::middleware(['auth:sanctum', EnsureUserIsCarrierMiddleware::class])->prefix('carrier-frontend')
+    ->group(function () {
+        Route::get('/', [DummyController::class, 'test']);
+    });
 
-Route::middleware(['auth:sanctum', EnsureUserIsAuctioneerMiddleware::class ])->prefix('auctioneer-frontend')->group(function () {
-    Route::get('/', [DummyController::class, 'test']);
-});
+Route::middleware(['auth:sanctum', EnsureUserIsAuctioneerMiddleware::class ])->prefix('auctioneer-frontend')
+    ->group(function () {
+        Route::get('/', [DummyController::class, 'test']);
+    });

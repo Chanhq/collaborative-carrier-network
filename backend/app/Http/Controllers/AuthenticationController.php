@@ -30,7 +30,7 @@ class AuthenticationController extends Controller
             'isAuctioneerRegistration' => 'required|boolean',
         ]);
 
-        if($this->authenticationService->doesUserExist($validated['username'])) {
+        if ($this->authenticationService->doesUserExist($validated['username'])) {
             return new JsonResponse([
                 'status' => 'error',
                 'message' => 'User already exists!',
@@ -38,7 +38,7 @@ class AuthenticationController extends Controller
             ], Response::HTTP_CONFLICT);
         }
 
-        if($validated['isAuctioneerRegistration'] && $this->authenticationService->doesAnAuctioneerAgentExist()) {
+        if ($validated['isAuctioneerRegistration'] && $this->authenticationService->doesAnAuctioneerAgentExist()) {
             return new JsonResponse([
                 'status' => 'error',
                 'message' => 'Cannot register more than one auctioneer agent.',
@@ -50,7 +50,7 @@ class AuthenticationController extends Controller
             'username' => $validated['username'],
             'password' => Hash::make($validated['password']),
             'is_auctioneer' => $validated['isAuctioneerRegistration'],
-        ]);
+         ]);
 
         return new JsonResponse([
             'status' => 'success',
@@ -72,7 +72,7 @@ class AuthenticationController extends Controller
         $username = $validated['username'];
         $password = $validated['password'];
 
-        if(!$this->authenticationService->doesUserExist($username)) {
+        if (!$this->authenticationService->doesUserExist($username)) {
             return new JsonResponse([
                 'status' => 'error',
                 'message' => 'Credentials incorrect!',
