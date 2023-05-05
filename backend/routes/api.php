@@ -1,6 +1,9 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\AuthenticationController;
+use App\Http\Controllers\DummyController;
+use App\Http\Middleware\Authorization\EnsureUserIsAuctioneerMiddleware;
+use App\Http\Middleware\Authorization\EnsureUserIsCarrierMiddleware;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,16 +17,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/auth/register', [\App\Http\Controllers\AuthenticationController::class, 'register']);
-Route::post('/auth/login', [\App\Http\Controllers\AuthenticationController::class, 'login']);
+Route::post('/auth/register', [AuthenticationController::class, 'register']);
+Route::post('/auth/login', [AuthenticationController::class, 'login']);
+
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/logout', [\App\Http\Controllers\AuthenticationController::class, 'logout']);
+    Route::post('/auth/logout', [AuthenticationController::class, 'logout']);
 });
 
-Route::middleware('auth:sanctum')->prefix('carrier')->group(function () {
-    Route::get('/', [\App\Http\Controllers\TestController::class, 'test']);
+Route::middleware(['auth:sanctum', EnsureUserIsCarrierMiddleware::class])->prefix('carrier-frontend')->group(function () {
+    Route::get('/', [DummyController::class, 'test']);
 });
 
-Route::middleware('auth:sanctum')->prefix('auctioneer')->group(function () {
-    Route::get('/', [\App\Http\Controllers\TestController::class, 'test']);
+Route::middleware(['auth:sanctum', EnsureUserIsAuctioneerMiddleware::class ])->prefix('auctioneer-frontend')->group(function () {
+    Route::get('/', [DummyController::class, 'test']);
 });

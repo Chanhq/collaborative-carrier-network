@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\BusinessDomain\Exception\InvalidCredentialsException;
-use App\BusinessDomain\Service\AuthenticationService;
+use App\BusinessDomain\Authentication\Exception\InvalidCredentialsException;
+use App\BusinessDomain\Authentication\Service\AuthenticationService;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -17,12 +17,6 @@ class AuthenticationController extends Controller
     {
     }
 
-    /**
-     * Registers new User
-     *
-     * Takes username, password and information on whether a carrier agent or an auctioneer agent
-     * shall be registered and registers a new user if eligible.
-     */
     public function register(Request $request): JsonResponse
     {
         $validated = $request->validate([
@@ -52,18 +46,16 @@ class AuthenticationController extends Controller
             ], Response::HTTP_CONFLICT);
         }
 
-        $user = User::create([
+         User::create([
             'username' => $validated['username'],
             'password' => Hash::make($validated['password']),
-            'is_auctioneer' => $validated['isAuctioneerRegistration']
+            'is_auctioneer' => $validated['isAuctioneerRegistration'],
         ]);
 
         return new JsonResponse([
             'status' => 'success',
             'message' => 'Successfully created user!',
-            'data' => [
-                'api_token' => $user->api_token,
-            ]
+            'data' => [],
         ]);
     }
 
