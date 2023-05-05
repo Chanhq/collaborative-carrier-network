@@ -4,7 +4,6 @@ namespace App\BusinessDomain\Authentication\Service;
 
 use App\BusinessDomain\Authentication\Exception\InvalidCredentialsException;
 use App\Models\User;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\NewAccessToken;
