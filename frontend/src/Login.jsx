@@ -1,26 +1,24 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
 export const Login = (props) => {
-    const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
     const [pass, setPass] = useState('');
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(email);
+        console.log(username);
     }
 
     return (
         <div className="auth-form-container">
-            <h2>Welcome!</h2>
+            <h2>Login</h2>
             <form className="login-form" onSubmit={handleSubmit}>
-                <label htmlFor="email">Login with email :</label>
-                <input value={email} onChange={(e) => setEmail(e.target.value)}type="email" placeholder="youremail@gmail.com" id="email" name="email" />
-                <label htmlFor="password">Your password :</label>
+                <label htmlFor="username">Username :</label>
+                <input value={username} onChange={(e) => setUsername(e.target.value)}type="username" placeholder="Your Username" id="username" name="username" />
+                <label htmlFor="password">Password :</label>
                 <input value={pass} onChange={(e) => setPass(e.target.value)} type="password" placeholder="********" id="password" name="password" />
                 <button type="submit">Log In</button>
             </form>
-            <button className="link-btn" onClick={() => props.onFormSwitch('register_carrier')}>Register for carrier.</button>
-            <button className="link-btn" onClick={() => props.onFormSwitch('register_auctioneer')}>Register for auctioneer.</button>
         </div>
     )
 }
