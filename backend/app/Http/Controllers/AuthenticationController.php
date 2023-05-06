@@ -56,7 +56,7 @@ class AuthenticationController extends Controller
             'status' => 'success',
             'message' => 'Successfully created user!',
             'data' => [],
-        ]);
+        ], Response::HTTP_CREATED);
     }
 
     public function login(Request $request): JsonResponse

@@ -11,10 +11,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class EnsureUserIsAuctioneerMiddleware
 {
-    public function __construct(private readonly AuthenticationService $authenticationService)
-    {
-    }
-
     /**
      * Handle an incoming request.
      *
