@@ -1,6 +1,36 @@
 parameters:
 	ignoreErrors:
 		-
+			message: "#^Call to an undefined static method App\\\\Models\\\\User\\:\\:where\\(\\)\\.$#"
+			count: 3
+			path: app/BusinessDomain/Authentication/Service/AuthenticationService.php
+
+		-
+			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
+			count: 1
+			path: app/BusinessDomain/Authentication/Service/AuthenticationService.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Models\\\\User\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Controllers/AuthenticationController.php
+
+		-
+			message: "#^Cannot call method tokens\\(\\) on Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\|null\\.$#"
+			count: 1
+			path: app/Http/Controllers/AuthenticationController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$is_auctioneer\\.$#"
+			count: 1
+			path: app/Http/Middleware/Authorization/EnsureUserIsAuctioneerMiddleware.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$is_auctioneer\\.$#"
+			count: 1
+			path: app/Http/Middleware/Authorization/EnsureUserIsCarrierMiddleware.php
+
+		-
 			message: "#^Method App\\\\Http\\\\Middleware\\\\RedirectIfAuthenticated\\:\\:handle\\(\\) should return Symfony\\\\Component\\\\HttpFoundation\\\\Response but returns Illuminate\\\\Http\\\\RedirectResponse\\|Illuminate\\\\Routing\\\\Redirector\\.$#"
 			count: 1
 			path: app/Http/Middleware/RedirectIfAuthenticated.php
@@ -9,3 +39,23 @@ parameters:
 			message: "#^Cannot access property \\$id on mixed\\.$#"
 			count: 1
 			path: app/Providers/RouteServiceProvider.php
+
+		-
+			message: "#^Cannot access offset 'api_token' on mixed\\.$#"
+			count: 1
+			path: tests/Feature/AuthenticationTest.php
+
+		-
+			message: "#^Cannot cast mixed to string\\.$#"
+			count: 1
+			path: tests/Feature/AuthenticationTest.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Models\\\\User\\:\\:create\\(\\)\\.$#"
+			count: 2
+			path: tests/Unit/Middleware/Authorization/EnsureUserIsAuctioneerMiddlewareTest.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Models\\\\User\\:\\:create\\(\\)\\.$#"
+			count: 2
+			path: tests/Unit/Middleware/Authorization/EnsureUserIsCarrierMiddlewareTest.php
