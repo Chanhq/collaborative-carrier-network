@@ -9,6 +9,6 @@ class DummyController extends Controller
 {
     public function test(Request $request): JsonResponse
     {
-        return new JsonResponse([]);
+        return new JsonResponse($request->toArray());
     }
 }
