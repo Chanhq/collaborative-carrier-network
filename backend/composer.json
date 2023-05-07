@@ -57,7 +57,6 @@
         "lint": "./vendor/bin/parallel-lint .",
         "check": [
             "@lint",
-            "@cs-fix",
             "@cs-check",
             "@stan",
             "@test"
