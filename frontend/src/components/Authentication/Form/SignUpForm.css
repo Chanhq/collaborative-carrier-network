@@ -1,0 +1,16 @@
+.username-field {
+  margin-bottom: 8px !important;
+}
+
+.notice-container {
+  margin: 10px 0 0 0;
+  display: flex;
+}
+
+.notice-container .notice-message {
+  margin: 3px 0 0 5px;
+}
+
+.notice-container .notice-icon {
+  margin-top: 10px;
+}

@@ -1,0 +1,8 @@
+.error-container {
+  margin-bottom: 10px;
+  display: flex;
+}
+
+.error-container .error-message {
+  margin: 3px 0 0 2px;
+}
