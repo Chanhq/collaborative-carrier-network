@@ -1,16 +1,11 @@
 import './App.css';
-import { Login } from './Login';
-import { Register } from './Register';
+import AuthenticationComponent from './components/Authentication/AuthenticationComponent';
 
 function App() {
   return (
     <div className="App">
-      <h2>Welcome!</h2>
-      <Login /> 
-      <Register />    
+      <AuthenticationComponent />
     </div>
   );
 }
 export default App;
-
-
