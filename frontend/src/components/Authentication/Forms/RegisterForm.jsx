@@ -10,23 +10,25 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { REGISTER_ACTION } from '../AuthenticationComponent';
+import { LOGIN_ACTION } from '../AuthenticationComponent';
+import { Checkbox, FormControlLabel } from '@mui/material';
 
 const theme = createTheme();
 
-export default function LoginForm({ setAuthentiationAction }) {
+export default function RegisterForm({ setAuthenticationAction }) {
   const handleSubmit = (event) => {
-    // TODO: handle api call to login user here and save state (token, ...)
+    // TODO: call api to register user here
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
       username: data.get('username'),
-      password: data.get('password')
+      password: data.get('password'),
+      isAuctioneerRegistration: !!data.get('isAuctioneerRegistration')
     });
   };
 
-  const switchToRegisterForm = () => {
-    setAuthentiationAction(REGISTER_ACTION);
+  const switchToLoginForm = () => {
+    setAuthenticationAction(LOGIN_ACTION);
   };
 
   return (
@@ -45,7 +47,7 @@ export default function LoginForm({ setAuthentiationAction }) {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign In
+            Sign Up
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             <TextField
@@ -68,13 +70,19 @@ export default function LoginForm({ setAuthentiationAction }) {
               id="password"
               autoComplete="current-password"
             />
+            <FormControlLabel
+              id="isAuctioneerRegistration"
+              name="isAuctioneerRegistration"
+              control={<Checkbox />}
+              label="Register as an auctioneer"
+            />
             <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-              Sign In
+              Sign Up
             </Button>
             <Grid container>
               <Grid item>
-                <Link href="#" variant="body2" onClick={switchToRegisterForm}>
-                  Don't have an account? Sign Up
+                <Link href="#" variant="body2" onClick={switchToLoginForm}>
+                  Already have an account? Sign In
                 </Link>
               </Grid>
             </Grid>
