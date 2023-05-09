@@ -11,22 +11,23 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { REGISTER_ACTION } from '../AuthenticationComponent';
+import PropTypes from "prop-types";
 
 const theme = createTheme();
 
-export default function LoginForm({ setAuthentiationAction }) {
+export default function LoginForm({ setAuthenticationAction }) {
   const handleSubmit = (event) => {
     // TODO: handle api call to login user here and save state (token, ...)
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
       username: data.get('username'),
-      password: data.get('password')
+      password: data.get('password'),
     });
   };
 
   const switchToRegisterForm = () => {
-    setAuthentiationAction(REGISTER_ACTION);
+    setAuthenticationAction(REGISTER_ACTION);
   };
 
   return (
@@ -38,7 +39,7 @@ export default function LoginForm({ setAuthentiationAction }) {
             marginTop: 8,
             display: 'flex',
             flexDirection: 'column',
-            alignItems: 'center'
+            alignItems: 'center',
           }}
         >
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
@@ -74,7 +75,7 @@ export default function LoginForm({ setAuthentiationAction }) {
             <Grid container>
               <Grid item>
                 <Link href="#" variant="body2" onClick={switchToRegisterForm}>
-                  Don't have an account? Sign Up
+                  Do not have an account? Sign Up
                 </Link>
               </Grid>
             </Grid>
@@ -84,3 +85,8 @@ export default function LoginForm({ setAuthentiationAction }) {
     </ThemeProvider>
   );
 }
+
+LoginForm.propTypes = {
+  setAuthenticationAction: PropTypes.func
+}
+

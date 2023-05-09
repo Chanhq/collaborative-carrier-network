@@ -10,8 +10,9 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { LOGIN_ACTION } from '../AuthenticationComponent';
 import { Checkbox, FormControlLabel } from '@mui/material';
+import { LOGIN_ACTION } from '../AuthenticationComponent';
+import PropTypes from "prop-types";
 
 const theme = createTheme();
 
@@ -23,7 +24,7 @@ export default function RegisterForm({ setAuthenticationAction }) {
     console.log({
       username: data.get('username'),
       password: data.get('password'),
-      isAuctioneerRegistration: !!data.get('isAuctioneerRegistration')
+      isAuctioneerRegistration: !!data.get('isAuctioneerRegistration'),
     });
   };
 
@@ -40,7 +41,7 @@ export default function RegisterForm({ setAuthenticationAction }) {
             marginTop: 8,
             display: 'flex',
             flexDirection: 'column',
-            alignItems: 'center'
+            alignItems: 'center',
           }}
         >
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
@@ -91,4 +92,8 @@ export default function RegisterForm({ setAuthenticationAction }) {
       </Container>
     </ThemeProvider>
   );
+}
+
+RegisterForm.propTypes = {
+  setAuthenticationAction: PropTypes.func
 }
