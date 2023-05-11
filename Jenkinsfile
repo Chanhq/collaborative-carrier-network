@@ -3,7 +3,8 @@ pipeline {
     stages {
         stage('Build Backend') {
             steps {
-                sh 'composer install' // build app
+                sh 'composer --version'
+                sh 'cd backend && composer install' // build app
                 sh 'vendor/bin/phpstan analyse src/' // run PHPStan
                 sh 'vendor/bin/phpcs --standard=PSR2 src/' // run cs-checker
                 sh 'vendor/bin/phpunit' // run tests
