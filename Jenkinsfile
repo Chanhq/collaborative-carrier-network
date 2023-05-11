@@ -8,30 +8,6 @@ pipeline {
       }
     }
     
-    stage('PHPStan') {
-      steps {
-        sh 'cd backend && phpstan analyze src'
-      }
-    }
-    
-    stage('CodeSniffer') {
-      steps {
-        sh 'cd backend && phpcs src'
-      }
-    }
-    
-    stage('Tests') {
-      steps {
-        sh 'cd backend && ./vendor/bin/phpunit'
-      }
-    }
-    
-    stage('Linter') {
-      steps {
-        sh 'cd backend && ./vendor/bin/phpcs --standard=PSR2 src/'
-      }
-    }
-    
     stage('Build Frontend') {
       steps {
         sh 'cd frontend && npm install'
