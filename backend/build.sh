@@ -1,19 +1,16 @@
 #!/bin/bash
 
-# Install dependencies
+# Build the app
 composer install
 
-# Build the application
-php bin/console cache:clear --env=prod --no-debug
-
 # Run PHPStan
-vendor/bin/phpstan analyze src --level=5
+vendor/bin/phpstan analyze
 
 # Run cs-checker
-vendor/bin/phpcs src --standard=PSR2
+vendor/bin/phpcs --standard=PSR2 src/
 
 # Run tests
-vendor/bin/phpunit tests
+vendor/bin/phpunit tests/
 
 # Run linter
-vendor/bin/phpcs src --standard=PSR2
+vendor/bin/php-cs-fixer fix --dry-run --diff
