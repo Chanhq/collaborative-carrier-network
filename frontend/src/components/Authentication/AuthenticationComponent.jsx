@@ -3,15 +3,19 @@ import { useState } from 'react';
 import LoginForm from './Forms/LoginForm';
 import RegisterForm from './Forms/RegisterForm';
 
-export const LOGIN_ACTION = 'login';
-export const REGISTER_ACTION = 'register';
+export const LOGIN_TEMPLATE = 'login';
+export const REGISTER_TEMPLATE = 'register';
 
 function AuthenticationComponent() {
-  const [authenticationAction, setAuthenticationAction] = useState(LOGIN_ACTION);
-  let Form = <LoginForm setAuthentiationAction={setAuthenticationAction} />;
+  const [authenticationTemplate, setAuthenticationTemplate] = useState(LOGIN_TEMPLATE);
+  let Form = <LoginForm switchAuthenticationTemplateTo={switchAuthenticationTemplateTo} />;
 
-  if (authenticationAction === REGISTER_ACTION) {
-    Form = <RegisterForm setAuthenticationAction={setAuthenticationAction} />;
+  if (authenticationTemplate === REGISTER_TEMPLATE) {
+    Form = <RegisterForm switchAuthenticationTemplateTo={switchAuthenticationTemplateTo} />;
+  }
+
+  function switchAuthenticationTemplateTo(template) {
+    setAuthenticationTemplate(template);
   }
 
   return (

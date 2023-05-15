@@ -10,12 +10,12 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { REGISTER_ACTION } from '../AuthenticationComponent';
+import { REGISTER_TEMPLATE } from '../AuthenticationComponent';
 import PropTypes from "prop-types";
 
 const theme = createTheme();
 
-export default function LoginForm({ setAuthenticationAction }) {
+export default function LoginForm({ switchAuthenticationTemplateTo }) {
   const handleSubmit = (event) => {
     // TODO: handle api call to login user here and save state (token, ...)
     event.preventDefault();
@@ -27,7 +27,7 @@ export default function LoginForm({ setAuthenticationAction }) {
   };
 
   const switchToRegisterForm = () => {
-    setAuthenticationAction(REGISTER_ACTION);
+    switchAuthenticationTemplateTo(REGISTER_TEMPLATE);
   };
 
   return (
@@ -87,6 +87,6 @@ export default function LoginForm({ setAuthenticationAction }) {
 }
 
 LoginForm.propTypes = {
-  setAuthenticationAction: PropTypes.func
+  switchAuthenticationTemplateTo: PropTypes.func
 }
 

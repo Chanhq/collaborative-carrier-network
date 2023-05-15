@@ -11,12 +11,12 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Checkbox, FormControlLabel } from '@mui/material';
-import { LOGIN_ACTION } from '../AuthenticationComponent';
+import { LOGIN_TEMPLATE } from '../AuthenticationComponent';
 import PropTypes from "prop-types";
 
 const theme = createTheme();
 
-export default function RegisterForm({ setAuthenticationAction }) {
+export default function RegisterForm({ switchAuthenticationTemplateTo }) {
   const handleSubmit = (event) => {
     // TODO: call api to register user here
     event.preventDefault();
@@ -29,7 +29,7 @@ export default function RegisterForm({ setAuthenticationAction }) {
   };
 
   const switchToLoginForm = () => {
-    setAuthenticationAction(LOGIN_ACTION);
+    switchAuthenticationTemplateTo(LOGIN_TEMPLATE);
   };
 
   return (
@@ -95,5 +95,5 @@ export default function RegisterForm({ setAuthenticationAction }) {
 }
 
 RegisterForm.propTypes = {
-  setAuthenticationAction: PropTypes.func
+  switchAuthenticationTemplateTo: PropTypes.func
 }
