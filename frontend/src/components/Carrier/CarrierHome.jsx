@@ -1,7 +1,12 @@
+import {useContext} from "react";
+import {AuthContext} from "../../lib/context/AuthContext";
+
 function CarrierHome() {
+    const { authenticated } = useContext(AuthContext);
+
     return(
-        <><h1>Carrier Home works!</h1></>
-    )
+        authenticated && <><h1>Carrier Home works!</h1></>
+    );
 }
 
 export default CarrierHome;

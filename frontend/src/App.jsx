@@ -6,6 +6,7 @@ import {BrowserRouter, Route, Routes} from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import {red} from "@mui/material/colors";
+import AuthProvider from "./lib/context/AuthContext";
 
 const primary = red[900]; // #f44336
 
@@ -30,14 +31,16 @@ function NotFound() {
 function App() {
 
     return (
-        <BrowserRouter>
-            <Routes>
-                <Route path="/auth" element={<AuthenticationComponent />}/>
-                <Route path="/carrier" element={<CarrierHome />} />
-                <Route path="/auctioneer" element={<AuctioneerHome />} />
-                <Route path="*" element={<NotFound/>} />
-            </Routes>
-        </BrowserRouter>
+        <AuthProvider>
+            <BrowserRouter>
+                <Routes>
+                    <Route path="/auth" element={<AuthenticationComponent />}/>
+                    <Route path="/carrier" element={<CarrierHome />} />
+                    <Route path="/auctioneer" element={<AuctioneerHome />} />
+                    <Route path="*" element={<NotFound/>} />
+                </Routes>
+            </BrowserRouter>
+        </AuthProvider>
     );
 }
 export default App;
