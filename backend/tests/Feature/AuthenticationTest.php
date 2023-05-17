@@ -58,6 +58,6 @@ class AuthenticationTest extends TestCase
 
         $loginResponse = $this->json('post', '/api/auth/login', $loginPayload)->assertStatus(200);
 
-        return (string)$loginResponse->json('data')['api_token'];
+        return (string)$loginResponse->json('data')['token'];
     }
 }

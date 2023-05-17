@@ -94,7 +94,7 @@ class AuthenticationController extends Controller
             'status' => 'success',
             'message' => 'Login successful!',
             'data' => [
-                'api_token' => $apiToken->plainTextToken,
+                'token' => $apiToken->plainTextToken,
             ],
         ]);
     }

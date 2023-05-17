@@ -13,19 +13,30 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Checkbox, FormControlLabel } from '@mui/material';
 import { LOGIN_TEMPLATE } from '../AuthenticationComponent';
 import PropTypes from "prop-types";
+import httpClient from "../../../lib/infrastructure/http-client";
+import {useState} from "react";
 
 const theme = createTheme();
 
 export default function RegisterForm({ switchAuthenticationTemplateTo }) {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [isAuctioneerRegistration, setIsAuctioneerRegistration] = useState(false);
+
   const handleSubmit = (event) => {
-    // TODO: call api to register user here
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      username: data.get('username'),
-      password: data.get('password'),
-      isAuctioneerRegistration: !!data.get('isAuctioneerRegistration'),
-    });
+
+    httpClient.post('/api/auth/register', { username, password, isAuctioneerRegistration })
+        .then(() => {
+          alert('Created user successfully!')
+          switchToLoginForm();
+        })
+        .catch(() => {
+          alert('Something went wrong! Try again.');
+          setUsername('');
+          setPassword('');
+          setIsAuctioneerRegistration(false);
+        });
   };
 
   const switchToLoginForm = () => {
@@ -58,23 +69,30 @@ export default function RegisterForm({ switchAuthenticationTemplateTo }) {
               id="username"
               label="Username"
               name="username"
+              value={username}
               autoComplete="username"
               autoFocus
+              onChange={(e) => setUsername(e.target.value)}
             />
             <TextField
               margin="normal"
               required
               fullWidth
               name="password"
+              value={password}
               label="Password"
               type="password"
               id="password"
               autoComplete="current-password"
+              onChange={(e) => setPassword(e.target.value)}
             />
             <FormControlLabel
               id="isAuctioneerRegistration"
               name="isAuctioneerRegistration"
-              control={<Checkbox />}
+              control={<Checkbox
+                  value={isAuctioneerRegistration}
+                  onChange={(e) => setIsAuctioneerRegistration(e.target.value)}
+              />}
               label="Register as an auctioneer"
             />
             <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>

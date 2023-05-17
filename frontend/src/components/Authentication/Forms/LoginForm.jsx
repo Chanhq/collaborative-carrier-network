@@ -12,18 +12,29 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { REGISTER_TEMPLATE } from '../AuthenticationComponent';
 import PropTypes from "prop-types";
+import httpClient from "../../../lib/infrastructure/http-client";
+import {useState} from "react";
 
 const theme = createTheme();
 
 export default function LoginForm({ switchAuthenticationTemplateTo }) {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
   const handleSubmit = (event) => {
-    // TODO: handle api call to login user here and save state (token, ...)
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      username: data.get('username'),
-      password: data.get('password'),
-    });
+
+    httpClient.post('/api/auth/login', { username, password })
+        .then((response) => {
+          // implement persisting of api token
+          // implement redirect to landing
+          console.log(response);
+        })
+        .catch((error) => {
+          const responseData = error.response.data;
+          alert(responseData.message + ' Try again.');
+        });
+
   };
 
   const switchToRegisterForm = () => {
@@ -56,6 +67,7 @@ export default function LoginForm({ switchAuthenticationTemplateTo }) {
               id="username"
               label="Username"
               name="username"
+              onChange={(e) => setUsername(e.target.value)}
               autoComplete="username"
               autoFocus
             />
@@ -64,6 +76,7 @@ export default function LoginForm({ switchAuthenticationTemplateTo }) {
               required
               fullWidth
               name="password"
+              onChange={(e) => setPassword(e.target.value)}
               label="Password"
               type="password"
               id="password"
