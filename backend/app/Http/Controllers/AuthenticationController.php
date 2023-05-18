@@ -81,7 +81,7 @@ class AuthenticationController extends Controller
         }
 
         try {
-            $apiToken = $this->authenticationService->loginUser($username, $password);
+            $loginData = $this->authenticationService->loginUser($username, $password);
         } catch (InvalidCredentialsException) {
             return new JsonResponse([
                 'status' => 'error',
@@ -94,7 +94,9 @@ class AuthenticationController extends Controller
             'status' => 'success',
             'message' => 'Login successful!',
             'data' => [
-                'token' => $apiToken->plainTextToken,
+                'username' => $loginData->username,
+                'isAuctioneer' => $loginData->isAuctioneer,
+                'token' => $loginData->plainTextToken,
             ],
         ]);
     }
