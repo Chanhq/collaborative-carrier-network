@@ -22,6 +22,7 @@ Route::post('/auth/login', [AuthenticationController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/auth/logout', [AuthenticationController::class, 'logout']);
+    Route::get('/auth/user', [AuthenticationController::class, 'getAuthenticatedUser']);
 });
 
 Route::middleware(['auth:sanctum', EnsureUserIsCarrierMiddleware::class])->prefix('carrier-frontend')

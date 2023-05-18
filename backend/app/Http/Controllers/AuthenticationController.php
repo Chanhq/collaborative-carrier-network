@@ -118,4 +118,25 @@ class AuthenticationController extends Controller
             'data' => [],
         ]);
     }
+
+    public function getAuthenticatedUser(): JsonResponse
+    {
+        $user = Auth::user();
+
+        if ($user === null) {
+            return new JsonResponse([
+                'status' => 'error',
+                'message' => 'An unknown error occurred.',
+                'data' => $e->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        return new JsonResponse([
+            'status' => 'success',
+            'data' => [
+                'username' => $user->username,
+                'isAuctioneer' => $user->is_auctioneer,
+            ],
+        ]);
+    }
 }
