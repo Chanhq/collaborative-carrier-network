@@ -3,11 +3,10 @@
 namespace App\BusinessDomain\Authentication\Service;
 
 use App\BusinessDomain\Authentication\Exception\InvalidCredentialsException;
-use App\LoginDTO;
+use App\Models\DTO\LoginDTO;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use Laravel\Sanctum\NewAccessToken;
 
 class AuthenticationService
 {
