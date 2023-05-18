@@ -127,7 +127,7 @@ class AuthenticationController extends Controller
             return new JsonResponse([
                 'status' => 'error',
                 'message' => 'An unknown error occurred.',
-                'data' => $e->getMessage(),
+                'data' => [],
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
