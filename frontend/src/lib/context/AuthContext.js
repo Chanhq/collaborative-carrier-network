@@ -1,7 +1,7 @@
 import React, {createContext, useEffect, useState} from "react";
 import PropTypes from "prop-types";
 import authApi from "../api/auth.js";
-import locationHelper from "../helper/location-helper.js";
+import windowLocationHelper from "../helper/window-location.js";
 export const AuthContext = createContext();
 
 function AuthProvider({ children }) {
@@ -16,28 +16,37 @@ function AuthProvider({ children }) {
     }
 
     const isNotOnAuthPage = () => {
-        return !locationHelper.isAlreadyOnPath('/auth');
+        return !windowLocationHelper.isAlreadyOnPath('/auth');
     }
 
     const redirectToAuthPage = () => {
-        locationHelper.redirectTo('/auth');
+        windowLocationHelper.redirectTo('/auth');
     }
 
     useEffect(() => {
         let storageToken = localStorage.getItem('token');
 
-        if (storageToken === null && isNotOnAuthPage()) {
+        if (!storageToken && isNotOnAuthPage()) {
             redirectToAuthPage();
         }
 
-        authApi.getAuthedUser(storageToken).then((response) => {
-            if (response.status === 'success') {
-                setUser(response.user);
-                setAuthenticated(true);
-            } else {
-                clearUserData();
-            }
-        });
+        if (storageToken) {
+            authApi.getAuthedUser(storageToken).then((response) => {
+                if (response && response.status === 'success') {
+                    setUser({
+                        username: response.data.username,
+                        isAuctioneer: response.data.isAuctioneer,
+                    });
+                    console.log(response.data);
+                    setAuthenticated(true);
+                } else {
+                    clearUserData();
+                }
+            }).catch((error) => {
+                // TODO Handle error -> redirect, session clearing
+                console.log(error);
+            });
+        }
 
     }, []);
 

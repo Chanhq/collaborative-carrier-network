@@ -2,10 +2,12 @@ import {useContext} from "react";
 import {AuthContext} from "../../lib/context/AuthContext";
 
 function CarrierHome() {
-    const { authenticated } = useContext(AuthContext);
+    const { user, authenticated } = useContext(AuthContext);
+
+    // TODO: add redirect when no carrier (maybe guarded routes)
 
     return(
-        authenticated && <><h1>Carrier Home works!</h1></>
+        (authenticated && !user.isAuctioneer)&& <><h1>Carrier Home works!</h1></>
     );
 }
 
