@@ -11,7 +11,6 @@ function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
     const [token, setToken] = useState('');
     const [authenticated, setAuthenticated] = useState(false);
-    const [redirecting, setRedirecting] = useState(false);
 
     const clearUserData = () => {
         setToken('');
@@ -36,20 +35,14 @@ function AuthProvider({ children }) {
                         setAuthenticated(true);
                     } else {
                         alert('Forbidden. You are now being redirected to your homepage!');
-                        if(!redirecting) {
-                            setRedirecting(true)
-                            windowLocationHelper.redirectToHomePage(user.isAuctioneer);
-                        }
+                        windowLocationHelper.redirectToHomePage(user.isAuctioneer);
                     }
                 } else {
                     clearUserData();
                 }
             }).catch(() => {
                 clearUserData();
-                if(!redirecting) {
-                    setRedirecting(true)
-                    windowLocationHelper.redirectToAuthPage();
-                }
+                windowLocationHelper.redirectToAuthPage();
             });
         }
 
