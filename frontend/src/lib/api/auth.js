@@ -1,4 +1,6 @@
 import httpClient from "../infrastructure/http-client";
+import sessionHelper from "../helper/session";
+import windowLocationHelper from "../helper/window-location";
 
 
 export default {
@@ -22,4 +24,10 @@ export default {
             return error.response.data;
         }
     },
+    logout: () => {
+        alert('You will now be logged of')
+        // TODO: also invalidate session server side e.g. calling logout endpoint with current user token
+        sessionHelper.deleteUserSessionClientSide();
+        windowLocationHelper.redirectToAuthPage();
+    }
 }
