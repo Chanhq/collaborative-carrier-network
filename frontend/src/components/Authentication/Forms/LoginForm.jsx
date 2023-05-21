@@ -13,16 +13,13 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { REGISTER_TEMPLATE } from '../AuthenticationComponent';
 import PropTypes from "prop-types";
 import authApi from "../../../lib/api/auth.js";
-import {useContext, useState} from "react";
+import {useState} from "react";
 import sessionHelper from "../../../lib/helper/session.js";
 import windowLocationHelper from "../../../lib/helper/window-location.js";
-import {AuthContext} from "../../../lib/context/AuthContext";
 
 const theme = createTheme();
 
 export default function LoginForm({ switchAuthenticationTemplateTo }) {
-  const { setUser, setAuthenticated, setToken} = useContext(AuthContext);
-
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -32,14 +29,14 @@ export default function LoginForm({ switchAuthenticationTemplateTo }) {
     authApi.login(username, password).then((response) => {
       if (response.status) {
         if (response.status === 'success') {
-          setToken(response.data.token);
-          sessionHelper.persistTokenClientSide(response.data.token);
-          setAuthenticated(true);
-          setUser({
+          const user = {
             username: response.data.username,
-            isAuctioneer: response.data.is_auctioneer,
-          })
-          if (response.data.is_auctioneer) {
+            isAuctioneer: response.data.isAuctioneer,
+            token: response.data.token,
+          };
+          sessionHelper.persistUserSessionClientSide(user);
+
+          if (response.data.isAuctioneer) {
             windowLocationHelper.redirectTo('/auctioneer');
           } else {
             windowLocationHelper.redirectTo('/carrier');

@@ -1,5 +1,9 @@
 export default {
-    persistTokenClientSide: (token) => {
-        localStorage.setItem('token', token);
+    persistUserSessionClientSide: (user) => {
+        localStorage.setItem('user', JSON.stringify(user));
     },
+
+    getUserSessionClientSide: () => {
+        return JSON.parse(localStorage.getItem('user'));
+    }
 }

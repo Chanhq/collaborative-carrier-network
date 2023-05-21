@@ -5,5 +5,8 @@ export default {
     },
     redirectTo(path) {
         window.location.href = APP_BASE_URL + path;
+    },
+    getPath() {
+        return window.location.pathname;
     }
 }
