@@ -8,5 +8,23 @@ export default {
     },
     getPath() {
         return window.location.pathname;
+    },
+    isOnAuthPage() {
+        return this.isAlreadyOnPath('/auth');
+    },
+    redirectToAuthPage() {
+        if (!this.isOnAuthPage()) {
+            this.redirectTo('/auth');
+        }
+    },
+    redirectToHomePage(isAuctioneer) {
+        if (isAuctioneer === null || isAuctioneer === undefined) {
+            this.redirectToAuthPage();
+        }
+        if (isAuctioneer) {
+            this.redirectTo('/auctioneer');
+        } else {
+            this.redirectTo('/carrier');
+        }
     }
 }
