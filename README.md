@@ -12,6 +12,7 @@ come in very handy.
 - Docker installed (Win, MacOs: Docker Desktop; Linux: Docker compose)
 - ``npm`` installed (see official documentation)
 - ``ssh`` setup and linked with your tuhh gitlab account 
+- ``git`` setup and installed
 
 ### 2. Setup - Backend
 Clone the github repository:
