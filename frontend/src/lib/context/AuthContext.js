@@ -9,11 +9,9 @@ export const AuthContext = createContext();
 
 function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
-    const [token, setToken] = useState('');
     const [authenticated, setAuthenticated] = useState(false);
 
     const clearUserData = () => {
-        setToken('');
         setAuthenticated(false);
         setUser(null);
         sessionHelper.deleteUserSessionClientSide()
@@ -31,6 +29,7 @@ function AuthProvider({ children }) {
                         setUser({
                             username: user.username,
                             isAuctioneer: user.isAuctioneer,
+                            token: user.token
                         });
                         setAuthenticated(true);
                     } else {
@@ -54,8 +53,6 @@ function AuthProvider({ children }) {
         value={{
             user,
             setUser,
-            token,
-            setToken,
             authenticated,
             setAuthenticated
         }}

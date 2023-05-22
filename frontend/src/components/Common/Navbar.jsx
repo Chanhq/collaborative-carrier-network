@@ -1,16 +1,25 @@
 import {useContext} from "react";
 import {AuthContext} from "../../lib/context/AuthContext";
 import {SpeedDial, SpeedDialAction, SpeedDialIcon} from "@mui/material";
-import FileCopyIcon from '@mui/icons-material/FileCopyOutlined';
+import LogoutIcon from '@mui/icons-material/Logout';
 import authApi from "../../lib/api/auth";
+import windowLocationHelper from "../../lib/helper/window-location";
 
 
 function CarrierHome() {
-    const { authenticated } = useContext(AuthContext);
+    const { user, authenticated } = useContext(AuthContext);
+
+    function handleLogoutClick() {
+        authApi.logout(user.token).then(() => {
+            alert('Logout successful!');
+            windowLocationHelper.redirectToAuthPage();
+        });
+    }
 
     const actions = [
-        { icon: <FileCopyIcon />, name: 'Copy', onClick: authApi.logout},
+        { icon: <LogoutIcon />, name: 'Copy', onClick: handleLogoutClick},
     ];
+
 
     return(
         authenticated &&
@@ -24,7 +33,7 @@ function CarrierHome() {
                     key={action.name}
                     icon={action.icon}
                     tooltipTitle={action.name}
-                    onClick={action.onClick}
+                    onClick={handleLogoutClick}
                 />
             ))}
         </SpeedDial>
