@@ -81,7 +81,7 @@ class AuthenticationController extends Controller
         }
 
         try {
-            $apiToken = $this->authenticationService->loginUser($username, $password);
+            $loginData = $this->authenticationService->loginUser($username, $password);
         } catch (InvalidCredentialsException) {
             return new JsonResponse([
                 'status' => 'error',
@@ -94,7 +94,9 @@ class AuthenticationController extends Controller
             'status' => 'success',
             'message' => 'Login successful!',
             'data' => [
-                'api_token' => $apiToken->plainTextToken,
+                'username' => $loginData->username,
+                'isAuctioneer' => $loginData->isAuctioneer,
+                'token' => $loginData->plainTextToken,
             ],
         ]);
     }
@@ -116,6 +118,27 @@ class AuthenticationController extends Controller
             'status' => 'success',
             'message' => 'Logout successful!',
             'data' => [],
+        ]);
+    }
+
+    public function getAuthenticatedUser(): JsonResponse
+    {
+        $user = Auth::user();
+
+        if ($user === null) {
+            return new JsonResponse([
+                'status' => 'error',
+                'message' => 'An unknown error occurred.',
+                'data' => [],
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        return new JsonResponse([
+            'status' => 'success',
+            'data' => [
+                'username' => $user->username,
+                'isAuctioneer' => $user->is_auctioneer,
+            ],
         ]);
     }
 }
