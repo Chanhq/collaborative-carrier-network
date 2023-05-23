@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('transport_requests', function (Blueprint $table) {
+        Schema::create('transport_requests', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->nullable();
 
@@ -20,12 +20,12 @@ return new class extends Migration
             $table->string('destination');
             $table->timestamp('request_date')->useCurrent();
             $table->timestamps();
-            
+
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users')
                 ->onDelete('cascade');
-            
+
         });
     }
 
@@ -34,9 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('transport_requests', function (Blueprint $table) {
-            $table->dropForeign(['user_id']);
-            $table->dropColumn('user_id');
-        });
+        Schema::dropIfExists('transport_requests');
     }
 };
