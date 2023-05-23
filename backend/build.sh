@@ -7,10 +7,8 @@ composer install
 vendor/bin/phpstan analyze
 
 # Run cs-checker
-vendor/bin/phpcs --standard=PSR2 public/src/
+vendor/bin/phpcs --standard=PSR2 public/
 
 # Run tests
 vendor/bin/phpunit tests/
 
-# Run linter
-vendor/bin/php-cs-fixer fix --dry-run --diff

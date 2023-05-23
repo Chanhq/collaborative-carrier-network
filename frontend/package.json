@@ -19,6 +19,11 @@
     "react-router-dom": "^6.11.1",
     "web-vitals": "^2.1.4"
   },
+  "jest": {
+    "transform": {
+      "^.+\\.[jt]sx?$": "babel-jest"
+    }
+  },
   "devDependencies": {
     "react-scripts": "5.0.1"
   },
