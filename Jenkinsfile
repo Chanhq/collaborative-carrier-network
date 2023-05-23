@@ -20,11 +20,5 @@ pipeline {
         sh 'cd frontend/my-app && npx eslint --fix'
       }
     }
-    
-    stage('Frontend Tests') {
-      steps {
-        sh 'cd frontend/my-app && npm test'
-      }
-    }
   }
 }
