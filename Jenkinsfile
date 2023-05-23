@@ -17,7 +17,7 @@ pipeline {
     
     stage('ESLint') {
       steps {
-        sh 'cd frontend/my-app && npx eslint .'
+        sh 'cd frontend/my-app && npx eslint --fix'
       }
     }
     
