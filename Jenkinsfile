@@ -10,14 +10,14 @@ pipeline {
     
     stage('Build Frontend') {
       steps {
-        sh 'cd frontend/my-app && npm install'
-        sh 'cd frontend/my-app && npm run build'
+        sh 'cd frontend && npm install'
+        sh 'cd frontend && npm run build'
       }
     }
     
     stage('ESLint') {
       steps {
-        sh 'cd frontend/my-app && npx eslint --fix'
+        sh 'cd frontend && npx eslint --fix'
       }
     }
   }
