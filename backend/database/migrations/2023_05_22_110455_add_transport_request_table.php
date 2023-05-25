@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('transport_request', function (Blueprint $table) {
+        Schema::create('transport_requests', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->nullable();
 
             $table->string('requester_name');
-            $table->string('pickup_location');
+            $table->string('origin');
             $table->string('destination');
             $table->timestamp('request_date')->useCurrent();
             $table->timestamps();
@@ -34,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('transport_request');
+        Schema::dropIfExists('transport_requests');
     }
 };
