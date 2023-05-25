@@ -16,8 +16,10 @@ class TransportRequest extends Model
      */
     protected $fillable = [
         'requester_name',
-        'origin',
-        'destination',
+        'origin_x',
+        'origin_y',
+        'destination_x',
+        'destination_y',
     ];
 
 
