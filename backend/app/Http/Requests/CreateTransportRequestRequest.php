@@ -43,27 +43,23 @@ class CreateTransportRequestRequest extends FormRequest
                 // transform input: "(originX, originY), (destX, destY) -> [originX, originY, destX, destY]"
                 $originCoords = array_map(trim(...), explode(',', substr($origin, 1, -1)));
 
-                $originValidationResults = array_map(function (string $coord) {
-                    return ((int)$coord) <= 250;
+                $originValidationResults = array_map(function (int $coord) {
+                    return 0 <= $coord && $coord <= 250; // Check whether in value range, use this when building default map
                 }, $originCoords);
 
                 if (!array_reduce($originValidationResults, function (bool $carry, bool $value) {return $carry && $value;}, true)) {
                     $validator->errors()->add('origin', 'The coordinates of origin exceed the value range (max 250)');
-                } else {
-                    $this->request->set('originCoords', $originCoords);
                 }
 
                 // transform input: "(originX, originY), (destX, destY) -> [originX, originY, destX, destY]"
                 $destinationCoords = array_map(trim(...), explode(',', substr($destination, 1, -1)));
 
-                $destinationValidationResults = array_map(function (string $coord) {
-                    return ((int)$coord) <= 250;
+                $destinationValidationResults = array_map(function (int $coord) {
+                    return 0 <= $coord && $coord <= 250; // Check whether in value range, use this when building default map
                 }, $destinationCoords);
 
                 if (!array_reduce($destinationValidationResults, function (bool $carry, bool $value) {return $carry && $value;}, true)) {
                     $validator->errors()->add('destination', 'The coordinates of destination exceed the value range (max 250)');
-                } else {
-                    $this->request->set('destinationCoords', $destinationCoords);
                 }
             }
         ];
