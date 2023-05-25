@@ -49,6 +49,8 @@ class CreateTransportRequestRequest extends FormRequest
 
                 if (!array_reduce($originValidationResults, function (bool $carry, bool $value) {return $carry && $value;}, true)) {
                     $validator->errors()->add('origin', 'The coordinates of origin exceed the value range (max 250)');
+                } else {
+                    $this->request->set('originCoords', $originCoords);
                 }
 
                 // transform input: "(originX, originY), (destX, destY) -> [originX, originY, destX, destY]"
@@ -60,6 +62,8 @@ class CreateTransportRequestRequest extends FormRequest
 
                 if (!array_reduce($destinationValidationResults, function (bool $carry, bool $value) {return $carry && $value;}, true)) {
                     $validator->errors()->add('destination', 'The coordinates of destination exceed the value range (max 250)');
+                } else {
+                    $this->request->set('destinationCoords', $destinationCoords);
                 }
             }
         ];
