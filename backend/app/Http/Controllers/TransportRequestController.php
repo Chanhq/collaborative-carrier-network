@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateTransportRequestRequest;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class TransportRequestController extends Controller
 {
-    public function create(Request $request): JsonResponse
+    public function create(CreateTransportRequestRequest $request): JsonResponse
     {
         return new JsonResponse($request->toArray());
     }

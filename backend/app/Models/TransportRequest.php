@@ -9,6 +9,18 @@ class TransportRequest extends Model
 {
     use HasFactory;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'requester_name',
+        'origin',
+        'destination',
+    ];
+
+
     public function user()
     {
         return $this->belongsTo(User::class);
