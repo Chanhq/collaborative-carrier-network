@@ -17,7 +17,7 @@ class AuthenticationTest extends TestCase
         $apiToken =
             $this->registerNewUserAndLogin('tester', 'testerpw123', false);
 
-        $this->json('get', '/api/carrier-frontend', headers: ['Authorization' => 'Bearer ' . $apiToken])
+        $this->json('get', '/api/auth/user', headers: ['Authorization' => 'Bearer ' . $apiToken])
             ->assertStatus(200);
 
         $this->json('get', '/api/auctioneer-frontend', headers: ['Authorization' => 'Bearer ' . $apiToken])
@@ -38,7 +38,7 @@ class AuthenticationTest extends TestCase
         $this->json('get', '/api/carrier-frontend', headers: ['Authorization' => 'Bearer ' . $apiToken])
             ->assertStatus(403);
 
-        $this->json('get', '/api/auctioneer-frontend', headers: ['Authorization' => 'Bearer ' . $apiToken])
+        $this->json('get', '/api/auth/user', headers: ['Authorization' => 'Bearer ' . $apiToken])
             ->assertStatus(200);
 
         $this->json('post', '/api/auth/logout', headers: ['Authorization' => 'Bearer ' . $apiToken])->assertStatus(200);

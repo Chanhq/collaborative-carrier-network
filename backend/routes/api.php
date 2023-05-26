@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthenticationController;
-use App\Http\Controllers\DummyController;
+use App\Http\Controllers\TransportRequestController;
 use App\Http\Middleware\Authorization\EnsureUserIsAuctioneerMiddleware;
 use App\Http\Middleware\Authorization\EnsureUserIsCarrierMiddleware;
 use Illuminate\Support\Facades\Route;
@@ -28,12 +28,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::middleware(['auth:sanctum', EnsureUserIsCarrierMiddleware::class])->prefix('carrier-frontend')
     ->group(function () {
-        Route::get('/', [DummyController::class, 'test']);
+        Route::post('/transport-request', [TransportRequestController::class, 'create']);
     });
 
 Route::middleware(['auth:sanctum', EnsureUserIsAuctioneerMiddleware::class ])->prefix('auctioneer-frontend')
     ->group(function () {
-        Route::get('/', [DummyController::class, 'test']);
     });
 Route::get('/maps', function (Request $request) {
     $maps = Map::all();

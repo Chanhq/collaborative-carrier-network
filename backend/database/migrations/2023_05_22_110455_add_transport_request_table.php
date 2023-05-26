@@ -16,9 +16,10 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id')->nullable();
 
             $table->string('requester_name');
-            $table->string('pickup_location');
-            $table->string('destination');
-            $table->timestamp('request_date')->useCurrent();
+            $table->integer('origin_x');
+            $table->integer('origin_y');
+            $table->integer('destination_x');
+            $table->integer('destination_y');
             $table->timestamps();
 
             $table->foreign('user_id')
