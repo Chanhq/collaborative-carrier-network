@@ -5,7 +5,8 @@ use App\Http\Controllers\DummyController;
 use App\Http\Middleware\Authorization\EnsureUserIsAuctioneerMiddleware;
 use App\Http\Middleware\Authorization\EnsureUserIsCarrierMiddleware;
 use Illuminate\Support\Facades\Route;
-
+use Illuminate\Http\Request;
+use App\Models\Map;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -34,3 +35,7 @@ Route::middleware(['auth:sanctum', EnsureUserIsAuctioneerMiddleware::class ])->p
     ->group(function () {
         Route::get('/', [DummyController::class, 'test']);
     });
+Route::get('/maps', function (Request $request) {
+    $maps = Map::all();
+    return response()->json($maps);
+});
