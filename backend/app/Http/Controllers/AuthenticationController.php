@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\BusinessDomain\Authentication\Exception\InvalidCredentialsException;
 use App\BusinessDomain\Authentication\Service\AuthenticationService;
+use App\Http\Requests\Authentication\LoginRequest;
+use App\Http\Requests\Authentication\RegisterRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,20 +18,9 @@ class AuthenticationController extends Controller
     {
     }
 
-    public function register(Request $request): JsonResponse
+    public function register(RegisterRequest $request): JsonResponse
     {
-        $validated = $request->validate([
-            'username' => [
-                'required',
-                'unique:users',
-                'max:255',
-                'string',
-            ],
-            'password' => 'required|string|min:8|max:255',
-            'isAuctioneerRegistration' => 'required|boolean',
-        ]);
-
-        if ($this->authenticationService->doesUserExist($validated['username'])) {
+        if ($this->authenticationService->doesUserExist($request->validated('username'))) {
             return new JsonResponse([
                 'status' => 'error',
                 'message' => 'User already exists!',
@@ -38,7 +28,7 @@ class AuthenticationController extends Controller
             ], Response::HTTP_CONFLICT);
         }
 
-        if ($validated['isAuctioneerRegistration'] && $this->authenticationService->doesAnAuctioneerAgentExist()) {
+        if ($request->validated('isAuctioneerRegistration') && $this->authenticationService->doesAnAuctioneerAgentExist()) {
             return new JsonResponse([
                 'status' => 'error',
                 'message' => 'Cannot register more than one auctioneer agent.',
@@ -47,9 +37,9 @@ class AuthenticationController extends Controller
         }
 
          User::create([
-            'username' => $validated['username'],
-            'password' => Hash::make($validated['password']),
-            'is_auctioneer' => $validated['isAuctioneerRegistration'],
+            'username' => $request->validated('username'),
+            'password' => Hash::make($request->validated('password'),),
+            'is_auctioneer' => $request->validated('isAuctioneerRegistration'),
          ]);
 
         return new JsonResponse([
@@ -59,18 +49,10 @@ class AuthenticationController extends Controller
         ], Response::HTTP_CREATED);
     }
 
-    public function login(Request $request): JsonResponse
+    public function login(LoginRequest $request): JsonResponse
     {
-        $validated = $request->validate([
-            'username' => [
-                'required',
-                'max:255',
-                'string',
-            ],
-            'password' => 'required|string|min:8|max:255',
-        ]);
-        $username = $validated['username'];
-        $password = $validated['password'];
+        $username = $request->validated('username');
+        $password = $request->validated('password');
 
         if (!$this->authenticationService->doesUserExist($username)) {
             return new JsonResponse([

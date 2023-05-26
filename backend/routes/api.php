@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\AuthenticationController;
-use App\Http\Controllers\DummyController;
 use App\Http\Controllers\TransportRequestController;
 use App\Http\Middleware\Authorization\EnsureUserIsAuctioneerMiddleware;
 use App\Http\Middleware\Authorization\EnsureUserIsCarrierMiddleware;
@@ -33,5 +32,4 @@ Route::middleware(['auth:sanctum', EnsureUserIsCarrierMiddleware::class])->prefi
 
 Route::middleware(['auth:sanctum', EnsureUserIsAuctioneerMiddleware::class ])->prefix('auctioneer-frontend')
     ->group(function () {
-        Route::get('/', [DummyController::class, 'test']);
     });
