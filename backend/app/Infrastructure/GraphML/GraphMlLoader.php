@@ -54,7 +54,7 @@ class GraphMlLoader
             } else {
                 $edge = $source->createEdge($target);
             }
-            $edge->setAttribute('weight', $edgeElem['weight']);
+            $edge->setWeight((int)$edgeElem['weight']);
             $this->loadAttributes($edgeElem, $edge, $keys);
         }
 

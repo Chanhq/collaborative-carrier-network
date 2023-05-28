@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Infrastructure\GraphML\GraphMlLoader;
-use Fhaculty\Graph\Edge\Base;
 use Graphp\GraphViz\GraphViz;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
@@ -20,11 +19,6 @@ class VisualizeMap extends Command
 
         $loader = new GraphMlLoader();
         $graph = $loader->loadContents($data);
-
-        /** @var Base $edge */
-        foreach ($graph->getEdges()->getIterator() as $edge) {
-            $edge->setWeight((int)$edge->getAttribute('weight'));
-        }
 
         $graphviz = new GraphViz();
         $graphviz->display($graph);
