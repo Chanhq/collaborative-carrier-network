@@ -16,10 +16,8 @@ class TransportRequestController extends Controller
 
             $transportRequest = new TransportRequest([
                 'requester_name' => $request->validated('requester_name'),
-                'origin_x' => $request->validated('origin_x'),
-                'origin_y' => $request->validated('origin_x'),
-                'destination_x' => $request->validated('destination_x'),
-                'destination_y' => $request->validated('destination_y'),
+                'origin_node' => $request->validated('origin_node'),
+                'destination_node' => $request->validated('destination_node'),
             ]);
 
             Auth::user()->transportRequests()->save($transportRequest);
@@ -29,10 +27,8 @@ class TransportRequestController extends Controller
                 'message' => 'Successfully added transport request for current user!',
                 'data' => [
                     'requester_name' => $transportRequest->requester_name,
-                    'origin_x' => $transportRequest->origin_x,
-                    'origin_y' => $transportRequest->origin_y,
-                    'destination_x' => $transportRequest->destination_x,
-                    'destination_y' => $transportRequest->destination_y,
+                    'origin_node' => $transportRequest->origin_node,
+                    'destination_node' => $transportRequest->destination_node,
                 ],
             ], Response::HTTP_CREATED);
         } catch (\Throwable $e) {
