@@ -4,14 +4,27 @@ namespace App\Infrastructure;
 
 use App\Infrastructure\GraphML\GraphMlLoader;
 use Fhaculty\Graph\Graph;
+use Fhaculty\Graph\Set\Vertices;
 
 class MapHelper
 {
-    public function graph(): Graph
+    private Graph $map;
+
+    public function __construct()
     {
         $data = file_get_contents('map.graphml');
         $loader = new GraphMlLoader();
 
-        return $loader->loadContents($data);
+        $this->map =$loader->loadContents($data);
+    }
+
+    public function get(): Graph
+    {
+        return $this->map;
+    }
+
+    public function vertices(): Vertices
+    {
+        return $this->map->getVertices();
     }
 }
