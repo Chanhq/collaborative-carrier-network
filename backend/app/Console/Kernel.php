@@ -25,6 +25,6 @@ class Kernel extends ConsoleKernel
         require base_path('routes/console.php');
     }
     protected $commands = [
-        \App\Console\Commands\CreateDefaultMap::class,
+        \App\Console\Commands\VisualizeMap::class,
     ];
 }
