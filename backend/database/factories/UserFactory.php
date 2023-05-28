@@ -14,7 +14,7 @@ class UserFactory extends Factory
     {
         return [
             'username' => $this->faker->userName,
-            'password' => Hash::make($this->faker->password),
+            'password' => Hash::make('password123'),
             'is_auctioneer' => $this->faker->boolean,
         ];
     }
