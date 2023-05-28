@@ -33,4 +33,5 @@ Route::middleware(['auth:sanctum', EnsureUserIsCarrierMiddleware::class])->prefi
 
 Route::middleware(['auth:sanctum', EnsureUserIsAuctioneerMiddleware::class ])->prefix('auctioneer-frontend')
     ->group(function () {
+        Route::get('/', function () {return 'OK';});
     });
