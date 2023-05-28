@@ -17,8 +17,23 @@ class VisualizeMap extends Command
     public function handle()
     {
         /** @var Graph $graph */
-        $graph = Map::graph();
+        $graph = Map::get();
+        $maxOutgoingEdges = 0;
 
+        /** @var Vertex $vertex */
+        foreach (Map::vertices() as $vertex) {
+            $this->info('N-Id: ' . $vertex->getId());
+            $edgeCounter = 0;
+            /** @var Base $edge */
+            foreach ($vertex->getEdges() as $edge) {
+                $this->info('E' . $edgeCounter . '-Id: ' . $edge->getAttribute('id'));
+                $this->info('E' . $edgeCounter . '-W: ' . $edge->getWeight());
+                $this->info('E' . $edgeCounter . '-S: ' . $edge->getAttribute('source'));
+                $this->info('E' . $edgeCounter++ . '-T: ' . $edge->getAttribute('target'));
+                $maxOutgoingEdges = $edgeCounter > $maxOutgoingEdges ? $edgeCounter : $maxOutgoingEdges;
+            }
+        }
+        $this->info($maxOutgoingEdges);
         $graphviz = new GraphViz();
         $graphviz->display($graph);
 
