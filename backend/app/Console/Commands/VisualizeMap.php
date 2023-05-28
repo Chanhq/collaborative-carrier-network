@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Infrastructure\GraphML\GraphMlLoader;
+use App\Facades\Map;
 use Graphp\GraphViz\GraphViz;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
@@ -15,10 +15,7 @@ class VisualizeMap extends Command
 
     public function handle()
     {
-        $data = file_get_contents('map.graphml');
-
-        $loader = new GraphMlLoader();
-        $graph = $loader->loadContents($data);
+        $graph = Map::graph();
 
         $graphviz = new GraphViz();
         $graphviz->display($graph);
