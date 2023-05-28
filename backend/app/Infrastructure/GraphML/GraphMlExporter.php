@@ -38,6 +38,7 @@ EOL;
             $edgeElem['source'] = $edge->getVertices()->getVertexFirst()->getId();
             $edgeElem['target'] = $edge->getVertices()->getVertexLast()->getId();
             $edgeElem->addAttribute('weight', $edge->getAttribute('weight'));
+            $edgeElem->addAttribute('id', $edge->getAttribute('id'));
             if ($edge instanceof Directed) {
                 $edgeElem['directed'] = 'true';
             }
