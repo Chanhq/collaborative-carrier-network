@@ -38,3 +38,6 @@ Route::middleware(['auth:sanctum', EnsureUserIsAuctioneerMiddleware::class ])->p
             return 'OK';
         });
     });
+
+Route::get('/carrier/path', 'CarrierController@getPath')->middleware('api');
+
