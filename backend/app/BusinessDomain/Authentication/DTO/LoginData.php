@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Models\DTO;
+namespace App\BusinessDomain\Authentication\DTO;
 
-class LoginDTO
+class LoginData
 {
     public readonly string $plainTextToken;
 
