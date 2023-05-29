@@ -1,9 +1,14 @@
+from typing import Optional
+
 import typer
 
+app = typer.Typer()
 
-def main():
-    print(f"Hello")
+
+@app.command()
+def optimalpath(transportrequests: Optional[str] = None):
+    typer.echo(transportrequests)
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    app()

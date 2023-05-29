@@ -25,7 +25,7 @@ class OptimalPathForCarrierTransportRequestSet extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): int
     {
         $carrierAgentId = $this->argument('carrier');
         $user = User::find($carrierAgentId);
@@ -35,7 +35,11 @@ class OptimalPathForCarrierTransportRequestSet extends Command
             return self::FAILURE;
         }
 
-        $result = Process::run('python3 network/main.py');
+        $transportRequestsJson =
+            json_encode($user->transportRequests()->get(['id', 'origin_node', 'destination_node'])->toArray());
+
+        $result = Process::run('python3 network/main.py  --transportrequests ' . $transportRequestsJson);
+
         $this->info($result->output());
 
         return self::SUCCESS;
