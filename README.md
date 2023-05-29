@@ -42,6 +42,12 @@ I recommend creating an alias for ``./vendor/bin/sail`` since sail is the cli
 to interact with the backends application docker container and you will need it 
 for various tasks. 
 
+Now we need to migrate the database and seed it, this can be achieved with the following commands
+
+```
+    ./vendor/bin/sail artisan migrate:refresh && ./vendor/bin/sail artisan db:seed
+```
+
 ### 3. Setup - Frontend
 Navigate back into the frontend directory: 
 ```

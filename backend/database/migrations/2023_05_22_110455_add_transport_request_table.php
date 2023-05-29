@@ -16,17 +16,14 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id')->nullable();
 
             $table->string('requester_name');
-            $table->integer('origin_x');
-            $table->integer('origin_y');
-            $table->integer('destination_x');
-            $table->integer('destination_y');
+            $table->integer('origin_node');
+            $table->integer('destination_node');
             $table->timestamps();
 
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users')
                 ->onDelete('cascade');
-
         });
     }
 

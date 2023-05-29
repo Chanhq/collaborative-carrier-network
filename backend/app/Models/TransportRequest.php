@@ -16,12 +16,24 @@ class TransportRequest extends Model
      */
     protected $fillable = [
         'requester_name',
-        'origin_x',
-        'origin_y',
-        'destination_x',
-        'destination_y',
+        'origin_node',
+        'destination_node',
     ];
 
+    public function requesterName(): string
+    {
+        return $this->requester_name;
+    }
+
+    public function originNode(): int
+    {
+        return $this->origin_node;
+    }
+
+    public function destinationNode(): int
+    {
+        return $this->destination_node;
+    }
 
     public function user()
     {

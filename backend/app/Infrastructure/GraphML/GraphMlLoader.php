@@ -8,7 +8,10 @@ use SimpleXMLElement;
 
 class GraphMlLoader
 {
-    public function loadContents($contents): Graph
+    /**
+     * @throws \Exception
+     */
+    public function loadContents(string $contents): Graph
     {
         return $this->loadXml(new SimpleXMLElement($contents));
     }
@@ -24,7 +27,9 @@ class GraphMlLoader
                 'name' => (string)$keyElem['attr.name'],
                 'type' => (string)$keyElem['attr.type'],
                 'for'  => (isset($keyElem['for']) ? (string)$keyElem['for'] : 'all'),
-                'default' => (isset($keyElem->default) ? $this->castAttribute((string)$keyElem->default, (string)$keyElem['attr.type']) : null)
+                'default' => isset($keyElem->default)
+                    ? $this->castAttribute((string)$keyElem->default, (string)$keyElem['attr.type'])
+                    : null
             );
         }
 
@@ -54,8 +59,10 @@ class GraphMlLoader
             } else {
                 $edge = $source->createEdge($target);
             }
+            $edge->setAttribute('id', $edgeElem['id']);
+            $edge->setAttribute('source', $edgeElem['source']);
+            $edge->setAttribute('target', $edgeElem['target']);
             $edge->setWeight((int)$edgeElem['weight']);
-            $this->loadAttributes($edgeElem, $edge, $keys);
         }
 
         return $graph;
@@ -77,7 +84,7 @@ class GraphMlLoader
         }
     }
 
-    private function castAttribute($value, $type): bool|int|float
+    private function castAttribute($value, $type): bool|int|float|null
     {
         if ($type === 'boolean') {
             return ($value === 'true');
@@ -86,5 +93,7 @@ class GraphMlLoader
         } elseif ($type === 'float' || $type === 'double') {
             return (float)$value;
         }
+
+        return null;
     }
 }

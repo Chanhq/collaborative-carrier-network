@@ -17,16 +17,14 @@ class CreateTransportRequestRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array|string>
+     * @return array<string, string>
      */
     public function rules(): array
     {
         return [
             'requester_name' => 'required|string|max:256',
-            'origin_x' => 'required|Integer|min:0|max:250',
-            'origin_y' => 'required|Integer|min:0|max:250',
-            'destination_x' => 'required|Integer|min:0|max:250',
-            'destination_y' => 'required|Integer|min:0|max:250',
+            'origin_node' => 'required|Integer|exists:map_vertices,id',
+            'destination_node' => 'required|Integer|exists:map_vertices,id|different:origin_node',
         ];
     }
 }
