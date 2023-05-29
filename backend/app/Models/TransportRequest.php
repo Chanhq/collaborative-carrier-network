@@ -20,6 +20,20 @@ class TransportRequest extends Model
         'destination_node',
     ];
 
+    public function requesterName(): string
+    {
+        return $this->requester_name;
+    }
+
+    public function originNode(): int
+    {
+        return $this->origin_node;
+    }
+
+    public function destinationNode(): int
+    {
+        return $this->destination_node;
+    }
 
     public function user()
     {
