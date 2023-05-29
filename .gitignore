@@ -5,7 +5,8 @@ backend/public/hot
 backend/public/storage
 backend/storage/*.key
 backend/vendor
-backend/network/env`
+backend/network/env
+backend/network/.idea
 backend/.env
 backend/.env.backup
 backend/.env.production
