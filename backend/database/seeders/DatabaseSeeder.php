@@ -42,11 +42,11 @@ class DatabaseSeeder extends Seeder
                 $destination_node_id = 0;
                 $origin_node_id = 0;
 
-                for ($i = 0; $i < 10; $i++) {
+                for ($i = 0; $i < 5; $i++) {
                     do {
-                        $origin_node_id = random_int(0, 2576);
+                        $origin_node_id = random_int(MapVertex::min('id'), MapVertex::max('id'));
                         do {
-                            $destination_node_id = random_int(0, 2576);
+                            $destination_node_id = random_int(MapVertex::min('id'), MapVertex::max('id'));
                         } while ($origin_node_id === $destination_node_id);
                     } while (in_array([$origin_node_id, $destination_node_id], $transportRequests));
                     $transportRequest = new TransportRequest([
