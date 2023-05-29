@@ -24,7 +24,9 @@ class GraphMlLoader
                 'name' => (string)$keyElem['attr.name'],
                 'type' => (string)$keyElem['attr.type'],
                 'for'  => (isset($keyElem['for']) ? (string)$keyElem['for'] : 'all'),
-                'default' => (isset($keyElem->default) ? $this->castAttribute((string)$keyElem->default, (string)$keyElem['attr.type']) : null)
+                'default' => isset($keyElem->default)
+                    ? $this->castAttribute((string)$keyElem->default, (string)$keyElem['attr.type'])
+                    : null
             );
         }
 

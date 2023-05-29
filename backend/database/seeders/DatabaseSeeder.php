@@ -34,7 +34,7 @@ class DatabaseSeeder extends Seeder
         if (TransportRequest::all()->count() === 0) {
             /** @var User $user */
             foreach (User::all() as $user) {
-                if ($user->isAuctioneer()){
+                if ($user->isAuctioneer()) {
                     continue;
                 }
 
@@ -43,7 +43,7 @@ class DatabaseSeeder extends Seeder
                 $origin_node_id = 0;
 
                 for ($i = 0; $i < 10; $i++) {
-                    do{
+                    do {
                         $origin_node_id = random_int(0, 2576);
                         do {
                             $destination_node_id = random_int(0, 2576);

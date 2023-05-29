@@ -15,7 +15,7 @@ class MapHelper
         $data = file_get_contents('default.graphml');
         $loader = new GraphMlLoader();
 
-        $this->map =$loader->loadContents($data);
+        $this->map = $loader->loadContents($data);
     }
 
     public function get(): Graph

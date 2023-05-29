@@ -10,7 +10,7 @@ use SimpleXMLElement;
 
 class GraphMlExporter
 {
-    const SKEL = <<<EOL
+    private const SKEL = <<<EOL
 <?xml version="1.0" encoding="UTF-8"?>
 <graphml xmlns="http://graphml.graphdrawing.org/xmlns"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"

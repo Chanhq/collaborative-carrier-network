@@ -13,7 +13,6 @@ class TransportRequestController extends Controller
     public function create(CreateTransportRequestRequest $request): JsonResponse
     {
         try {
-
             $transportRequest = new TransportRequest([
                 'requester_name' => $request->validated('requester_name'),
                 'origin_node' => $request->validated('origin_node'),
@@ -36,6 +35,7 @@ class TransportRequestController extends Controller
                 'status' => 'error',
                 'message' => 'An unknown error occurred.',
                 'data' => $e->getMessage(),
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);        }
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 }

@@ -9,7 +9,7 @@ class MapServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->app->bind('map', function(){
+        $this->app->bind('map', function () {
             return new MapHelper();
         });
     }

@@ -28,7 +28,10 @@ class AuthenticationController extends Controller
             ], Response::HTTP_CONFLICT);
         }
 
-        if ($request->validated('isAuctioneerRegistration') && $this->authenticationService->doesAnAuctioneerAgentExist()) {
+        if (
+            $request->validated('isAuctioneerRegistration')
+            && $this->authenticationService->doesAnAuctioneerAgentExist()
+        ) {
             return new JsonResponse([
                 'status' => 'error',
                 'message' => 'Cannot register more than one auctioneer agent.',
@@ -38,7 +41,7 @@ class AuthenticationController extends Controller
 
          User::create([
             'username' => $request->validated('username'),
-            'password' => Hash::make($request->validated('password'),),
+            'password' => Hash::make($request->validated('password')),
             'is_auctioneer' => $request->validated('isAuctioneerRegistration'),
          ]);
 
