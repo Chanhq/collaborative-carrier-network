@@ -6,6 +6,7 @@ use Fhaculty\Graph\Edge\Directed;
 use Fhaculty\Graph\Graph;
 use Fhaculty\Graph\Vertex;
 use Graphp\Graph\Edge;
+use http\Exception\RuntimeException;
 use SimpleXMLElement;
 
 class GraphMlExporter
@@ -19,7 +20,7 @@ class GraphMlExporter
 </graphml>
 EOL;
 
-    public function getOutput(Graph $graph)
+    public function getOutput(Graph $graph): string
     {
         $root = new SimpleXMLElement(self::SKEL);
 
@@ -43,7 +44,12 @@ EOL;
                 $edgeElem['directed'] = 'true';
             }
         }
+        $xmlData = $root->asXML();
 
-        return $root->asXML();
+        if ($xmlData === false) {
+            throw new \RuntimeException('Could not convert map XML to string');
+        }
+
+        return $xmlData;
     }
 }

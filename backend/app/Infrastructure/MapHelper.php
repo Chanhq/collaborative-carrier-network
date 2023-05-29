@@ -10,9 +10,17 @@ class MapHelper
 {
     private Graph $map;
 
+    /**
+     * @throws \Exception
+     */
     public function __construct()
     {
         $data = file_get_contents('default.graphml');
+
+        if ($data === false) {
+            throw new \RuntimeException('Could not load graphml file of map');
+        }
+
         $loader = new GraphMlLoader();
 
         $this->map = $loader->loadContents($data);

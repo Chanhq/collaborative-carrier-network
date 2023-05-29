@@ -8,7 +8,10 @@ use SimpleXMLElement;
 
 class GraphMlLoader
 {
-    public function loadContents($contents): Graph
+    /**
+     * @throws \Exception
+     */
+    public function loadContents(string $contents): Graph
     {
         return $this->loadXml(new SimpleXMLElement($contents));
     }

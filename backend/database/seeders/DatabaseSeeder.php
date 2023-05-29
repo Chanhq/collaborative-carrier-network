@@ -15,7 +15,7 @@ class DatabaseSeeder extends Seeder
     /**
      * Seed the application's database.
      */
-    public function run()
+    public function run(): void
     {
         if (User::all()->count() === 0) {
             User::factory(1)->create(['is_auctioneer' => true]);
@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
         $mapVertices = Map::vertices();
         /** @var Vertex $vertex */
         foreach ($mapVertices as $vertex) {
-            $id = Str::remove(search: 'n', subject: $vertex->getId());
+            $id = Str::remove(search: 'n', subject: (string)$vertex->getId());
             if (MapVertex::find($id) === null) {
                 MapVertex::factory(1)->create(['id' => $id]);
             }
