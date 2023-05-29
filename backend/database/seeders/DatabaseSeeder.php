@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
         $mapVertices = Map::vertices();
         /** @var Vertex $vertex */
         foreach ($mapVertices as $vertex) {
-            $id = Str::remove(search: 'n', subject: (string)$vertex->getId());
+            $id = (int)Str::remove(search: 'n', subject: (string)$vertex->getId());
             if (MapVertex::find($id) === null) {
                 MapVertex::factory(1)->create(['id' => $id]);
             }

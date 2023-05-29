@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('map_vertices', function (Blueprint $table) {
-            $table->string('id')->unique()->index('vertex_id');
+            $table->unsignedBigInteger('id')->unique()->index('vertex_id');
             $table->timestamps();
         });
     }

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('transport_requests', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('user_id');
 
             $table->string('requester_name');
             $table->integer('origin_node');
