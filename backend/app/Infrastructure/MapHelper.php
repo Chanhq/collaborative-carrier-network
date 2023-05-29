@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure;
 
+use App\Infrastructure\GraphML\GraphMlExporter;
 use App\Infrastructure\GraphML\GraphMlLoader;
 use Fhaculty\Graph\Graph;
 use Fhaculty\Graph\Set\Vertices;
@@ -34,5 +35,10 @@ class MapHelper
     public function vertices(): Vertices
     {
         return $this->map->getVertices();
+    }
+
+    public function xml(): string
+    {
+        return (new GraphMlExporter())->getOutput($this->map);
     }
 }

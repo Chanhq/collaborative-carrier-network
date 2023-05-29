@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Facade;
 /**
  * @method static Graph get()
  * @method static Vertices vertices()
+ * @method static string xml()
  */
 class Map extends Facade
 {
