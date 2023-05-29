@@ -12,9 +12,8 @@ class VisualizeMap extends Command
     protected $signature = 'map:viz';
     protected $description = 'Visualizes the map of the application';
 
-    public function handle()
+    public function handle(): void
     {
-        /** @var Graph $graph */
         $graph = Map::get();
 
         $graphviz = new GraphViz();

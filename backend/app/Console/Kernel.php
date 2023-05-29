@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\VisualizeMap;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -24,7 +25,11 @@ class Kernel extends ConsoleKernel
 
         require base_path('routes/console.php');
     }
+
+    /**
+     * @var string[]
+     */
     protected $commands = [
-        \App\Console\Commands\VisualizeMap::class,
+        VisualizeMap::class,
     ];
 }

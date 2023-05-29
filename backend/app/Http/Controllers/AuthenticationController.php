@@ -20,7 +20,9 @@ class AuthenticationController extends Controller
 
     public function register(RegisterRequest $request): JsonResponse
     {
-        if ($this->authenticationService->doesUserExist($request->validated('username'))) {
+        /** @var string $username */
+        $username = $request->validated('username');
+        if ($this->authenticationService->doesUserExist($username)) {
             return new JsonResponse([
                 'status' => 'error',
                 'message' => 'User already exists!',
@@ -28,8 +30,10 @@ class AuthenticationController extends Controller
             ], Response::HTTP_CONFLICT);
         }
 
+        /** @var bool $isAuctioneerRegistration */
+        $isAuctioneerRegistration = $request->validated('isAuctioneerRegistration');
         if (
-            $request->validated('isAuctioneerRegistration')
+            $isAuctioneerRegistration
             && $this->authenticationService->doesAnAuctioneerAgentExist()
         ) {
             return new JsonResponse([
@@ -39,10 +43,12 @@ class AuthenticationController extends Controller
             ], Response::HTTP_CONFLICT);
         }
 
-         User::create([
-            'username' => $request->validated('username'),
-            'password' => Hash::make($request->validated('password')),
-            'is_auctioneer' => $request->validated('isAuctioneerRegistration'),
+        /** @var string $password */
+        $password = $request->validated('password');
+        User::create([
+            'username' => $username,
+            'password' => Hash::make($password),
+            'is_auctioneer' => $isAuctioneerRegistration,
          ]);
 
         return new JsonResponse([
@@ -54,7 +60,9 @@ class AuthenticationController extends Controller
 
     public function login(LoginRequest $request): JsonResponse
     {
+        /** @var string $username */
         $username = $request->validated('username');
+        /** @var string $password */
         $password = $request->validated('password');
 
         if (!$this->authenticationService->doesUserExist($username)) {
@@ -108,6 +116,7 @@ class AuthenticationController extends Controller
 
     public function getAuthenticatedUser(): JsonResponse
     {
+        /** @var User|null $user */
         $user = Auth::user();
 
         if ($user === null) {
@@ -121,8 +130,8 @@ class AuthenticationController extends Controller
         return new JsonResponse([
             'status' => 'success',
             'data' => [
-                'username' => $user->username,
-                'isAuctioneer' => $user->is_auctioneer,
+                'username' => $user->username(),
+                'isAuctioneer' => $user->isAuctioneer(),
             ],
         ]);
     }

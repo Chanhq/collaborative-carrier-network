@@ -27,15 +27,16 @@ class AuthenticationService
      */
     public function loginUser(string $username, string $password): LoginDTO
     {
+        /** @var User $user */
         $user = User::where(['username' => $username])->first();
 
-        if (Hash::check($password, $user->password)) {
+        if (Hash::check($password, $user->password())) {
             $token = $user->createToken(Str::random(40));
 
             return new LoginDTO(
                 plainTextToken: $token->plainTextToken,
-                username: $user->username,
-                isAuctioneer: $user->is_auctioneer,
+                username: $user->username(),
+                isAuctioneer: $user->isAuctioneer(),
             );
         }
 
