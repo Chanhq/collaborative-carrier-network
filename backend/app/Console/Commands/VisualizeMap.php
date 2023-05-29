@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Facades\Map;
-use Fhaculty\Graph\Graph;
 use Graphp\GraphViz\GraphViz;
 use Illuminate\Console\Command;
 
