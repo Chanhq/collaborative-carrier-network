@@ -12,7 +12,7 @@ class MapHelper
 
     public function __construct()
     {
-        $data = file_get_contents('map.graphml');
+        $data = file_get_contents('default.graphml');
         $loader = new GraphMlLoader();
 
         $this->map =$loader->loadContents($data);
