@@ -84,7 +84,7 @@ class GraphMlLoader
         }
     }
 
-    private function castAttribute($value, $type): bool|int|float
+    private function castAttribute($value, $type): bool|int|float|null
     {
         if ($type === 'boolean') {
             return ($value === 'true');
@@ -93,5 +93,7 @@ class GraphMlLoader
         } elseif ($type === 'float' || $type === 'double') {
             return (float)$value;
         }
+
+        return null;
     }
 }
