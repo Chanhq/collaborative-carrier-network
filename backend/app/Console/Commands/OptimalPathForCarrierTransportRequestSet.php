@@ -2,12 +2,16 @@
 
 namespace App\Console\Commands;
 
+use App\BusinessDomain\VehicleRouting\VehicleRoutingService;
 use App\Models\User;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Process;
 
 class OptimalPathForCarrierTransportRequestSet extends Command
 {
+    public function __construct(private readonly VehicleRoutingService $vehicleRoutingService)
+    {
+        parent::__construct();
+    }
     /**
      * The name and signature of the console command.
      *
@@ -35,13 +39,8 @@ class OptimalPathForCarrierTransportRequestSet extends Command
             return self::FAILURE;
         }
 
-        $transportRequestsJson =
-            json_encode($user->transportRequests()->get(['id', 'origin_node', 'destination_node'])->toArray());
+        $optimalPath = $this->vehicleRoutingService->findOptimalPath($user->transportRequests());
 
-        $result = Process::run('python3 network/main.py  --transportrequests ' . $transportRequestsJson);
-
-        $this->info($result->output());
-
-        return self::SUCCESS;
+        dd($optimalPath);
     }
 }
