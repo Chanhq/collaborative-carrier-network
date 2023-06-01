@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthenticationController;
+use App\Http\Controllers\CarrierController;
 use App\Http\Controllers\TransportRequestController;
 use App\Http\Middleware\Authorization\EnsureUserIsAuctioneerMiddleware;
 use App\Http\Middleware\Authorization\EnsureUserIsCarrierMiddleware;
@@ -30,6 +31,7 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::middleware(['auth:sanctum', EnsureUserIsCarrierMiddleware::class])->prefix('carrier-frontend')
     ->group(function () {
         Route::post('/transport-request', [TransportRequestController::class, 'create']);
+        Route::get('/map', [CarrierController::class, 'getMapData']);
     });
 
 Route::middleware(['auth:sanctum', EnsureUserIsAuctioneerMiddleware::class ])->prefix('auctioneer-frontend')
@@ -38,6 +40,3 @@ Route::middleware(['auth:sanctum', EnsureUserIsAuctioneerMiddleware::class ])->p
             return 'OK';
         });
     });
-
-Route::get('/carrier/path', 'CarrierController@getPath')->middleware('api');
-
