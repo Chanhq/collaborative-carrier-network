@@ -24,7 +24,7 @@ class OptimalPathForCarrierTransportRequestSet extends Command
      *
      * @var string
      */
-    protected $description = 'Calculate the optimal path for transport request set for a given carrier agent';
+    protected $description = 'Dumps the optimal path for transport request set for a given carrier agent';
 
     /**
      * Execute the console command.
@@ -46,6 +46,10 @@ class OptimalPathForCarrierTransportRequestSet extends Command
 
         $optimalPath = $this->vehicleRoutingService->findOptimalPath($transportRequests);
 
-        dd($optimalPath);
+        $this->table(['SOURCE', 'TARGET', 'WEIGHT'], array_map(function ($edge) {
+            return [$edge->source, $edge->target, $edge->weight];
+        }, $optimalPath));
+
+        return self::SUCCESS;
     }
 }
