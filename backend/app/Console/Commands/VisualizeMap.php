@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Facades\Map;
+use App\Infrastructure\GraphML\GraphMlExporter;
 use Fhaculty\Graph\Graph;
 use Fhaculty\Graph\Vertex;
 use Graphp\GraphViz\GraphViz;
@@ -47,5 +48,8 @@ class VisualizeMap extends Command
                 }
             }
         }
+
+        $exporter = new GraphMlExporter();
+        file_put_contents('maps/default.graphml', $exporter->getOutput($newGraph));
     }
 }
