@@ -8,7 +8,9 @@ backend/vendor
 backend/network/env
 backend/network/requirements.txt
 backend/network/.idea
-backend/network/*__pycache__
+backend/network/__pycache__
+backend/network/helper/__pycache__
+backend/network/mapper/__pycache__
 backend/.env
 backend/.env.backup
 backend/.env.production
