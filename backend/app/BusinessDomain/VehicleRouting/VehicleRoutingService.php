@@ -10,6 +10,7 @@ class VehicleRoutingService
 {
     /**
      * @param TransportRequest[] $transportRequests
+     * @throws \JsonException
      */
     public function hasOptimalPath(array $transportRequests): bool
     {
@@ -27,7 +28,7 @@ class VehicleRoutingService
 
         foreach ($transportRequests as $transportRequest) {
             $transportRequestsFiltered[] = [
-                'id' => $transportRequest->id,
+                'id' => $transportRequest->id(),
                 'origin_node' => $transportRequest->originNode(),
                 'destination_node' => $transportRequest->destinationNode(),
             ];
