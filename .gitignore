@@ -5,6 +5,10 @@ backend/public/hot
 backend/public/storage
 backend/storage/*.key
 backend/vendor
+backend/network/env
+backend/network/requirements.txt
+backend/network/.idea
+backend/network/__pycache__
 backend/.env
 backend/.env.backup
 backend/.env.production

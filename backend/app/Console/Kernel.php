@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\OptimalPathForCarrierTransportRequestSet;
 use App\Console\Commands\VisualizeMap;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -31,5 +32,6 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         VisualizeMap::class,
+        OptimalPathForCarrierTransportRequestSet::class,
     ];
 }
