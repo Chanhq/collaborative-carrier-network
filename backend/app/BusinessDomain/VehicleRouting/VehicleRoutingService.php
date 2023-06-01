@@ -10,6 +10,7 @@ class VehicleRoutingService
 {
     /**
      * @param TransportRequest[] $transportRequests
+     * @throws \JsonException
      */
     public function hasOptimalPath(array $transportRequests): bool
     {
@@ -27,14 +28,13 @@ class VehicleRoutingService
 
         foreach ($transportRequests as $transportRequest) {
             $transportRequestsFiltered[] = [
-                'id' => $transportRequest->id,
                 'origin_node' => $transportRequest->originNode(),
                 'destination_node' => $transportRequest->destinationNode(),
             ];
         }
 
         $transportRequestsJson = json_encode($transportRequestsFiltered);
-        $optimalPathJson = Process::run('python3 network/main.py  --transportrequests \'' . $transportRequestsJson . '\'')
+        $optimalPathJson = Process::run('python3 '. base_path() . '/network/main.py  --transportrequests \'' . $transportRequestsJson . '\'')
         ->output();
 
         if ($optimalPathJson === '') {
