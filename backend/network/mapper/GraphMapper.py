@@ -5,7 +5,6 @@ from helper.GraphHelper import get_edge_by_node_ids
 
 def to_distance_matrix(graph: Graph) -> [[int]]:
     edges = graph.edges()
-    print(type(edges))
     vertex_count = len(graph.nodes())
     distance_matrix = []
     for row_node_id in range(0, vertex_count):

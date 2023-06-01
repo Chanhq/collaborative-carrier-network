@@ -24,7 +24,7 @@ def optimalpath(transportrequests: Optional[str] = None):
         'distance_matrix': GraphMapper.to_distance_matrix(graph),
         'pickups_deliveries': TransportrequestMapper.to_pickups_deliveries(transportrequests),
         'depot': 1,
-        'num_vehicles': 1
+        'num_vehicles': 1,
     }
 
     manager = pywrapcp.RoutingIndexManager(len(or_tool_data['distance_matrix']),
