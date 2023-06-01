@@ -16,7 +16,7 @@ class MapHelper
      */
     public function __construct()
     {
-        $data = file_get_contents('default.graphml');
+        $data = file_get_contents('maps/default.graphml');
 
         if ($data === false) {
             throw new \RuntimeException('Could not load graphml file of map');
