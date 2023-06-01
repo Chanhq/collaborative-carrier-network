@@ -33,8 +33,8 @@ def extract_optimal_path_from_solution(data, manager, routing, solution):
             route_distance += routing.GetArcCostForVehicle(
                 previous_index, index, vehicle_id)
             edge = {
-                'source': manager.IndexToNode(previous_index),
-                'target': manager.IndexToNode(index),
+                'source': manager.IndexToNode(previous_index)+1,
+                'target': manager.IndexToNode(index)+1,
                 'weight': routing.GetArcCostForVehicle(previous_index, index, vehicle_id)
             }
             optimal_path_data['optimal_path'].append(edge)

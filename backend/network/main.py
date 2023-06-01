@@ -19,7 +19,7 @@ app = typer.Typer()
 @app.command()
 def optimalpath(transportrequests: Optional[str] = None):
     parser = GraphMLParser()
-    graph = parser.parse('maps/default.graphml')
+    graph = parser.parse('/var/www/html/maps/default.graphml')
 
     or_tool_data = {
         'distance_matrix': GraphMapper.to_distance_matrix(graph),
