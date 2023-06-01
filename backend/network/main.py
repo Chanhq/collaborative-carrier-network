@@ -1,8 +1,9 @@
+import json
 import sys
 import typer
 
 from mapper import TransportrequestMapper, GraphMapper
-from helper.OrToolsHelper import print_solution
+from helper.OrToolsHelper import extract_optimal_path_from_solution
 
 from typing import Optional
 from graphml_parser import GraphMLParser
@@ -75,7 +76,7 @@ def optimalpath(transportrequests: Optional[str] = None):
 
     # Print solution on console.
     if solution:
-        print_solution(or_tool_data, manager, routing, solution)
+        print(json.dumps(extract_optimal_path_from_solution(or_tool_data, manager, routing, solution)))
 
 if __name__ == "__main__":
     app()

@@ -39,7 +39,12 @@ class OptimalPathForCarrierTransportRequestSet extends Command
             return self::FAILURE;
         }
 
-        $optimalPath = $this->vehicleRoutingService->findOptimalPath($user->transportRequests());
+        $transportRequests = [];
+        foreach ($user->transportRequests()->get() as $transportRequest) {
+            $transportRequests[] = $transportRequest;
+        }
+
+        $optimalPath = $this->vehicleRoutingService->findOptimalPath($transportRequests);
 
         dd($optimalPath);
     }

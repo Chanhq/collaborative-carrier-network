@@ -3,28 +3,52 @@
 namespace App\BusinessDomain\VehicleRouting;
 
 use App\BusinessDomain\VehicleRouting\DTO\Edge;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\TransportRequest;
 use Illuminate\Support\Facades\Process;
 
 class VehicleRoutingService
 {
     /**
-     * @return Edge[]
+     * @param TransportRequest[] $transportRequests
      */
-    public function findOptimalPath(HasMany $transportRequests): array
+    public function hasOptimalPath(array $transportRequests): bool
     {
-        $transportRequestsJson =
-            json_encode($transportRequests->get(['id', 'origin_node', 'destination_node'])->toArray());
+        return $this->findOptimalPath($transportRequests) !== [];
+    }
 
-        $optimalPathJson =
-            Process::run('python3 network/main.py  --transportrequests \'' . $transportRequestsJson . '\'')
-            ->output();
+    /**
+     * @param TransportRequest[] $transportRequests
+     * @return Edge[]
+     * @throws \JsonException
+     */
+    public function findOptimalPath(array $transportRequests): array
+    {
+        $transportRequestsFiltered = [];
 
-        return [
-            new Edge(id: 1, weight: 88, source: 1, target: 2),
-            new Edge(id: 32, weight: 42, source: 2, target: 5),
-            new Edge(id: 113, weight: 57, source: 5, target: 8),
-            new Edge(id: 185, weight: 88, source: 8, target: 11),
-        ];
+        foreach ($transportRequests as $transportRequest) {
+            $transportRequestsFiltered[] = [
+                'id' => $transportRequest->id,
+                'origin_node' => $transportRequest->originNode(),
+                'destination_node' => $transportRequest->destinationNode(),
+            ];
+        }
+
+        $transportRequestsJson = json_encode($transportRequestsFiltered);
+        $optimalPathJson = Process::run('python3 network/main.py  --transportrequests \'' . $transportRequestsJson . '\'')
+        ->output();
+
+        if ($optimalPathJson === '') {
+            return [];
+        }
+
+        $optimalPathData = json_decode($optimalPathJson, true, 512, JSON_THROW_ON_ERROR);
+
+        return array_map(function ($edge) {
+            return new Edge(
+                weight: $edge['weight'],
+                source: $edge['source'],
+                target: $edge['target'],
+            );
+        }, $optimalPathData['optimal_path']);
     }
 }
