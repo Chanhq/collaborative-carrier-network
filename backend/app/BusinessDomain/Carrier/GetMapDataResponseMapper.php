@@ -50,7 +50,9 @@ class GetMapDataResponseMapper
         $mappedVertices = [];
         foreach ($vertices->getVector() as $vertex) {
             $mappedVertices[] = [
-                'id' => (int)$vertex->getId()
+                'id' => (int)$vertex->getId(),
+                'x' => (int)$vertex->getAttribute('x'),
+                'y' => (int)$vertex->getAttribute('y'),
             ];
         }
         return $mappedVertices;

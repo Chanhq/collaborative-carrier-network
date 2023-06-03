@@ -40,7 +40,8 @@ class GraphMlLoader
         // load all vertices (known as "nodes" in GraphML)
         foreach ($root->graph->node as $nodeElem) {
             $vertex = $graph->createVertex((string)$nodeElem['id']);
-
+            $vertex->setAttribute('x', (int)$nodeElem['x']);
+            $vertex->setAttribute('y', (int)$nodeElem['y']);
             $this->loadAttributes($nodeElem, $vertex, $keys);
         }
 
