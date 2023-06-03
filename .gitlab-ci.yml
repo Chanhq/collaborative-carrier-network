@@ -1,0 +1,44 @@
+# .gitlab-ci.yml
+
+image: composer:latest
+
+stages:
+  - build_backend
+  - build_frontend
+  - eslint
+
+build_backend:
+  stage: build_backend
+  script:
+    - cd backend
+    - composer install
+    - vendor/bin/phpstan analyze
+    - vendor/bin/phpcs --standard=PSR2 public/
+    - vendor/bin/phpunit tests/
+
+build_frontend:
+  stage: build_frontend
+  script:
+    - cd frontend && npm install
+    - cd frontend && npm run build
+
+eslint:
+  stage: eslint
+  script:
+    - cd frontend && npx eslint --fix
+
+# Trigger the pipeline on every push
+push_trigger:
+  stage: build_backend
+  script:
+    - echo "Triggered by push"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+
+# Trigger the pipeline on every merge request
+merge_request_trigger:
+  stage: build_backend
+  script:
+    - echo "Triggered by merge request"
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
