@@ -31,6 +31,8 @@ EOL;
             /* @var $vertex Vertex */
             $vertexElem = $graphElem->addChild('node');
             $vertexElem['id'] = $id;
+            $vertexElem['x'] = $vertex->getAttribute('x');
+            $vertexElem['y'] = $vertex->getAttribute('y');
         }
 
         foreach ($graph->getEdges() as $edge) {
@@ -38,8 +40,9 @@ EOL;
             $edgeElem = $graphElem->addChild('edge');
             $edgeElem['source'] = $edge->getVertices()->getVertexFirst()->getId();
             $edgeElem['target'] = $edge->getVertices()->getVertexLast()->getId();
-            $edgeElem->addAttribute('weight', $edge->getAttribute('weight'));
-            $edgeElem->addAttribute('id', $edge->getAttribute('id'));
+            $edgeElem['weight'] = $edge->getWeight();
+            $edgeElem['id'] =   $edge->getAttribute('id');
+
             if ($edge instanceof Directed) {
                 $edgeElem['directed'] = 'true';
             }
