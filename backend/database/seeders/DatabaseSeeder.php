@@ -63,7 +63,11 @@ class DatabaseSeeder extends Seeder
                         'origin_node' => $origin_node_id,
                         'destination_node' => $destination_node_id,
                     ]);
-                    if ($this->vehicleRoutingService->hasOptimalPath(array_merge($transportRequests, [$transportRequest]))) {
+                    if (
+                        $this->vehicleRoutingService->hasOptimalPath(
+                            array_merge($transportRequests, [$transportRequest])
+                        )
+                    ) {
                         $transportRequests[] = $transportRequest;
                         $output->info('Got feasible tr, adding');
                         $trBar->advance();

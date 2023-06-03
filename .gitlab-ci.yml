@@ -12,9 +12,7 @@ build_backend:
   script:
     - cd backend
     - composer install
-    - vendor/bin/phpstan analyze
-    - vendor/bin/phpcs --standard=PSR2 public/
-    - vendor/bin/phpunit tests/
+    - composer check
 
 build_frontend:
   stage: build_frontend
@@ -25,7 +23,7 @@ build_frontend:
 eslint:
   stage: eslint
   script:
-    - cd frontend && npx eslint --fix
+    - cd frontend && npx eslint
 
 # Trigger the pipeline on every push
 push_trigger:
