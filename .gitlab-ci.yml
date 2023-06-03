@@ -1,6 +1,5 @@
 # .gitlab-ci.yml
 
-image: composer:latest
 
 stages:
   - build_backend
@@ -9,6 +8,7 @@ stages:
 
 build_backend:
   stage: build_backend
+  image: composer:latest
   script:
     - cd backend
     - composer install
@@ -16,6 +16,7 @@ build_backend:
 
 build_frontend:
   stage: build_frontend
+  image: node:latest
   script:
     - cd frontend && npm install
     - cd frontend && npm run build
