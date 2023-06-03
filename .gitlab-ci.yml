@@ -1,7 +1,5 @@
 # .gitlab-ci.yml
 
-image: sail-8.2/app
-
 stages:
   - build_backend
   - build_frontend
