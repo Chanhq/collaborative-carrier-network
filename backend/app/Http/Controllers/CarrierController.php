@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\BusinessDomain\Carrier\GetMapDataResponseMapper;
 use App\BusinessDomain\VehicleRouting\VehicleRoutingService;
 use App\Facades\Map;
+use App\Models\TransportRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -26,6 +27,7 @@ class CarrierController extends Controller
         $map = Map::get();
         $transportRequests = [];
 
+        /** @var TransportRequest $transportRequest */
         foreach ($user->transportRequests()->get() as $transportRequest) {
             $transportRequests[] = $transportRequest;
         }

@@ -11,15 +11,21 @@ class GetMapDataResponseMapper
 {
     /**
      * @param Edge[] $optimalPath
+     * @return array<array{
+ *          weight: int,
+     *      source: int,
+     *      target: int,
+     *      isOnOptimalPath: bool,
+ *     }>
      */
     public function mapEdgesToArray(Edges $edges, array $optimalPath): array
     {
         $mappedEdges = [];
         foreach ($edges->getVector() as $edge) {
             $mappedEdges[] = [
-                'weight' => $edge->getWeight(),
-                'source' => $edge->getVertices()->getVertexFirst()->getId(),
-                'target' => $edge->getVertices()->getVertexLast()->getId(),
+                'weight' => (int)$edge->getWeight(),
+                'source' => (int)$edge->getVertices()->getVertexFirst()->getId(),
+                'target' => (int)$edge->getVertices()->getVertexLast()->getId(),
                 'isOnOptimalPath' => $this->isEdgeOnOptimalPath($edge, $optimalPath),
             ];
         }
@@ -45,6 +51,15 @@ class GetMapDataResponseMapper
         return false;
     }
 
+    /**
+     * @return array <
+     *      array{
+     *          id: int,
+     *          x: int,
+     *          y: int,
+     *      }
+     *  >
+     */
     public function mapVerticesToArray(Vertices $vertices): array
     {
         $mappedVertices = [];

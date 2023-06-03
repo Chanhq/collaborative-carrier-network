@@ -3,10 +3,9 @@
 namespace App\Infrastructure\GraphML;
 
 use Fhaculty\Graph\Edge\Directed;
+use Fhaculty\Graph\Edge\Undirected;
 use Fhaculty\Graph\Graph;
 use Fhaculty\Graph\Vertex;
-use Graphp\Graph\Edge;
-use http\Exception\RuntimeException;
 use SimpleXMLElement;
 
 class GraphMlExporter
@@ -36,7 +35,7 @@ EOL;
         }
 
         foreach ($graph->getEdges() as $edge) {
-            /* @var $edge Edge */
+            /* @var $edge Undirected */
             $edgeElem = $graphElem->addChild('edge');
             $edgeElem['source'] = $edge->getVertices()->getVertexFirst()->getId();
             $edgeElem['target'] = $edge->getVertices()->getVertexLast()->getId();
