@@ -19,7 +19,7 @@ build_frontend:
   image: node:latest
   script:
     - cd frontend && npm install
-    - cd npm run build
+    - npm run build
     - npx eslint
 
 # Trigger the pipeline on every push
