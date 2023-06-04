@@ -5,6 +5,8 @@ stages:
   - build_backend
   - test_frontend
   - test_backend
+  - push
+  - merge_request
 
 build_frontend:
   stage: build_frontend
