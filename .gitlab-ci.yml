@@ -35,8 +35,19 @@ test_backend:
     - composer install
     - composer check
 
+push:
+  stage: push
+  script:
+    - echo "Triggered by push"
+
+merge_request:
+  stage: merge_request
+  script:
+    - echo "Triggered by merge request"
+
 # Trigger the pipeline on every push
 push_trigger:
+  stage: push
   script:
     - echo "Triggered by push"
   rules:
@@ -46,9 +57,10 @@ push_trigger:
     - test_backend
     - build_frontend
     - test_frontend
-    -
+
 # Trigger the pipeline on every merge request
 merge_request_trigger:
+  stage: merge_request
   script:
     - echo "Triggered by merge request"
   rules:
