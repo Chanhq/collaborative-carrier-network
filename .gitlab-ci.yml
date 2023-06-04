@@ -6,20 +6,6 @@ stages:
   - build_frontend
   - build_backend
 
-build_frontend:
-  stage: build_frontend
-  image: node:latest
-  script:
-    - cd frontend && npm install
-    - npm run build
-
-build_backend:
-  stage: build_backend
-  image: composer:latest
-  script:
-    - cd backend
-    - composer install
-
 test_frontend:
   stage: test_frontend
   image: node:latest
@@ -44,3 +30,17 @@ test_backend:
     - merge_requests
     - master
   needs: [ "build_backend" ]
+
+build_frontend:
+  stage: build_frontend
+  image: node:latest
+  script:
+    - cd frontend && npm install
+    - npm run build
+
+build_backend:
+  stage: build_backend
+  image: composer:latest
+  script:
+    - cd backend
+    - composer install
