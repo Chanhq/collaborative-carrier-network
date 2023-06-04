@@ -5,6 +5,8 @@ stages:
   - build_backend
   - test_frontend
   - test_backend
+  - push
+  - merge_request
 
 build_frontend:
   stage: build_frontend
@@ -35,7 +37,6 @@ test_backend:
     - composer install
     - composer check
 
-
 push:
   stage: push
   script:
@@ -51,7 +52,6 @@ merge_request:
     - run Docker build_frontend
     - run Docker test_backend
     - run Docker test_frontend
-
 
 # Trigger the pipeline on every push
 push_trigger:
