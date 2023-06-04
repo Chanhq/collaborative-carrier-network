@@ -3,11 +3,14 @@
         "browser": true,
         "es2021": true
     },
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
+    },
     "extends": [
         "eslint:recommended",
         "plugin:react/recommended"
-    ],
-    "overrides": [
     ],
     "parserOptions": {
         "ecmaVersion": "latest",
@@ -17,6 +20,22 @@
         "react"
     ],
     "rules": {
-        "react/react-in-jsx-scope": "off"
+        "no-mixed-spaces-and-tabs": 0,
+        "indent": [
+            "error",
+            "tab"
+        ],
+        "linebreak-style": [
+            "error",
+            "unix"
+        ],
+        "quotes": [
+            "error",
+            "single"
+        ],
+        "semi": [
+            "error",
+            "always"
+        ]
     }
 }
