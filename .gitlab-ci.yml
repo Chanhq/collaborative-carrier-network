@@ -2,8 +2,8 @@
 
 stages:
   - test_frontend
-  - test_backend
   - build_frontend
+  - test_backend
   - build_backend
 
 test_frontend:
