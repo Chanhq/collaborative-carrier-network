@@ -24,16 +24,16 @@ build_frontend:
 
 # Trigger the pipeline on every push
 push_trigger:
-  stage: build_backend
-  script:
-    - echo "Triggered by push"
+  stage:
+    - build_backend
+    - build_frontend
   rules:
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
 
 # Trigger the pipeline on every merge request
 merge_request_trigger:
-  stage: build_backend
-  script:
-    - echo "Triggered by merge request"
+  stage:
+    - build_backend
+    - build_frontend
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
