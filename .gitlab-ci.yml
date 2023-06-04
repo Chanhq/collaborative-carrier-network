@@ -1,19 +1,10 @@
 # .gitlab-ci.yml
 
-stages:
-  - push
-  - merge_request
-  - build_frontend
-  - build_backend
-  - test_frontend
-  - test_backend
 
-build_frontend:
-  stage: build_frontend
-  image: node:latest
-  script:
-    - cd frontend && npm install
-    - npm run build
+stages:
+  - build_backend
+  - build_frontend
+  - eslint
 
 build_backend:
   stage: build_backend
@@ -21,54 +12,28 @@ build_backend:
   script:
     - cd backend
     - composer install
+    - composer check
 
-test_frontend:
-  stage: test_frontend
+build_frontend:
+  stage: build_frontend
   image: node:latest
   script:
     - cd frontend && npm install
+    - npm run build
     - npm run lint
-
-test_backend:
-  stage: test_backend
-  image: composer:latest
-  script:
-    - cd backend
-    - composer install
-    - composer check
-
-push:
-  stage: push
-  script:
-    - echo "Triggered by push"
-
-merge_request:
-  stage: merge_request
-  script:
-    - echo "Triggered by merge request"
 
 # Trigger the pipeline on every push
 push_trigger:
-  stage: push
+  stage: build_backend
   script:
     - echo "Triggered by push"
   rules:
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
-  needs:
-    - build_backend
-    - test_backend
-    - build_frontend
-    - test_frontend
 
 # Trigger the pipeline on every merge request
 merge_request_trigger:
-  stage: merge_request
+  stage: build_backend
   script:
     - echo "Triggered by merge request"
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-  needs:
-    - build_backend
-    - test_backend
-    - build_frontend
-    - test_frontend
