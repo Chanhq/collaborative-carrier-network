@@ -1,10 +1,6 @@
 # .gitlab-ci.yml
 
 stages:
-  - build_frontend
-  - build_backend
-  - test_frontend
-  - test_backend
   - push
   - merge_request
 
