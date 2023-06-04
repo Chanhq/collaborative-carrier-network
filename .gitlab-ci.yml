@@ -18,21 +18,8 @@ build_frontend:
     - cd frontend && npm install
     - npm run build
     - npm run lint
-  needs: ["build_backend"]
-
-# Trigger the pipeline on every push
-push_trigger:
-  stage: build_frontend
-  script:
-    - echo "Triggered by push"
   only:
     - master
     - branches
-
-# Trigger the pipeline on every merge request
-merge_request_trigger:
-  stage: build_frontend
-  script:
-    - echo "Triggered by merge request"
-  only:
     - merge_requests
+  needs: ["build_backend"]
