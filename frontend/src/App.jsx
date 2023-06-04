@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import {red} from '@mui/material/colors';
 import AuthProvider from './lib/context/AuthContext';
+import React from 'react';
 
 const primary = red[900]; // #f44336
 

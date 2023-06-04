@@ -41,8 +41,8 @@
     "test": "react-scripts test",
     "test:all": "react-scripts test --watchAll",
     "eject": "react-scripts eject",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix"
   },
   "eslintConfig": {
     "extends": [
