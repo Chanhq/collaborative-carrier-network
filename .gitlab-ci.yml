@@ -35,24 +35,36 @@ test_backend:
     - composer install
     - composer check
 
-# Trigger the pipeline on every push
-push_trigger:
+
+push:
+  stage: push
   script:
-    - echo "Triggered by push"
     - run Docker build_backend
     - run Docker build_frontend
     - run Docker test_backend
     - run Docker test_frontend
+
+merge_request:
+  stage: merge_request
+  script:
+    - run Docker build_backend
+    - run Docker build_frontend
+    - run Docker test_backend
+    - run Docker test_frontend
+
+
+# Trigger the pipeline on every push
+push_trigger:
+  stage: push
+  script:
+    - echo "Triggered by push"
   rules:
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
 
 # Trigger the pipeline on every merge request
 merge_request_trigger:
+  stage: merge_request
   script:
     - echo "Triggered by merge request"
-    - run Docker build_backend
-    - run Docker build_frontend
-    - run Docker test_backend
-    - run Docker test_frontend
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
