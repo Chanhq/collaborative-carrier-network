@@ -29,16 +29,6 @@ test_backend:
     - composer install
     - composer check
 
-push:
-  stage: push
-  script:
-    - echo "Triggered by push"
-
-merge_request:
-  stage: merge_request
-  script:
-    - echo "Triggered by merge request"
-
 # Trigger the pipeline on every push
 push_trigger:
   stage: push
