@@ -27,6 +27,9 @@ push_trigger:
     - echo "Triggered by push"
   rules:
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+  needs:
+    - build_frontend
+    - build_backend
 
 # Trigger the pipeline on every merge request
 merge_request_trigger:
@@ -35,3 +38,6 @@ merge_request_trigger:
     - echo "Triggered by merge request"
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+  needs:
+    - build_frontend
+    - build_backend
