@@ -20,7 +20,8 @@ build_frontend:
   script:
     - cd frontend && npm install
     - npm run build
-    - npx eslint
+    - npm run lint
+    - npm run test:all
 
 # Trigger the pipeline on every push
 push_trigger:

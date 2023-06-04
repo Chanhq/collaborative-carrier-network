@@ -1,4 +1,4 @@
-import windowLocationHelper from "../helper/window-location";
+import windowLocationHelper from '../helper/window-location';
 
 /**
  * permission semantics:
@@ -21,19 +21,19 @@ import windowLocationHelper from "../helper/window-location";
 
 
 const routePermissions = new Map([
-    ['/carrier', {carrier: true, auctioneer: false}],
-    ['/auctioneer', {carrier: false, auctioneer: true}],
+	['/carrier', {carrier: true, auctioneer: false}],
+	['/auctioneer', {carrier: false, auctioneer: true}],
 ]);
 
 export default {
-    isUserPermittedToAccessRoute: (user) => {
-        const path = windowLocationHelper.getPath();
-        const permissions = routePermissions.get(path);
+	isUserPermittedToAccessRoute: (user) => {
+		const path = windowLocationHelper.getPath();
+		const permissions = routePermissions.get(path);
 
-        if (!permissions) {
-            return true;
-        }
+		if (!permissions) {
+			return true;
+		}
 
-        return user.isAuctioneer === permissions.auctioneer && !user.isAuctioneer === permissions.carrier;
-    },
-}
+		return user.isAuctioneer === permissions.auctioneer && !user.isAuctioneer === permissions.carrier;
+	},
+};
