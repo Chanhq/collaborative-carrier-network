@@ -25,52 +25,16 @@ build_frontend:
 push_trigger:
   script:
     - echo "Triggered by push"
+    - run Docker build_backend
+    - run Docker build_frontend
   rules:
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
-
-  stages:
-    - build_backend
-    - build_frontend
-
-  build_backend:
-    stage: build_backend
-    image: composer:latest
-    script:
-      - cd backend
-      - composer install
-      - composer check
-
-  build_frontend:
-    stage: build_frontend
-    image: node:latest
-    script:
-      - cd frontend && npm install
-      - npm run build
-      - npm run lint
 
 # Trigger the pipeline on every merge request
 merge_request_trigger:
   script:
     - echo "Triggered by merge request"
+    - run Docker build_backend
+    - run Docker build_frontend
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-
-  stages:
-    - build_backend
-    - build_frontend
-
-  build_backend:
-    stage: build_backend
-    image: composer:latest
-    script:
-      - cd backend
-      - composer install
-      - composer check
-
-  build_frontend:
-    stage: build_frontend
-    image: node:latest
-    script:
-      - cd frontend && npm install
-      - npm run build
-      - npm run lint
