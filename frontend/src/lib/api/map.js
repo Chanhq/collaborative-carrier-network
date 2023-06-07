@@ -1,6 +1,5 @@
 // apiService.js
 
-//import { useState } from 'react';
 import httpClient from "../infrastructure/http-client";
 
 export async function fetchMapData(token) {
@@ -15,3 +14,5 @@ export async function fetchMapData(token) {
     return null;
   }
 }
+
+ 

@@ -1,30 +1,70 @@
-import { Sigma } from 'react-sigma';
+import { Sigma, RandomizeNodePositions, EdgeShapes } from 'react-sigma';
 import { fetchMapData } from '../../lib/api/map';
-import {AuthContext} from "../../lib/context/AuthContext";
-import { useContext } from 'react';
+import { AuthContext } from "../../lib/context/AuthContext";
+import { useContext, useEffect, useState } from 'react';
 
 function MapVisualizer() {
+  const { user } = useContext(AuthContext);
+  const [graph, setGraph] = useState({ edges: [], vertices: [] });
 
-    const { user } = useContext(AuthContext);
-    const graph = fetchMapData(user.token);
-    console.log(graph);
-    
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const mapData = await fetchMapData(user.token);
+        
+        if (mapData) {
+          const { edges, vertices } = mapData;
+          console.log(mapData);
+          console.log(edges);
+          console.log(vertices);
+          
+          const edgesFormatted = edges.map((edge) => ({
+            weight: edge.weight,
+            source: edge.source,
+            target: edge.target,
+            isOnOptimalPath: edge.isOnOptimalPath,
+            size: 1,
+            color: '#000000'
+          }));
+
+          const verticesFormatted = vertices.map((vertex) => ({
+            id: vertex.id,
+            x: vertex.x,
+            y: vertex.y,
+            size: 5,
+            color: '#FF0000'
+          }));
+
+          setGraph({ edges: edgesFormatted, vertices: verticesFormatted });
+        }
+      } catch (error) {
+        console.error('Error fetching map data:', error);
+      }
+    };
+
+    fetchData();
+  }, [user.token]);
 
   return (
     <div>
       <Sigma
-        style={{ width: '100%', height: '500px' }} 
         graph={graph}
+        style={{ width: '1000px', height: '600px' }}
         settings={{
           drawEdges: true,
-          clone: false,
+          drawEdgeLabels: true,
+          clone: false
         }}
-      />
-    </div>
+      >
+        <RandomizeNodePositions />
+        <EdgeShapes default="curvedArrow" />
+      </Sigma>
+      </div>
   );
 }
 
 export default MapVisualizer; 
+ 
 
 /*import React from 'react';
 import { Sigma, RandomizeNodePositions, EdgeShapes } from 'react-sigma';
@@ -60,5 +100,4 @@ function MapVisualizer() {
 }
 
 export default MapVisualizer; */
-
 
