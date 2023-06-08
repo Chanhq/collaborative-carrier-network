@@ -1,40 +1,52 @@
-import { Sigma } from 'react-sigma';
+import { Sigma, RandomizeNodePositions, EdgeShapes } from 'react-sigma';
 import { fetchMapData } from '../../lib/api/map';
-import { AuthContext } from '../../lib/context/AuthContext';
-import React, { useContext, useEffect, useState } from 'react';
+import { AuthContext } from "../../lib/context/AuthContext";
+import { useContext, useEffect, useState } from 'react';
 
 function MapVisualizer() {
-	const { user } = useContext(AuthContext);
-	const [graph, setGraph] = useState(null);
+  const { user } = useContext(AuthContext);
+  const [graph, setGraph] = useState(null);
 
-	const fetchData = async () => {
-		try {
-			const mapData = await fetchMapData(user.token);
+  
+    const fetchData = async () => {
+      try {
+        const mapData = await fetchMapData(user.token);
+        
+        if (mapData) {
 
-			if (mapData) {
-				setGraph(mapData);
-			}
-		} catch (error) {
-			console.error('Error fetching map data:', error);
-		}
-	};
 
-	useEffect(() => {
-		fetchData();
-	}, []);
+          setGraph(mapData);
+        }
+      } catch (error) {
+        console.error('Error fetching map data:', error);
+      }
+    };
 
-	return (
-		graph &&
-		<Sigma
-			graph={graph}
-			settings={{
-				drawEdges: true,
-				drawEdgeLabels: true,
-				clone: false
-			}}
-		>
-		</Sigma>
-	);
+    useEffect(() => {
+      fetchData();
+    }, []);
+  
+
+  return (
+    graph &&
+
+      <Sigma
+        graph={graph}
+        style={{ width: '1000px', height: '600px' }}
+        settings={{
+          drawEdges: true,
+          drawEdgeLabels: true,
+          clone: false
+        }}
+      >
+        <RandomizeNodePositions />
+        <EdgeShapes default="curvedArrow" />
+      </Sigma>
+     
+  );
 }
 
-export default MapVisualizer;
+export default MapVisualizer; 
+
+
+
