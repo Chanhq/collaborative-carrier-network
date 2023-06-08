@@ -27,7 +27,7 @@ function MapVisualizer() {
             target: edge.target,
             isOnOptimalPath: edge.isOnOptimalPath,
             size: 1,
-            color: '#000000'
+            color: '#0000ff'
           }));
 
           
@@ -36,12 +36,11 @@ function MapVisualizer() {
             x: vertex.x,
             y: vertex.y,
             size: 5,
-            color: '#FF0000'
+            color: '#00ff00'
           }));
-
-        
-
+       
           setGraph({ edges: edgesFormatted, vertices: verticesFormatted });
+
         }
       } catch (error) {
         console.error('Error fetching map data:', error);
@@ -49,7 +48,12 @@ function MapVisualizer() {
     };
 
     fetchData();
+    
+
   }, [user.token]);
+
+
+  console.log(graph);
 
   return (
     <div>
