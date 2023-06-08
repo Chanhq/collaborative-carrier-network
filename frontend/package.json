@@ -12,11 +12,14 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.4.0",
     "bootstrap": "^5.2.3",
+    "graphology": "^0.25.1",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.4",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.11.1",
+    "react-sigma": "^1.2.35",
+    "sigma": "^3.0.0-alpha3",
     "web-vitals": "^2.1.4"
   },
   "jest": {

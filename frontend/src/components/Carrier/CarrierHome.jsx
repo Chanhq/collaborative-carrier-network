@@ -1,16 +1,18 @@
-import {useContext} from 'react';
-import {AuthContext} from '../../lib/context/AuthContext';
+import React, { useContext } from 'react';
+import { AuthContext } from '../../lib/context/AuthContext';
 import Navbar from '../Common/Navbar';
-import React from 'react';
+import MapVisualizer from '../Map/MapVisualizer';
+
 
 function CarrierHome() {
-	const { user, authenticated } = useContext(AuthContext);
+	const {user, authenticated} = useContext(AuthContext);
 
-	return(
+	return (
 		(authenticated && !user.isAuctioneer) &&
         <>
         	<h1>Carrier Home works!</h1>
         	<Navbar/>
+        	<MapVisualizer/>
         </>
 	);
 }
