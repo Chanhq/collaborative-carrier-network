@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\BusinessDomain\VehicleRouting\VehicleRoutingService;
+use App\Models\TransportRequest;
 use App\Models\User;
 use Illuminate\Console\Command;
 
@@ -31,7 +32,7 @@ class OptimalPathForCarrierTransportRequestSet extends Command
      */
     public function handle(): int
     {
-        $carrierAgentId = $this->argument('carrier');
+        $carrierAgentId = (int)$this->argument('carrier');
         $user = User::find($carrierAgentId);
 
         if ($user === null || $user->isAuctioneer()) {
@@ -40,6 +41,8 @@ class OptimalPathForCarrierTransportRequestSet extends Command
         }
 
         $transportRequests = [];
+
+        /** @var TransportRequest $transportRequest */
         foreach ($user->transportRequests()->get() as $transportRequest) {
             $transportRequests[] = $transportRequest;
         }

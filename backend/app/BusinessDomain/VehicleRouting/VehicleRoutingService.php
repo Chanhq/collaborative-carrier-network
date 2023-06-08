@@ -34,7 +34,10 @@ class VehicleRoutingService
         }
 
         $transportRequestsJson = json_encode($transportRequestsFiltered);
-        $optimalPathJson = Process::run('python3 '. base_path() . '/network/main.py  --transportrequests \'' . $transportRequestsJson . '\'')
+        $optimalPathJson = Process::run(
+            'python3 ' . base_path() .
+            '/network/main.py  --transportrequests \'' . $transportRequestsJson . '\''
+        )
         ->output();
 
         if ($optimalPathJson === '') {
