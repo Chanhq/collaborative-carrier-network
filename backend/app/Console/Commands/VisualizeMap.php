@@ -30,8 +30,8 @@ class VisualizeMap extends Command
         $newGraph = new Graph();
         $vertexId = 1;
 
-        for ($row = 0; $row < 50; $row = $row + 5) {
-            for ($col = 0; $col < 25; $col = $col + 5) {
+        for ($row = 0; $row < 50; $row = $row+5) {
+            for ($col = 0; $col < 25; $col = $col+5) {
                 $vertex = $newGraph->createVertex($vertexId);
                 $vertex->setAttribute('y', $row);
                 $vertex->setAttribute('x', $col);
@@ -42,11 +42,7 @@ class VisualizeMap extends Command
         $edgeId = 1;
         foreach ($newGraph->getVertices()->getVector() as $vertex1) {
             foreach ($newGraph->getVertices()->getVector() as $vertex2) {
-                if (
-                    $vertex1->getId() !== $vertex2->getId()
-                    && !$vertex1->hasEdgeTo($vertex2)
-                    && !$vertex2->hasEdgeTo($vertex1)
-                ) {
+                if ($vertex1->getId() !== $vertex2->getId() && !$vertex1->hasEdgeTo($vertex2) && !$vertex2->hasEdgeTo($vertex1)) {
                     $edge = $vertex1->createEdge($vertex2);
                     $edge->setWeight($this->calculateDistance($vertex1, $vertex2));
                     $edge->setAttribute('id', $edgeId);
@@ -84,7 +80,7 @@ class VisualizeMap extends Command
                 } else {
                     if (!$currentVertex->hasEdgeTo($otherVertex)) {
                         $edge = $currentVertex->createEdge($otherVertex);
-                        $edge->setAttribute('weight', random_int(1, 100));
+                        $edge->setAttribute('weight', random_int(1,100));
                         $edge->setAttribute('id', $edgeId++);
                     }
                 }
@@ -104,6 +100,6 @@ class VisualizeMap extends Command
         $x2 = (int)$vertex2->getAttribute('x');
         $y2 = (int)$vertex2->getAttribute('y');
 
-        return round(sqrt(pow($x2 - $x1, 2) + pow($y2 - $y1, 2)), 0) * 10;
+        return round(sqrt(pow($x2-$x1, 2) + pow($y2-$y1, 2)), 0)*10;
     }
 }

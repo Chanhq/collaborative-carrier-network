@@ -45,7 +45,7 @@ class CarrierController extends Controller
             'data' => [
                 'map' => [
                     'edges' => $this->responseMapper->mapEdgesToArray($map->getEdges(), $optimalPath),
-                    'nodes' => $this->responseMapper->mapVerticesToArray($map->getVertices()),
+                    'vertices' => $this->responseMapper->mapVerticesToArray($map->getVertices()),
                 ],
             ]
         ]);
