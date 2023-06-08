@@ -17,7 +17,7 @@ class GetMapDataResponseMapper
         $mappedEdges = [];
         $edgeId = 1;
         foreach ($edges->getVector() as $edge) {
-            if($this->isEdgeOnOptimalPath($edge, $optimalPath)) {
+            if ($this->isEdgeOnOptimalPath($edge, $optimalPath)) {
                 $mappedEdges[] = [
                     'id' => $edgeId,
                     'source' => $edge->getVertices()->getVertexFirst()->getId(),
