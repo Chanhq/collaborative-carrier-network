@@ -13,21 +13,7 @@ class GetMapDataResponseMapper
     /**
      * @param Graph $map
      * @param Edge[] $optimalPath
-     * @return array<
-     *      edges: array{
-     *          id: int,
-     *          source: int,
-     *          target: int,
-     *          color: string,
-     *      },
-     *      nodes: array{
-     *          id: int,
-     *          x: int,
-     *          y: int,
-     *          size: int,
-     *      }
-     *
-     * >
+     * @return  array{edges: array<array{id: int, source: int, target: int, color: string}>,nodes: array<array{id: int, x: int, y: int, size: int}>}
      */
     public function mapResponse(Graph $map, array $optimalPath): array
     {
