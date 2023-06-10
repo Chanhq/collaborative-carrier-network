@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Infrastructure;
+namespace App\Infrastructure\Map;
 
 use App\Infrastructure\GraphML\GraphMlExporter;
 use Fhaculty\Graph\Graph;
