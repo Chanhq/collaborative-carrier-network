@@ -3,11 +3,19 @@
 namespace App\Infrastructure\Map;
 
 use App\Infrastructure\GraphML\GraphMlExporter;
+use App\Infrastructure\Map\DistanceCalculation\DistanceCalculatorInterface;
 use Fhaculty\Graph\Graph;
 use Fhaculty\Graph\Vertex;
 
 class MapGenerator
 {
+    private readonly DistanceCalculatorInterface $distanceCalculator;
+
+    public function __construct(DistanceCalculatorInterface $distanceCalculator)
+    {
+        $this->distanceCalculator = $distanceCalculator;
+    }
+
     /**
      * Generates a graph and save it to the default map graphml with x and y coordinates
      */
@@ -34,7 +42,7 @@ class MapGenerator
                     && !$vertex2->hasEdgeTo($vertex1)
                 ) {
                     $edge = $vertex1->createEdge($vertex2);
-                    $edge->setWeight($this->calculateDistance($vertex1, $vertex2));
+                    $edge->setWeight($this->distanceCalculator->calculateDistance($vertex1, $vertex2));
                     $edge->setAttribute('id', $edgeId);
                     $edgeId++;
                 }
@@ -80,16 +88,5 @@ class MapGenerator
         $exporter = new GraphMlExporter();
         file_put_contents('maps/default.graphml', $exporter->getOutput($newGraph));
         return $newGraph;
-    }
-
-    private function calculateDistance(Vertex $vertex1, Vertex $vertex2): float
-    {
-        $x1 = (int)$vertex1->getAttribute('x');
-        $y1 = (int)$vertex1->getAttribute('y');
-
-        $x2 = (int)$vertex2->getAttribute('x');
-        $y2 = (int)$vertex2->getAttribute('y');
-
-        return round(sqrt(pow($x2 - $x1, 2) + pow($y2 - $y1, 2)), 0) * 10;
     }
 }
