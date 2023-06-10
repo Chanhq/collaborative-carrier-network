@@ -9,10 +9,11 @@ use Tests\TestCase;
 
 class PythonVehicleRoutingWrapperTest extends TestCase
 {
+    // TODO: Make it work in CI, python dependency
     /**
      * @throws \JsonException
      */
-    public function testItCalculatesTheOptimalPath(): void
+    public function itCalculatesTheOptimalPath(): void
     {
         /** @var User $user */
         $user = User::factory(1)->create()->first();
