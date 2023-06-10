@@ -45,10 +45,7 @@ class CarrierController extends Controller
             'status' => 'success',
             'message' => '',
             'data' => [
-                'map' => [
-                    'edges' => $this->responseMapper->mapEdgesToArray($map->getEdges(), $optimalPath),
-                    'nodes' => $this->responseMapper->mapVerticesToArray($map->getVertices()),
-                ],
+                'map' => $this->responseMapper->mapResponse($map, $optimalPath),
             ]
         ]);
     }

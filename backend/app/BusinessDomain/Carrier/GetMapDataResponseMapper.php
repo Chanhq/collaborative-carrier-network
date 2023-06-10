@@ -4,11 +4,39 @@ namespace App\BusinessDomain\Carrier;
 
 use App\BusinessDomain\VehicleRouting\DTO\Edge;
 use Fhaculty\Graph\Edge\Base;
+use Fhaculty\Graph\Graph;
 use Fhaculty\Graph\Set\Edges;
 use Fhaculty\Graph\Set\Vertices;
 
 class GetMapDataResponseMapper
 {
+    /**
+     * @param Graph $map
+     * @param Edge[] $optimalPath
+     * @return array<
+     *      edges: array{
+     *          id: int,
+     *          source: int,
+     *          target: int,
+     *          color: string,
+     *      },
+     *      nodes: array{
+     *          id: int,
+     *          x: int,
+     *          y: int,
+     *          size: int,
+     *      }
+     *
+     * >
+     */
+    public function mapResponse(Graph $map, array $optimalPath): array
+    {
+        return [
+            'edges' => $this->mapEdgesToArray($map->getEdges(), $optimalPath),
+            'nodes' => $this->mapVerticesToArray($map->getVertices()),
+        ];
+    }
+
     /**
      * @param Edge[] $optimalPath
      * @return array<array{
@@ -18,7 +46,7 @@ class GetMapDataResponseMapper
      *      color: string,
      * }>
      */
-    public function mapEdgesToArray(Edges $edges, array $optimalPath): array
+    private function mapEdgesToArray(Edges $edges, array $optimalPath): array
     {
         $mappedEdges = [];
         $edgeId = 1;
@@ -63,7 +91,7 @@ class GetMapDataResponseMapper
      *      size: int   ,
      * }>
      */
-    public function mapVerticesToArray(Vertices $vertices): array
+    private function mapVerticesToArray(Vertices $vertices): array
     {
         $mappedVertices = [];
         foreach ($vertices->getVector() as $vertex) {
