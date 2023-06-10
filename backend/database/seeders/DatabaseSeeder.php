@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\BusinessDomain\VehicleRouting\VehicleRoutingService;
+use App\BusinessDomain\VehicleRouting\PythonVehicleRoutingWrapper;
 use App\Facades\Map;
 use App\Models\MapVertex;
 use App\Models\TransportRequest;
@@ -13,7 +13,7 @@ use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
-    public function __construct(private readonly VehicleRoutingService $vehicleRoutingService)
+    public function __construct(private readonly PythonVehicleRoutingWrapper $vehicleRoutingService)
     {
     }
 

@@ -6,7 +6,7 @@ use App\BusinessDomain\VehicleRouting\DTO\Edge;
 use App\Models\TransportRequest;
 use Illuminate\Support\Facades\Process;
 
-class VehicleRoutingService
+class PythonVehicleRoutingWrapper
 {
     /**
      * @param TransportRequest[] $transportRequests
@@ -24,6 +24,9 @@ class VehicleRoutingService
      */
     public function findOptimalPath(array $transportRequests): array
     {
+        if (empty($transportRequests)) {
+            return [];
+        }
         $transportRequestsFiltered = [];
 
         foreach ($transportRequests as $transportRequest) {
