@@ -15,6 +15,6 @@ class EuclideanDistanceCalculator implements DistanceCalculatorInterface
         $x2 = (int)$vertex2->getAttribute('x');
         $y2 = (int)$vertex2->getAttribute('y');
 
-        return round(sqrt(pow($x2 - $x1, 2) + pow($y2 - $y1, 2)), 0) * 10;
+        return round(sqrt(pow($x2 - $x1, 2) + pow($y2 - $y1, 2)), 0);
     }
 }
