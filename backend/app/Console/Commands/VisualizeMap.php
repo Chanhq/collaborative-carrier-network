@@ -27,7 +27,10 @@ class VisualizeMap extends Command
     {
         $graph = Map::get();
 
-        file_put_contents('maps/default.graphml', $this->exporter->getOutput($this->mapGenerator->generateGraphWithCoords()));
+        file_put_contents(
+            'maps/default.graphml',
+            $this->exporter->getOutput($this->mapGenerator->generateGraphWithCoords())
+        );
 
         $graphviz = new GraphViz();
         $graphviz->display($graph);

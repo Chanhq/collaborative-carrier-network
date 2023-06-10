@@ -32,7 +32,6 @@ class GetMapDataResponseMapperTest extends TestCase
         $this->assertEquals(1, $edge['source']);
         $this->assertEquals(2, $edge['target']);
         $this->assertEquals('#FF0000', $edge['color']);
-
     }
 
     private function getUnitUnderTest(): GetMapDataResponseMapper

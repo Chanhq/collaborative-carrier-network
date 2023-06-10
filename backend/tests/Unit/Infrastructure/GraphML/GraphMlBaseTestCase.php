@@ -12,7 +12,7 @@ class GraphMlBaseTestCase extends TestCase
 {
     protected function assertGraphEquals(Graph $expected, Graph $actual)
     {
-        $f = function(Graph $graph){
+        $f = function (Graph $graph) {
             $ret = get_class($graph);
             $ret .= PHP_EOL . 'vertices: ' . count($graph->getVertices());
             $ret .= PHP_EOL . 'edges: ' . count($graph->getEdges());
@@ -41,7 +41,7 @@ class GraphMlBaseTestCase extends TestCase
 
         $edgesExpected = array();
         foreach ($expected->getEdges() as $edge) {
-            $edgesExpected []= $this->getEdgeDump($edge);
+            $edgesExpected [] = $this->getEdgeDump($edge);
         }
 
         foreach ($actual->getEdges() as $edge) {

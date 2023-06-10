@@ -6,7 +6,6 @@ use Fhaculty\Graph\Vertex;
 
 class EuclideanDistanceCalculator implements DistanceCalculatorInterface
 {
-
     public function calculateDistance(Vertex $vertex1, Vertex $vertex2): float
     {
         $x1 = (int)$vertex1->getAttribute('x');

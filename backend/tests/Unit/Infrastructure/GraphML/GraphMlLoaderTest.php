@@ -6,7 +6,7 @@ use App\Infrastructure\GraphML\GraphMlLoader;
 
 class GraphMlLoaderTest extends GraphMlBaseTestCase
 {
-    private GraphMlLoader$loader;
+    private GraphMlLoader $loader;
 
     public function setUp(): void
     {
