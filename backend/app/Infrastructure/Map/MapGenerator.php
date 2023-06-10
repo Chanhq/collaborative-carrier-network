@@ -24,13 +24,11 @@ class MapGenerator
         $newGraph = new Graph();
         $vertexId = 1;
 
-        for ($row = 0; $row < 50; $row = $row + 5) {
-            for ($col = 0; $col < 25; $col = $col + 5) {
-                $vertex = $newGraph->createVertex($vertexId);
-                $vertex->setAttribute('y', $row);
-                $vertex->setAttribute('x', $col);
-                $vertexId++;
-            }
+        for ($row = 0; $row < 70; $row++) {
+            $vertex = $newGraph->createVertex($vertexId);
+            $vertex->setAttribute('y', random_int(1, 100));
+            $vertex->setAttribute('x', random_int(1, 100));
+            $vertexId++;
         }
 
         $edgeId = 1;
