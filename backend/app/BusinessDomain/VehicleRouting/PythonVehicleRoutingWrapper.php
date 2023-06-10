@@ -39,7 +39,7 @@ class PythonVehicleRoutingWrapper
         $transportRequestsJson = json_encode($transportRequestsFiltered);
         $optimalPathJson = Process::run(
             'python3 ' . base_path() .
-            '/network/main.py  --transportrequests \'' . $transportRequestsJson . '\''
+            '/vehicle-routing/main.py  --transportrequests \'' . $transportRequestsJson . '\''
         )
         ->output();
 
