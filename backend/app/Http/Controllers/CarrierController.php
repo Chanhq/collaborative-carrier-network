@@ -16,7 +16,7 @@ class CarrierController extends Controller
 {
     public function __construct(
         private readonly PythonVehicleRoutingWrapper $vehicleRoutingService,
-        private readonly GetMapDataResponseMapper    $responseMapper
+        private readonly GetMapDataResponseMapper $responseMapper
     ) {
     }
 
