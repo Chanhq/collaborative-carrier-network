@@ -9,6 +9,11 @@ use Tests\TestCase;
 
 class PythonVehicleRoutingWrapperTest extends TestCase
 {
+    public function testDummy(): void
+    {
+        self::assertTrue(true);
+    }
+
     // TODO: Make it work in CI, python dependency
     /**
      * @throws \JsonException
