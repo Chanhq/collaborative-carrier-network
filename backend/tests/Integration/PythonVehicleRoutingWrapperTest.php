@@ -18,7 +18,7 @@ class PythonVehicleRoutingWrapperTest extends TestCase
     /**
      * @throws \JsonException
      */
-    public function itCalculatesTheOptimalPath(): void
+    public function testItCalculatesTheOptimalPath(): void
     {
         /** @var User $user */
         $user = User::factory(1)->create()->first();

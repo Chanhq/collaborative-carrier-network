@@ -3,7 +3,9 @@
 namespace App\BusinessDomain\VehicleRouting;
 
 use App\BusinessDomain\VehicleRouting\DTO\Edge;
+use App\Facades\Map;
 use App\Models\TransportRequest;
+use Fhaculty\Graph\Edge\Base;
 use Illuminate\Support\Facades\Process;
 
 class PythonVehicleRoutingWrapper
@@ -48,12 +50,22 @@ class PythonVehicleRoutingWrapper
         }
 
         $optimalPathData = json_decode($optimalPathJson, true, 512, JSON_THROW_ON_ERROR);
+        $map = Map::get();
 
-        return array_map(function ($edge) {
+        return array_map(function ($optimalPathEdge) use($map){
+            $matchedMapEdge = $map->getEdges()->getEdgeMatch(function ($mapEdge) use($optimalPathEdge) {
+                /** @var Base $mapEdge */
+                $source = (int)$mapEdge->getVertices()->getVertexFirst()->getId();
+                $target = (int)$mapEdge->getVertices()->getVertexLast()->getId();
+                return ($source === $optimalPathEdge['source'] && $target === $optimalPathEdge['target'])
+                    || ($source === $optimalPathEdge['target'] && $target === $optimalPathEdge['source']);
+            });
+
             return new Edge(
-                weight: $edge['weight'],
-                source: $edge['source'],
-                target: $edge['target'],
+                id: (int)$matchedMapEdge->getAttribute('id'),
+                weight: $optimalPathEdge['weight'],
+                source: $optimalPathEdge['source'],
+                target: $optimalPathEdge['target'],
             );
         }, $optimalPathData['optimal_path']);
     }

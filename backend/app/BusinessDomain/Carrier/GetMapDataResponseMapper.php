@@ -38,17 +38,15 @@ class GetMapDataResponseMapper
     private function mapEdgesToArray(Edges $edges, array $optimalPath): array
     {
         $mappedEdges = [];
-        $edgeId = 1;
         foreach ($edges->getVector() as $edge) {
             if ($this->isEdgeOnOptimalPath($edge, $optimalPath)) {
                 $mappedEdges[] = [
-                    'id' => $edgeId,
+                    'id' => (int)$edge->getAttribute('id'),
                     'source' => (int)$edge->getVertices()->getVertexFirst()->getId(),
                     'target' => (int)$edge->getVertices()->getVertexLast()->getId(),
                     'color' => '#FF0000',
                 ];
             }
-            $edgeId++;
         }
 
         return $mappedEdges;
