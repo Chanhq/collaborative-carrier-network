@@ -2,14 +2,14 @@
 
 namespace App\Console\Commands;
 
-use App\BusinessDomain\VehicleRouting\VehicleRoutingService;
+use App\BusinessDomain\VehicleRouting\PythonVehicleRoutingWrapper;
 use App\Models\TransportRequest;
 use App\Models\User;
 use Illuminate\Console\Command;
 
 class OptimalPathForCarrierTransportRequestSet extends Command
 {
-    public function __construct(private readonly VehicleRoutingService $vehicleRoutingService)
+    public function __construct(private readonly PythonVehicleRoutingWrapper $vehicleRoutingService)
     {
         parent::__construct();
     }

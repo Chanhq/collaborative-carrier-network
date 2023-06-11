@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Middleware\Authorization;
+namespace Tests\Unit\Http\Middleware\Authorization;
 
 use App\Http\Middleware\Authorization\EnsureUserIsAuctioneerMiddleware;
 use App\Models\User;

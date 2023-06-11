@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Infrastructure\MapHelper;
+use App\Infrastructure\Map\MapHelper;
 use Illuminate\Support\ServiceProvider;
 
 class MapServiceProvider extends ServiceProvider

@@ -1,4 +1,4 @@
-import { Sigma, RandomizeNodePositions, EdgeShapes } from 'react-sigma';
+import { Sigma, EdgeShapes } from 'react-sigma';
 import { fetchMapData } from '../../lib/api/map';
 import { AuthContext } from '../../lib/context/AuthContext';
 import React, { useContext, useEffect, useState } from 'react';
@@ -13,8 +13,6 @@ function MapVisualizer() {
 			const mapData = await fetchMapData(user.token);
         
 			if (mapData) {
-
-
 				setGraph(mapData);
 			}
 		} catch (error) {
@@ -39,7 +37,6 @@ function MapVisualizer() {
       		clone: false
       	}}
       >
-      	<RandomizeNodePositions />
       	<EdgeShapes default="curvedArrow" />
       </Sigma>
      
