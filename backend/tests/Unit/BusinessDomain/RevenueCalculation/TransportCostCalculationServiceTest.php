@@ -87,8 +87,6 @@ class TransportCostCalculationServiceTest extends TestCase
 
     private function getUnitUnderTest(): TransportCostCalculationService
     {
-        $distanceCalculator = $this->mock(DistanceCalculatorInterface::class, function (MockInterface $mock) {
-        });
-        return new TransportCostCalculationService($distanceCalculator);
+        return new TransportCostCalculationService();
     }
 }

@@ -39,11 +39,12 @@ class TransportCostCalculationService
      */
     private function calculateLengthOfPath(array $path): int
     {
-        $pathLength = 0;
+        $cumLength = 0;
+
         foreach ($path as $edge) {
-            $pathLength += $edge->weight;
+            $cumLength += $edge->weight;
         }
 
-        return $pathLength;
+        return $cumLength;
     }
 }
