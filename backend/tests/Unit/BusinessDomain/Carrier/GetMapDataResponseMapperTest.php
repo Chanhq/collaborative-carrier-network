@@ -12,7 +12,7 @@ class GetMapDataResponseMapperTest extends TestCase
     public function testResponseArrayStructure(): void
     {
         $mapper = $this->getUnitUnderTest();
-        $actual = $mapper->mapResponse(Map::get(), [new Edge(1 ,100, 1, 2)]);
+        $actual = $mapper->mapResponse(Map::get(), [new Edge(1, 100, 1, 2)]);
         $node = $actual['nodes'][0];
         $edge = $actual['edges'][0];
 

@@ -14,11 +14,11 @@ class PythonVehicleRoutingWrapperTest extends TestCase
         self::assertTrue(true);
     }
 
-    // TODO: Make it work in CI, python dependency
+    // TODO: Make it work in CI, python dependency this is why it has no test prefix
     /**
      * @throws \JsonException
      */
-    public function testItCalculatesTheOptimalPath(): void
+    public function itCalculatesTheOptimalPath(): void
     {
         /** @var User $user */
         $user = User::factory(1)->create()->first();

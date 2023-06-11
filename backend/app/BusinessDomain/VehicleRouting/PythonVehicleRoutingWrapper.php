@@ -52,8 +52,8 @@ class PythonVehicleRoutingWrapper
         $optimalPathData = json_decode($optimalPathJson, true, 512, JSON_THROW_ON_ERROR);
         $map = Map::get();
 
-        return array_map(function ($optimalPathEdge) use($map){
-            $matchedMapEdge = $map->getEdges()->getEdgeMatch(function ($mapEdge) use($optimalPathEdge) {
+        return array_map(function ($optimalPathEdge) use ($map) {
+            $matchedMapEdge = $map->getEdges()->getEdgeMatch(function ($mapEdge) use ($optimalPathEdge) {
                 /** @var Base $mapEdge */
                 $source = (int)$mapEdge->getVertices()->getVertexFirst()->getId();
                 $target = (int)$mapEdge->getVertices()->getVertexLast()->getId();
