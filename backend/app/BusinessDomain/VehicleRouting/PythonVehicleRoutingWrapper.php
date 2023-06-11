@@ -3,10 +3,12 @@
 namespace App\BusinessDomain\VehicleRouting;
 
 use App\BusinessDomain\VehicleRouting\DTO\Edge;
+use App\Facades\Map;
 use App\Models\TransportRequest;
+use Fhaculty\Graph\Edge\Base;
 use Illuminate\Support\Facades\Process;
 
-class VehicleRoutingService
+class PythonVehicleRoutingWrapper
 {
     /**
      * @param TransportRequest[] $transportRequests
@@ -24,6 +26,9 @@ class VehicleRoutingService
      */
     public function findOptimalPath(array $transportRequests): array
     {
+        if (empty($transportRequests)) {
+            return [];
+        }
         $transportRequestsFiltered = [];
 
         foreach ($transportRequests as $transportRequest) {
@@ -36,7 +41,7 @@ class VehicleRoutingService
         $transportRequestsJson = json_encode($transportRequestsFiltered);
         $optimalPathJson = Process::run(
             'python3 ' . base_path() .
-            '/network/main.py  --transportrequests \'' . $transportRequestsJson . '\''
+            '/vehicle-routing/main.py  --transportrequests \'' . $transportRequestsJson . '\''
         )
         ->output();
 
@@ -45,12 +50,22 @@ class VehicleRoutingService
         }
 
         $optimalPathData = json_decode($optimalPathJson, true, 512, JSON_THROW_ON_ERROR);
+        $map = Map::get();
 
-        return array_map(function ($edge) {
+        return array_map(function ($optimalPathEdge) use ($map) {
+            $matchedMapEdge = $map->getEdges()->getEdgeMatch(function ($mapEdge) use ($optimalPathEdge) {
+                /** @var Base $mapEdge */
+                $source = (int)$mapEdge->getVertices()->getVertexFirst()->getId();
+                $target = (int)$mapEdge->getVertices()->getVertexLast()->getId();
+                return ($source === $optimalPathEdge['source'] && $target === $optimalPathEdge['target'])
+                    || ($source === $optimalPathEdge['target'] && $target === $optimalPathEdge['source']);
+            });
+
             return new Edge(
-                weight: $edge['weight'],
-                source: $edge['source'],
-                target: $edge['target'],
+                id: (int)$matchedMapEdge->getAttribute('id'),
+                weight: $optimalPathEdge['weight'],
+                source: $optimalPathEdge['source'],
+                target: $optimalPathEdge['target'],
             );
         }, $optimalPathData['optimal_path']);
     }

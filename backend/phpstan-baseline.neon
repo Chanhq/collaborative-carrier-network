@@ -104,13 +104,3 @@ parameters:
 			message: "#^Class Database\\\\Factories\\\\UserFactory extends generic class Illuminate\\\\Database\\\\Eloquent\\\\Factories\\\\Factory but does not specify its types\\: TModel$#"
 			count: 1
 			path: database/factories/UserFactory.php
-
-		-
-			message: "#^Call to an undefined static method App\\\\Models\\\\User\\:\\:create\\(\\)\\.$#"
-			count: 2
-			path: tests/Unit/Middleware/Authorization/EnsureUserIsAuctioneerMiddlewareTest.php
-
-		-
-			message: "#^Call to an undefined static method App\\\\Models\\\\User\\:\\:create\\(\\)\\.$#"
-			count: 2
-			path: tests/Unit/Middleware/Authorization/EnsureUserIsCarrierMiddlewareTest.php

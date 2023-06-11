@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\BusinessDomain\Carrier\GetMapDataResponseMapper;
-use App\BusinessDomain\VehicleRouting\VehicleRoutingService;
+use App\BusinessDomain\VehicleRouting\PythonVehicleRoutingWrapper;
 use App\Facades\Map;
 use App\Models\TransportRequest;
 use App\Models\User;
@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 class CarrierController extends Controller
 {
     public function __construct(
-        private readonly VehicleRoutingService $vehicleRoutingService,
+        private readonly PythonVehicleRoutingWrapper $vehicleRoutingService,
         private readonly GetMapDataResponseMapper $responseMapper
     ) {
     }
@@ -45,10 +45,7 @@ class CarrierController extends Controller
             'status' => 'success',
             'message' => '',
             'data' => [
-                'map' => [
-                    'edges' => $this->responseMapper->mapEdgesToArray($map->getEdges(), $optimalPath),
-                    'nodes' => $this->responseMapper->mapVerticesToArray($map->getVertices()),
-                ],
+                'map' => $this->responseMapper->mapResponse($map, $optimalPath),
             ]
         ]);
     }
