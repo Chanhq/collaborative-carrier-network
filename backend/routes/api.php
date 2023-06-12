@@ -1,13 +1,12 @@
 <?php
 
+use App\Http\Controllers\AuctioneerController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\CarrierController;
 use App\Http\Controllers\TransportRequestController;
 use App\Http\Middleware\Authorization\EnsureUserIsAuctioneerMiddleware;
 use App\Http\Middleware\Authorization\EnsureUserIsCarrierMiddleware;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
-use App\Models\Map;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,7 +35,5 @@ Route::middleware(['auth:sanctum', EnsureUserIsCarrierMiddleware::class])->prefi
 
 Route::middleware(['auth:sanctum', EnsureUserIsAuctioneerMiddleware::class ])->prefix('auctioneer-frontend')
     ->group(function () {
-        Route::get('/', function () {
-            return 'OK';
-        });
+        Route::get('/transport-requests', [AuctioneerController::class, 'getForAuctionSelectedTransportRequests']);
     });
