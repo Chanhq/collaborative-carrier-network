@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Enum\TransportRequestAuctionStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,6 +19,10 @@ class TransportRequest extends Model
         'requester_name',
         'origin_node',
         'destination_node',
+    ];
+
+    protected $casts = [
+      'auction_status' => TransportRequestAuctionStatusEnum::class,
     ];
 
     public function requesterName(): string
