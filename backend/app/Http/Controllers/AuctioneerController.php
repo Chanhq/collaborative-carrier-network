@@ -23,4 +23,11 @@ class AuctioneerController extends Controller
             ]
         ]);
     }
+
+    public function startAuction(): JsonResponse
+    {
+        return new JsonResponse([
+           'test' => 'test',
+        ]);
+    }
 }
