@@ -30,7 +30,7 @@ class AuctioneerController extends Controller
 
     public function startAuction(): JsonResponse
     {
-        $activeAuction = Auction::active('status', AuctionStatusEnum::Active->value);
+        $activeAuction = Auction::active('status', AuctionStatusEnum::Active->value)->get()->first();
 
         if ($activeAuction !== null) {
             return new JsonResponse([
@@ -40,8 +40,13 @@ class AuctioneerController extends Controller
             ], Response::HTTP_CONFLICT);
         }
 
+        $startedAuction = new Auction();
+        $startedAuction->save();
+
         return new JsonResponse([
-           'test' => 'test',
+           'status' => 'success',
+            'message' => 'Successfully started new auction.',
+            'data' => [],
         ]);
     }
 }
