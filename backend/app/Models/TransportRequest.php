@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
-use App\Models\Enum\TransportRequestAuctionStatusEnum;
+use App\Models\Enum\TransportRequestStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class TransportRequest extends Model
 {
@@ -19,10 +20,11 @@ class TransportRequest extends Model
         'requester_name',
         'origin_node',
         'destination_node',
+        'status',
     ];
 
     protected $casts = [
-      'auction_status' => TransportRequestAuctionStatusEnum::class,
+        'status' => TransportRequestStatusEnum::class,
     ];
 
     public function requesterName(): string
@@ -40,8 +42,13 @@ class TransportRequest extends Model
         return $this->destination_node;
     }
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function auction(): BelongsTo
+    {
+        return $this->belongsTo(Auction::class);
     }
 }

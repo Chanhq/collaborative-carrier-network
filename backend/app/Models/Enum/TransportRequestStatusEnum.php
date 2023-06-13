@@ -2,7 +2,7 @@
 
 namespace App\Models\Enum;
 
-enum TransportRequestAuctionStatusEnum: string
+enum TransportRequestStatusEnum: string
 {
     case Pristine = 'pristine';
     case Selected = 'selected';

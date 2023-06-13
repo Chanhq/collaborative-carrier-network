@@ -11,8 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('transport_requests', function (Blueprint $table) {
-            $table->enum('status', ['pristine', 'selected'])->default('pristine');
+        Schema::create('auctions', function (Blueprint $table) {
+            $table->id();
+            $table->enum('status', ['inactive', 'active'])->default('active');
+            $table->timestamps();
         });
     }
 
@@ -21,8 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('transport_requests', function (Blueprint $table) {
-            $table->dropColumn('status');
-        });
+        Schema::dropIfExists('auctions');
     }
 };

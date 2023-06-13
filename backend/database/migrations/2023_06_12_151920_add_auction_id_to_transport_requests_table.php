@@ -12,7 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('transport_requests', function (Blueprint $table) {
-            $table->enum('status', ['pristine', 'selected'])->default('pristine');
+            $table->unsignedBigInteger('auction_id')->nullable();
+
+            $table->foreign('auction_id')->references('id')->on('auctions')
+                ->onUpdate('cascade')->onDelete('cascade');
         });
     }
 
@@ -22,7 +25,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('transport_requests', function (Blueprint $table) {
-            $table->dropColumn('status');
+            $table->dropForeign(['auction_id']);
+            $table->dropColumn('auction_id');
         });
     }
 };
