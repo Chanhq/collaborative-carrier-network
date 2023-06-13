@@ -48,6 +48,17 @@ Now we need to migrate the database and seed it, this can be achieved with the f
     ./vendor/bin/sail artisan migrate:refresh && ./vendor/bin/sail artisan db:seed
 ```
 
+After that we need to start the python application by sshing into the container and runnning the start commmand as follows: 
+```
+    ./vendor/bin/sail shell 
+```
+
+and then
+
+```
+    cd vehicle-routing && flask run
+```
+
 ### 3. Setup - Frontend
 Navigate back into the frontend directory: 
 ```
