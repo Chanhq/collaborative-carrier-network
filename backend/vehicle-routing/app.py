@@ -17,7 +17,7 @@ sys.path.append("../")
 
 app = Flask(__name__)
 @app.route('/', methods=['GET'])
-def hello_world():
+def optimalpath():
     parser = GraphMLParser()
     graph = parser.parse(request.json.get('map_xml'))
 
@@ -78,4 +78,4 @@ def hello_world():
     if solution:
         return make_response(json.dumps(extract_optimal_path_from_solution(or_tool_data, manager, routing, solution)), 200)
 
-    return make_response("", 200)
+    return make_response('', 200)
