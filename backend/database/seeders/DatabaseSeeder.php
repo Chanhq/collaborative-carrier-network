@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
         $output = $this->command->getOutput();
         if (User::all()->count() === 0) {
             User::factory(1)->create(['is_auctioneer' => true]);
-            User::factory(19)->create(['is_auctioneer' => false]);
+            User::factory(4)->create(['is_auctioneer' => false]);
         }
 
         $mapVertices = Map::vertices();
@@ -38,7 +38,7 @@ class DatabaseSeeder extends Seeder
         }
 
         if (TransportRequest::all()->count() === 0) {
-            $userBar = $output->createProgressBar(count(User::all()));
+            $userBar = $output->createProgressBar(count(User::all())-1);
             $userBar->start();
             /** @var User $user */
             foreach (User::all() as $user) {
@@ -49,13 +49,13 @@ class DatabaseSeeder extends Seeder
                 $destination_node_id = 0;
                 $origin_node_id = 0;
                 $transportRequests = [];
-                $trBar = $output->createProgressBar(5);
+                $trBar = $output->createProgressBar(3);
                 $trBar->start();
                 while (count($transportRequests) < 5) {
                     // Ids start at 1, node with id 1 is depot so TRs should not start there
                     $origin_node_id = random_int(2, MapVertex::max('id'));
                     do {
-                        // Ids start at 1, node with id 1 is depot so TRs should not start there
+                        // Ids start at 1, node with id 1 is depot so TRs should not end there
                         $destination_node_id = random_int(2, MapVertex::max('id'));
                     } while ($origin_node_id === $destination_node_id);
                     $transportRequest = new TransportRequest([

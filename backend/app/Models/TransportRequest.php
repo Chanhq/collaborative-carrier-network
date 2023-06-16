@@ -21,11 +21,17 @@ class TransportRequest extends Model
         'origin_node',
         'destination_node',
         'status',
+        'auction_id'
     ];
 
     protected $casts = [
         'status' => TransportRequestStatusEnum::class,
     ];
+
+    public function id(): int
+    {
+        return $this->id;
+    }
 
     public function requesterName(): string
     {
@@ -40,6 +46,11 @@ class TransportRequest extends Model
     public function destinationNode(): int
     {
         return $this->destination_node;
+    }
+
+    public function status(): TransportRequestStatusEnum
+    {
+        return $this->status;
     }
 
     public function user(): BelongsTo
