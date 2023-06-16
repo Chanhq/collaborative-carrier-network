@@ -22,13 +22,9 @@ class StartAuction implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
-    /**
-     * Create a new job instance.
-     */
-    public function __construct()
-    {
-        //
-    }
+    public $failOnTimeout = false;
+
+    public $timeout = 120000;
 
     /**
      * Execute the job.
@@ -42,7 +38,7 @@ class StartAuction implements ShouldQueue
         }
     }
 
-    private function failed(\Exception|OngoingAuctionFoundException $e): void
+    public function failed(\Exception|OngoingAuctionFoundException $e): void
     {
         Log::critical($e->getMessage(), $e->getTrace());
     }

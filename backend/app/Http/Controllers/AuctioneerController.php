@@ -39,7 +39,8 @@ class AuctioneerController extends Controller
                 'data' => [],
             ], Response::HTTP_CONFLICT);
         }
-        StartAuction::dispatchAfterResponse();
+
+        StartAuction::dispatch();
 
         return new  JsonResponse([
            'status' => 'success',
