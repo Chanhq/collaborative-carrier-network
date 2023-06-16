@@ -22,7 +22,7 @@ class AuthenticationTest extends TestCase
 
         $this->json(
             'get',
-            '/api/auctioneer-frontend/transport-requests',
+            '/api/auctioneer-frontend/auction/transport-requests',
             headers: ['Authorization' => 'Bearer ' . $apiToken],
         )->assertStatus(403);
 

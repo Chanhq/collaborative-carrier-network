@@ -35,6 +35,9 @@ Route::middleware(['auth:sanctum', EnsureUserIsCarrierMiddleware::class])->prefi
 
 Route::middleware(['auth:sanctum', EnsureUserIsAuctioneerMiddleware::class ])->prefix('auctioneer-frontend')
     ->group(function () {
-        Route::get('/transport-requests', [AuctioneerController::class, 'getForAuctionSelectedTransportRequests']);
+        Route::get(
+            '/auction/transport-requests',
+            [AuctioneerController::class, 'getForAuctionSelectedTransportRequests']
+        );
         Route::post('/auction/start', [AuctioneerController::class, 'startAuction']);
     });

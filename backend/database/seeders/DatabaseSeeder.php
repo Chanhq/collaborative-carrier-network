@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
         $output = $this->command->getOutput();
         if (User::all()->count() === 0) {
             User::factory(1)->create(['is_auctioneer' => true]);
-            User::factory(4)->create(['is_auctioneer' => false]);
+            User::factory(1)->create(['is_auctioneer' => false]);
         }
 
         $mapVertices = Map::vertices();
@@ -51,7 +51,7 @@ class DatabaseSeeder extends Seeder
                 $transportRequests = [];
                 $trBar = $output->createProgressBar(3);
                 $trBar->start();
-                while (count($transportRequests) < 5) {
+                while (count($transportRequests) < 3) {
                     // Ids start at 1, node with id 1 is depot so TRs should not start there
                     $origin_node_id = random_int(2, MapVertex::max('id'));
                     do {
