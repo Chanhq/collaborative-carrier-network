@@ -5,15 +5,11 @@ namespace App\Jobs;
 use App\BusinessDomain\Auction\Service\AuctionManagementService;
 use App\Exceptions\BusinessDomain\Auction\Exception\OngoingAuctionFoundException;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Symfony\Component\HttpFoundation\Response;
 
 class StartAuction implements ShouldQueue
 {
@@ -22,9 +18,9 @@ class StartAuction implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
-    public $failOnTimeout = false;
+    public bool $failOnTimeout = false;
 
-    public $timeout = 120000;
+    public int $timeout = 120000;
 
     /**
      * Execute the job.
