@@ -1,6 +1,21 @@
 parameters:
 	ignoreErrors:
 		-
+			message: "#^Access to an undefined property App\\\\Models\\\\TransportRequest\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/BusinessDomain/Auction/Service/AuctionManagementService.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Models\\\\TransportRequest\\:\\:\\$status\\.$#"
+			count: 1
+			path: app/BusinessDomain/Auction/Service/AuctionManagementService.php
+
+		-
+			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsTo\\:\\:first\\(\\)\\.$#"
+			count: 2
+			path: app/BusinessDomain/Auction/Service/AuctionManagementService.php
+
+		-
 			message: "#^Call to an undefined static method App\\\\Models\\\\User\\:\\:where\\(\\)\\.$#"
 			count: 3
 			path: app/BusinessDomain/Authentication/Service/AuthenticationService.php
@@ -9,6 +24,16 @@ parameters:
 			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
 			count: 1
 			path: app/BusinessDomain/Authentication/Service/AuthenticationService.php
+
+		-
+			message: "#^Call to an undefined static method App\\\\Models\\\\TransportRequest\\:\\:select\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Controllers/AuctioneerController.php
+
+		-
+			message: "#^Cannot call method first\\(\\) on array\\<Illuminate\\\\Database\\\\Eloquent\\\\Builder\\>\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\.$#"
+			count: 1
+			path: app/Http/Controllers/AuctioneerController.php
 
 		-
 			message: "#^Call to an undefined static method App\\\\Models\\\\User\\:\\:create\\(\\)\\.$#"
@@ -66,7 +91,17 @@ parameters:
 			path: app/Infrastructure/GraphML/GraphMlLoader.php
 
 		-
+			message: "#^Access to an undefined property App\\\\Models\\\\Auction\\:\\:\\$status\\.$#"
+			count: 1
+			path: app/Models/Auction.php
+
+		-
 			message: "#^Access to an undefined property App\\\\Models\\\\TransportRequest\\:\\:\\$destination_node\\.$#"
+			count: 1
+			path: app/Models/TransportRequest.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Models\\\\TransportRequest\\:\\:\\$id\\.$#"
 			count: 1
 			path: app/Models/TransportRequest.php
 
@@ -81,7 +116,12 @@ parameters:
 			path: app/Models/TransportRequest.php
 
 		-
-			message: "#^Method App\\\\Models\\\\TransportRequest\\:\\:user\\(\\) has no return type specified\\.$#"
+			message: "#^Access to an undefined property App\\\\Models\\\\TransportRequest\\:\\:\\$status\\.$#"
+			count: 1
+			path: app/Models/TransportRequest.php
+
+		-
+			message: "#^Property App\\\\Models\\\\TransportRequest\\:\\:\\$casts type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/Models/TransportRequest.php
 

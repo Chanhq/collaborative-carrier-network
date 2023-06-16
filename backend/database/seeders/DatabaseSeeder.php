@@ -38,7 +38,7 @@ class DatabaseSeeder extends Seeder
         }
 
         if (TransportRequest::all()->count() === 0) {
-            $userBar = $output->createProgressBar(count(User::all())-1);
+            $userBar = $output->createProgressBar(count(User::all()) - 1);
             $userBar->start();
             /** @var User $user */
             foreach (User::all() as $user) {

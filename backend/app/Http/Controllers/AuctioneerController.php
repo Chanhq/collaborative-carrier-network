@@ -2,20 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\BusinessDomain\Auction\Service\AuctionManagementService;
 use App\Jobs\StartAuction;
+use App\Models\Auction;
+use App\Models\Enum\AuctionStatusEnum;
 use App\Models\Enum\TransportRequestStatusEnum;
 use App\Models\TransportRequest;
 use Illuminate\Http\JsonResponse;
-
+use Symfony\Component\HttpFoundation\Response;
 
 class AuctioneerController extends Controller
 {
-
-    public function __construct(private readonly AuctionManagementService $auctionManagementService)
-    {
-    }
-
     public function getForAuctionSelectedTransportRequests(): JsonResponse
     {
         $transportRequests = TransportRequest::select(['requester_name', 'origin_node', 'destination_node'])
@@ -34,6 +30,15 @@ class AuctioneerController extends Controller
 
     public function startAuction(): JsonResponse
     {
+        $activeAuction = Auction::active()->get()->first();
+
+        if ($activeAuction !== null) {
+            return new  JsonResponse([
+                'status' => 'error',
+                'message' => 'There is already an ongoing auction.',
+                'data' => [],
+            ], Response::HTTP_CONFLICT);
+        }
         StartAuction::dispatchAfterResponse();
 
         return new  JsonResponse([

@@ -22,7 +22,7 @@ class AuctionManagementService
         private readonly TransportCostCalculationService $costCalculationService,
         private readonly TransportPriceCalculationService $priceCalculationService,
         private readonly PythonVehicleRoutingWrapper $vehicleRoutingWrapper,
-    ){
+    ) {
     }
 
     /**
@@ -32,11 +32,6 @@ class AuctionManagementService
     public function startAuction(): void
     {
         $selectedTransporRequests = [];
-        $activeAuction = Auction::active('status', AuctionStatusEnum::Active->value)->get()->first();
-
-        if ($activeAuction !== null) {
-            throw new OngoingAuctionFoundException();
-        }
 
         DB::beginTransaction();
         try {
@@ -67,33 +62,34 @@ class AuctionManagementService
         $eligibleTransportRequests = [];
 
         $pristineTransportRequests =
-            TransportRequest::all()->where('status', '=',TransportRequestStatusEnum::Pristine);
+            TransportRequest::all()->where('status', '=', TransportRequestStatusEnum::Pristine);
 
         /** @var TransportRequest $candidateTransportRequest */
-        foreach ( $pristineTransportRequests as $candidateTransportRequest) {
+        foreach ($pristineTransportRequests as $candidateTransportRequest) {
             /** @var User $transportRequestIssuer */
-           $transportRequestIssuer = $candidateTransportRequest->user()->first();
+            $transportRequestIssuer = $candidateTransportRequest->user()->first();
 
-           $usersTransportRequests = $this->convertTransportRequests($transportRequestIssuer->transportRequests());
-           $usersTransportRequestsWithoutCandiate = $this->convertTransportRequests(
-               $candidateTransportRequest->user()->first()
-                   ->transportRequests()->where('id', '!=', $candidateTransportRequest->id));
+            $usersTransportRequests = $this->convertTransportRequests($transportRequestIssuer->transportRequests());
+            $usersTransportRequestsWithoutCandiate = $this->convertTransportRequests(
+                $candidateTransportRequest->user()->first()
+                ->transportRequests()->where('id', '!=', $candidateTransportRequest->id)
+            );
 
-           $optimalPathWithCandidate =
+            $optimalPathWithCandidate =
                $this->vehicleRoutingWrapper->findOptimalPath($usersTransportRequests);
-           $optimalPathWithoutCandidate =
+            $optimalPathWithoutCandidate =
                $this->vehicleRoutingWrapper->findOptimalPath($usersTransportRequestsWithoutCandiate);
 
-           $candidateRevenue =
+            $candidateRevenue =
                $this->priceCalculationService->calculatePriceForTransportRequest($candidateTransportRequest)
                - $this->costCalculationService->calculateTransportRequestCost(
                    $optimalPathWithCandidate,
                    $optimalPathWithoutCandidate
                );
-           $a[] = $candidateRevenue;
-           if ($candidateRevenue < self::REVENUE_THRESHOLD) {
-               $eligibleTransportRequests[] = $candidateTransportRequest;
-           }
+            $a[] = $candidateRevenue;
+            if ($candidateRevenue < self::REVENUE_THRESHOLD) {
+                $eligibleTransportRequests[] = $candidateTransportRequest;
+            }
         }
         //dd($a);
         return $eligibleTransportRequests;

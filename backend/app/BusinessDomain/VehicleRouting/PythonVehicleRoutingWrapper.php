@@ -42,9 +42,14 @@ class PythonVehicleRoutingWrapper
             'transport_requests' => $transportRequestsFiltered,
             'map_xml' => Map::xml(),
         ];
+        $jsonBody = json_encode($requestBody);
+
+        if ($jsonBody === false) {
+            $jsonBody = '';
+        }
 
         $optimalPathJson = Http::withHeaders(['Content-Type' => 'application/json'])
-            ->withBody(json_encode($requestBody))
+            ->withBody($jsonBody)
             ->get('localhost:5000')
             ->body();
 
