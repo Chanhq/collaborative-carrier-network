@@ -6,7 +6,7 @@ use App\BusinessDomain\VehicleRouting\DTO\Edge;
 use App\Facades\Map;
 use App\Models\TransportRequest;
 use Fhaculty\Graph\Edge\Base;
-use Illuminate\Support\Facades\Process;
+use Illuminate\Support\Facades\Http;
 
 class PythonVehicleRoutingWrapper
 {
@@ -38,12 +38,20 @@ class PythonVehicleRoutingWrapper
             ];
         }
 
-        $transportRequestsJson = json_encode($transportRequestsFiltered);
-        $optimalPathJson = Process::run(
-            'python3 ' . base_path() .
-            '/vehicle-routing/main.py  --transportrequests \'' . $transportRequestsJson . '\''
-        )
-        ->output();
+        $requestBody = [
+            'transport_requests' => $transportRequestsFiltered,
+            'map_xml' => Map::xml(),
+        ];
+        $jsonBody = json_encode($requestBody);
+
+        if ($jsonBody === false) {
+            $jsonBody = '';
+        }
+
+        $optimalPathJson = Http::withHeaders(['Content-Type' => 'application/json'])
+            ->withBody($jsonBody)
+            ->get('localhost:5000')
+            ->body();
 
         if ($optimalPathJson === '') {
             return [];

@@ -2,16 +2,17 @@ import { Sigma, EdgeShapes } from 'react-sigma';
 import { fetchMapData } from '../../lib/api/map';
 import { AuthContext } from '../../lib/context/AuthContext';
 import React, { useContext, useEffect, useState } from 'react';
+import { CircularProgress } from '@mui/material';
 
 function MapVisualizer() {
 	const { user } = useContext(AuthContext);
 	const [graph, setGraph] = useState(null);
 
-  
+
 	const fetchData = async () => {
 		try {
 			const mapData = await fetchMapData(user.token);
-        
+
 			if (mapData) {
 				setGraph(mapData);
 			}
@@ -23,24 +24,30 @@ function MapVisualizer() {
 	useEffect(() => {
 		fetchData();
 	}, []);
-  
 
-	return (
-		graph &&
+	if (graph) {
+		return (
+			graph &&
 
-      <Sigma
-      	graph={graph}
-      	style={{ width: '1000px', height: '600px' }}
-      	settings={{
-      		drawEdges: true,
-      		drawEdgeLabels: true,
-      		clone: false
-      	}}
-      >
-      	<EdgeShapes default="curvedArrow" />
-      </Sigma>
-     
-	);
+			<Sigma
+				graph={graph}
+				style={{ width: '1000px', height: '600px' }}
+				settings={{
+					drawEdges: true,
+					drawEdgeLabels: true,
+					clone: false
+				}}
+			>
+				<EdgeShapes default="curvedArrow" />
+			</Sigma>
+
+		);
+	} else {
+		return (
+			<CircularProgress />
+		);
+	}
+
 }
 
 export default MapVisualizer; 

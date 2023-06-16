@@ -1,3 +1,5 @@
+from flask import Flask, request, jsonify, make_response
+
 import json
 import sys
 import typer
@@ -5,7 +7,6 @@ import typer
 from mapper import TransportrequestMapper, GraphMapper
 from helper.OrToolsHelper import extract_optimal_path_from_solution
 
-from typing import Optional
 from graphml_parser import GraphMLParser
 
 
@@ -14,16 +15,15 @@ from ortools.constraint_solver import pywrapcp
 
 sys.path.append("../")
 
-app = typer.Typer()
-
-@app.command()
-def optimalpath(transportrequests: Optional[str] = None):
+app = Flask(__name__)
+@app.route('/', methods=['GET'])
+def optimalpath():
     parser = GraphMLParser()
-    graph = parser.parse('/var/www/html/maps/default.graphml')
+    graph = parser.parse(request.json.get('map_xml'))
 
     or_tool_data = {
         'distance_matrix': GraphMapper.to_distance_matrix(graph),
-        'pickups_deliveries': TransportrequestMapper.to_pickups_deliveries(transportrequests),
+        'pickups_deliveries': TransportrequestMapper.to_pickups_deliveries(request.json.get('transport_requests')),
         'depot': 1,
         'num_vehicles': 1,
     }
@@ -54,9 +54,9 @@ def optimalpath(transportrequests: Optional[str] = None):
     distance_dimension = routing.GetDimensionOrDie(dimension_name)
     distance_dimension.SetGlobalSpanCostCoefficient(100)
 
-    for request in or_tool_data['pickups_deliveries']:
-        pickup_index = manager.NodeToIndex(request[0])
-        delivery_index = manager.NodeToIndex(request[1])
+    for transport_request in or_tool_data['pickups_deliveries']:
+        pickup_index = manager.NodeToIndex(transport_request[0])
+        delivery_index = manager.NodeToIndex(transport_request[1])
         routing.AddPickupAndDelivery(pickup_index, delivery_index)
         routing.solver().Add(
             routing.VehicleVar(pickup_index) == routing.VehicleVar(
@@ -76,7 +76,6 @@ def optimalpath(transportrequests: Optional[str] = None):
 
     # Print solution on console.
     if solution:
-        print(json.dumps(extract_optimal_path_from_solution(or_tool_data, manager, routing, solution)))
+        return make_response(json.dumps(extract_optimal_path_from_solution(or_tool_data, manager, routing, solution)), 200)
 
-if __name__ == "__main__":
-    app()
+    return make_response('', 200)

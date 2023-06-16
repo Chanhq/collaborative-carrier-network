@@ -12,15 +12,15 @@ class TransportCostCalculationService
     private const PER_KILOMETER_COST = 1;
 
     /**
-     * @param Edge[] $optimalPathWithTransportRequest
-     * @param Edge[] $optimalPathWithoutTransportRequest
+     * @param Edge[] $pathWithTransportRequest
+     * @param Edge[] $pathWithoutTransportRequest
      */
     public function calculateTransportRequestCost(
-        array $optimalPathWithTransportRequest,
-        array $optimalPathWithoutTransportRequest
+        array $pathWithTransportRequest,
+        array $pathWithoutTransportRequest
     ): int {
-        $lengthDifference = $this->calculateLengthOfPath($optimalPathWithTransportRequest)
-            - $this->calculateLengthOfPath($optimalPathWithoutTransportRequest);
+        $lengthDifference = $this->calculateLengthOfPath($pathWithTransportRequest)
+            - $this->calculateLengthOfPath($pathWithoutTransportRequest);
 
         return self::BASE_COST + $lengthDifference * self::PER_KILOMETER_COST;
     }

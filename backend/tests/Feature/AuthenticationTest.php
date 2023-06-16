@@ -20,8 +20,11 @@ class AuthenticationTest extends TestCase
         $this->json('get', '/api/auth/user', headers: ['Authorization' => 'Bearer ' . $apiToken])
             ->assertStatus(200);
 
-        $this->json('get', '/api/auctioneer-frontend', headers: ['Authorization' => 'Bearer ' . $apiToken])
-            ->assertStatus(403);
+        $this->json(
+            'get',
+            '/api/auctioneer-frontend/auction/transport-requests',
+            headers: ['Authorization' => 'Bearer ' . $apiToken],
+        )->assertStatus(403);
 
         $this->json('post', '/api/auth/logout', headers: ['Authorization' => 'Bearer ' . $apiToken])
             ->assertStatus(200);

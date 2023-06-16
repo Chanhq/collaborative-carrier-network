@@ -7,7 +7,7 @@ import windowLocationHelper from '../../lib/helper/window-location';
 import React from 'react';
 
 
-function CarrierHome() {
+function NavBar() {
 	const { user, authenticated } = useContext(AuthContext);
 
 	function handleLogoutClick() {
@@ -41,4 +41,4 @@ function CarrierHome() {
 	);
 }
 
-export default CarrierHome;
+export default NavBar;

@@ -1,5 +1,3 @@
-// apiService.js
-
 import httpClient from '../infrastructure/http-client';
 
 export async function fetchMapData(token) {
