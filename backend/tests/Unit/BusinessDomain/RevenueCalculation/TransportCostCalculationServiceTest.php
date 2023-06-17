@@ -41,8 +41,8 @@ class TransportCostCalculationServiceTest extends TestCase
      */
     public function testCalculatesCostForAPath(array $path, int $expectedCostOfPath)
     {
-        $user = new User();
-        echo $user->transportRequestCostVariable();
+        /** @var User $user */
+        $user = User::factory(1)->create()->first();
         self::assertEquals($expectedCostOfPath, $this->getUnitUnderTest()->calculateTotalCostOfPath($path, $user));
     }
 

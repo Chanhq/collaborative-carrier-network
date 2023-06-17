@@ -15,7 +15,6 @@ class TransportPriceCalculationServiceTest extends TestCase
     {
         /** @var User $user */
         $user = User::factory(1)->create()->first();
-
         $transportRequest = $this->mock(TransportRequest::class, function (MockInterface $mock) {
             $mock->expects('originNode')->andReturn(1);
             $mock->expects('destinationNode')->andReturn(1);
