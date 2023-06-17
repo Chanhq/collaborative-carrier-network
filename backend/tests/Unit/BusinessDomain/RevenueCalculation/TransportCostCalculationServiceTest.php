@@ -5,6 +5,7 @@ namespace Tests\Unit\BusinessDomain\RevenueCalculation;
 use App\BusinessDomain\RevenueCalculation\Service\TransportCostCalculationService;
 use App\BusinessDomain\VehicleRouting\DTO\Edge;
 use App\Infrastructure\Map\DistanceCalculation\DistanceCalculatorInterface;
+use App\Models\User;
 use Mockery\MockInterface;
 use Tests\TestCase;
 
@@ -22,11 +23,14 @@ class TransportCostCalculationServiceTest extends TestCase
         array $optimalPathWithoutTransportRequest,
         int $expectedCostOfTransportRequest
     ): void {
+        /** @var User $user */
+        $user = User::factory(1)->create()->first();
         $this->assertEquals(
             $expectedCostOfTransportRequest,
             $this->getUnitUnderTest()->calculateTransportRequestCost(
                 $optimalPathWithTransportRequest,
-                $optimalPathWithoutTransportRequest
+                $optimalPathWithoutTransportRequest,
+                $user,
             )
         );
     }
@@ -37,7 +41,9 @@ class TransportCostCalculationServiceTest extends TestCase
      */
     public function testCalculatesCostForAPath(array $path, int $expectedCostOfPath)
     {
-        self::assertEquals($expectedCostOfPath, $this->getUnitUnderTest()->calculateTotalCostOfPath($path));
+        $user = new User();
+        echo $user->transportRequestCostVariable();
+        self::assertEquals($expectedCostOfPath, $this->getUnitUnderTest()->calculateTotalCostOfPath($path, $user));
     }
 
     /**

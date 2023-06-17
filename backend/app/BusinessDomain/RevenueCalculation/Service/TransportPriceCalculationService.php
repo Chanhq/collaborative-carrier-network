@@ -5,6 +5,7 @@ namespace App\BusinessDomain\RevenueCalculation\Service;
 use App\Facades\Map;
 use App\Infrastructure\Map\DistanceCalculation\DistanceCalculatorInterface;
 use App\Models\TransportRequest;
+use App\Models\User;
 
 class TransportPriceCalculationService
 {
@@ -18,7 +19,7 @@ class TransportPriceCalculationService
         $this->distanceCalculator = $distanceCalculator;
     }
 
-    public function calculatePriceForTransportRequest(TransportRequest $transportRequest): int
+    public function calculatePriceForTransportRequest(TransportRequest $transportRequest, User $user): int
     {
         $pickupNode = $transportRequest->originNode();
         $deliveryNode = $transportRequest->destinationNode();
@@ -26,21 +27,21 @@ class TransportPriceCalculationService
 
         $pickupVertex = $map->getVertex($pickupNode);
         $deliveryVertex = $map->getVertex($deliveryNode);
-        $dynamicPricePart =
-            self::PER_KILOMETER_PRICE * $this->distanceCalculator->calculateDistance($pickupVertex, $deliveryVertex);
+        $variablePricePart =
+            $user->transportRequestPriceVariable() * $this->distanceCalculator->calculateDistance($pickupVertex, $deliveryVertex);
 
-        return self::BASE_PRICE + $dynamicPricePart;
+        return $user->transportRequestPriceBase() + $variablePricePart;
     }
 
     /**
      * @param TransportRequest[] $transportRequests
      */
-    public function calculatePriceForTransportRequestSet(array $transportRequests): int
+    public function calculatePriceForTransportRequestSet(array $transportRequests, User $user): int
     {
         $cumCost = 0;
 
         foreach ($transportRequests as $transportRequest) {
-            $cumCost += $this->calculatePriceForTransportRequest($transportRequest);
+            $cumCost += $this->calculatePriceForTransportRequest($transportRequest, $user);
         }
 
         return $cumCost;

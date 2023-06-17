@@ -26,6 +26,11 @@ class User extends Authenticatable
         'username',
         'password',
         'is_auctioneer',
+        'transport_request_minimum_revenue',
+        'transport_request_cost_base',
+        'transport_request_cost_variable',
+        'transport_request_price_base',
+        'transport_request_price_variable',
     ];
 
     /**
@@ -46,6 +51,31 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function transportRequestMinimumRevenue(): int
+    {
+        return $this->tranport_request_minimum_revenue;
+    }
+
+    public function transportRequestCostBase(): int
+    {
+        return $this->transport_request_cost_base;
+    }
+
+    public function transportRequestCostVariable(): int
+    {
+        return $this->transport_request_cost_variable;
+    }
+
+    public function transportRequestPriceBase(): int
+    {
+        return $this->transport_request_price_base;
+    }
+
+    public function transportRequestPriceVariable(): int
+    {
+        return $this->transport_request_price_variable;
+    }
 
     public function username(): string
     {

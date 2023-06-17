@@ -30,8 +30,6 @@ class AuctionManagementService
      */
     public function startAuction(): void
     {
-        $selectedTransporRequests = [];
-
         DB::beginTransaction();
         try {
             $eligibleTransportRequests = $this->getTransportRequestEligibleForAuction();
@@ -69,7 +67,7 @@ class AuctionManagementService
             $transportRequestIssuer = $candidateTransportRequest->user()->first();
 
             $usersTransportRequests = $this->convertTransportRequests($transportRequestIssuer->transportRequests());
-            $usersTransportRequestsWithoutCandiate = $this->convertTransportRequests(
+            $usersTransportRequestsWithoutCandidate = $this->convertTransportRequests(
                 $candidateTransportRequest->user()->first()
                 ->transportRequests()->where('id', '!=', $candidateTransportRequest->id)
             );
@@ -77,16 +75,17 @@ class AuctionManagementService
             $optimalPathWithCandidate =
                $this->vehicleRoutingWrapper->findOptimalPath($usersTransportRequests);
             $optimalPathWithoutCandidate =
-               $this->vehicleRoutingWrapper->findOptimalPath($usersTransportRequestsWithoutCandiate);
+               $this->vehicleRoutingWrapper->findOptimalPath($usersTransportRequestsWithoutCandidate);
 
             $candidateRevenue =
-               $this->priceCalculationService->calculatePriceForTransportRequest($candidateTransportRequest)
+               $this->priceCalculationService->calculatePriceForTransportRequest($candidateTransportRequest, $transportRequestIssuer)
                - $this->costCalculationService->calculateTransportRequestCost(
                    $optimalPathWithCandidate,
-                   $optimalPathWithoutCandidate
+                   $optimalPathWithoutCandidate,
+                   $transportRequestIssuer
                );
 
-            if ($candidateRevenue < self::REVENUE_THRESHOLD) {
+            if ($candidateRevenue < $transportRequestIssuer->transportRequestMinimumRevenue()) {
                 $eligibleTransportRequests[] = $candidateTransportRequest;
             }
         }

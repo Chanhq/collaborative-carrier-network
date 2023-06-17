@@ -3,35 +3,33 @@
 namespace App\BusinessDomain\RevenueCalculation\Service;
 
 use App\BusinessDomain\VehicleRouting\DTO\Edge;
-use App\Infrastructure\Map\DistanceCalculation\DistanceCalculatorInterface;
+use App\Models\User;
 
 class TransportCostCalculationService
 {
-    private const BASE_COST = 10;
-
-    private const PER_KILOMETER_COST = 1;
-
     /**
      * @param Edge[] $pathWithTransportRequest
      * @param Edge[] $pathWithoutTransportRequest
      */
     public function calculateTransportRequestCost(
         array $pathWithTransportRequest,
-        array $pathWithoutTransportRequest
+        array $pathWithoutTransportRequest,
+        User $user,
     ): int {
         $lengthDifference = $this->calculateLengthOfPath($pathWithTransportRequest)
             - $this->calculateLengthOfPath($pathWithoutTransportRequest);
 
-        return self::BASE_COST + $lengthDifference * self::PER_KILOMETER_COST;
+        return $user->transportRequestCostBase() + $lengthDifference * $user->transportRequestCostVariable();
     }
 
     /**
      * @param Edge[] $path
      * @return int
      */
-    public function calculateTotalCostOfPath(array $path): int
+    public function calculateTotalCostOfPath(array $path, User $user): int
     {
-        return \count($path) * self::BASE_COST + $this->calculateLengthOfPath($path) * self::PER_KILOMETER_COST;
+        return \count($path) * $user->transportRequestCostBase()
+            + $this->calculateLengthOfPath($path) * $user->transportRequestCostVariable();
     }
 
     /**
