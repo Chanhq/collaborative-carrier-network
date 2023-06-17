@@ -5,7 +5,7 @@ import sys
 import typer
 
 from mapper import TransportrequestMapper, GraphMapper
-from helper.OrToolsHelper import extract_optimal_path_from_solution
+from helper.OrToolsHelper import extract_optimal_path_from_solution, print_solution
 
 from graphml_parser import GraphMLParser
 
@@ -18,11 +18,10 @@ sys.path.append("../")
 app = Flask(__name__)
 @app.route('/', methods=['GET'])
 def optimalpath():
-    parser = GraphMLParser()
-    graph = parser.parse(request.json.get('map_xml'))
+    mapNodes = request.json.get('nodes')
 
     or_tool_data = {
-        'distance_matrix': GraphMapper.to_distance_matrix(graph),
+        'distance_matrix': GraphMapper.to_distance_matrix(mapNodes),
         'pickups_deliveries': TransportrequestMapper.to_pickups_deliveries(request.json.get('transport_requests')),
         'depot': 1,
         'num_vehicles': 1,
@@ -74,6 +73,7 @@ def optimalpath():
     # Solve the problem.
     solution = routing.SolveWithParameters(search_parameters)
 
+    print_solution(or_tool_data, manager, routing, solution)
     # Print solution on console.
     if solution:
         return make_response(json.dumps(extract_optimal_path_from_solution(or_tool_data, manager, routing, solution)), 200)

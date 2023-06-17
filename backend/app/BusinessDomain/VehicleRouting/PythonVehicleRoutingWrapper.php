@@ -6,6 +6,7 @@ use App\BusinessDomain\VehicleRouting\DTO\Edge;
 use App\Facades\Map;
 use App\Models\TransportRequest;
 use Fhaculty\Graph\Edge\Base;
+use Fhaculty\Graph\Vertex;
 use Illuminate\Support\Facades\Http;
 
 class PythonVehicleRoutingWrapper
@@ -38,10 +39,24 @@ class PythonVehicleRoutingWrapper
             ];
         }
 
+        $mapVertices = Map::vertices();
+
+        $mapVerticesArray = [];
+
+        /** @var Vertex $vertex */
+        foreach ($mapVertices as $vertex) {
+            $mapVerticesArray[] = [
+                'id' => $vertex->getId(),
+                'x' => $vertex->getAttribute('x'),
+                'y' => $vertex->getAttribute('y'),
+            ];
+        }
+
         $requestBody = [
             'transport_requests' => $transportRequestsFiltered,
-            'map_xml' => Map::xml(),
+            'nodes' => $mapVerticesArray,
         ];
+
         $jsonBody = json_encode($requestBody);
 
         if ($jsonBody === false) {
