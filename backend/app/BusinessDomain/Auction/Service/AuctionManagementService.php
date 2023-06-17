@@ -2,12 +2,11 @@
 
 namespace App\BusinessDomain\Auction\Service;
 
+use App\BusinessDomain\Auction\Exception\OngoingAuctionFoundException;
 use App\BusinessDomain\RevenueCalculation\Service\TransportCostCalculationService;
 use App\BusinessDomain\RevenueCalculation\Service\TransportPriceCalculationService;
 use App\BusinessDomain\VehicleRouting\PythonVehicleRoutingWrapper;
-use App\Exceptions\BusinessDomain\Auction\Exception\OngoingAuctionFoundException;
 use App\Models\Auction;
-use App\Models\Enum\AuctionStatusEnum;
 use App\Models\Enum\TransportRequestStatusEnum;
 use App\Models\TransportRequest;
 use App\Models\User;
@@ -86,12 +85,12 @@ class AuctionManagementService
                    $optimalPathWithCandidate,
                    $optimalPathWithoutCandidate
                );
-            $a[] = $candidateRevenue;
+
             if ($candidateRevenue < self::REVENUE_THRESHOLD) {
                 $eligibleTransportRequests[] = $candidateTransportRequest;
             }
         }
-        //dd($a);
+
         return $eligibleTransportRequests;
     }
 
