@@ -9,9 +9,6 @@ use App\Models\User;
 
 class TransportPriceCalculationService
 {
-    private const BASE_PRICE = 20;
-    private const PER_KILOMETER_PRICE = 2;
-
     private readonly DistanceCalculatorInterface $distanceCalculator;
 
     public function __construct(DistanceCalculatorInterface $distanceCalculator)
@@ -28,7 +25,8 @@ class TransportPriceCalculationService
         $pickupVertex = $map->getVertex($pickupNode);
         $deliveryVertex = $map->getVertex($deliveryNode);
         $variablePricePart =
-            $user->transportRequestPriceVariable() * $this->distanceCalculator->calculateDistance($pickupVertex, $deliveryVertex);
+            $user->transportRequestPriceVariable()
+            * $this->distanceCalculator->calculateDistance($pickupVertex, $deliveryVertex);
 
         return $user->transportRequestPriceBase() + $variablePricePart;
     }

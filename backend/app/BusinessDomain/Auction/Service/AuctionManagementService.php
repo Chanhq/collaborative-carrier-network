@@ -15,8 +15,6 @@ use Illuminate\Support\Facades\DB;
 
 class AuctionManagementService
 {
-    private const REVENUE_THRESHOLD = 70;
-
     public function __construct(
         private readonly TransportCostCalculationService $costCalculationService,
         private readonly TransportPriceCalculationService $priceCalculationService,
@@ -78,11 +76,14 @@ class AuctionManagementService
                $this->vehicleRoutingWrapper->findOptimalPath($usersTransportRequestsWithoutCandidate);
 
             $candidateRevenue =
-               $this->priceCalculationService->calculatePriceForTransportRequest($candidateTransportRequest, $transportRequestIssuer)
+               $this->priceCalculationService->calculatePriceForTransportRequest(
+                   $candidateTransportRequest,
+                   $transportRequestIssuer,
+               )
                - $this->costCalculationService->calculateTransportRequestCost(
                    $optimalPathWithCandidate,
                    $optimalPathWithoutCandidate,
-                   $transportRequestIssuer
+                   $transportRequestIssuer,
                );
 
             if ($candidateRevenue < $transportRequestIssuer->transportRequestMinimumRevenue()) {
