@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\BusinessDomain\Carrier\GetMapDataResponseMapper;
 use App\BusinessDomain\VehicleRouting\PythonVehicleRoutingWrapper;
 use App\Facades\Map;
+use App\Http\Requests\SetCostModelRequest;
 use App\Models\TransportRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -46,6 +47,32 @@ class CarrierController extends Controller
             'message' => '',
             'data' => [
                 'map' => $this->responseMapper->mapResponse($map, $optimalPath),
+            ]
+        ]);
+    }
+
+    public function setCostModel(SetCostModelRequest $request): JsonResponse
+    {
+        try {
+            /** @var User $user */
+            $user = Auth::user();
+
+            $user->update($request->toArray());
+            $user->save();
+        } catch (\Throwable $e) {
+            Log::error($e->getMessage(), $e->getTrace());
+            return new JsonResponse([
+                'status' => 'error',
+                'message' => 'An error occurred while updating the cost model of the user!',
+                'data' => [],
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        return new JsonResponse([
+            'status' => 'success',
+            'message' => '',
+            'data' => [
+                'user' => $user->toArray(),
             ]
         ]);
     }

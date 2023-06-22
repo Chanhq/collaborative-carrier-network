@@ -30,6 +30,7 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::middleware(['auth:sanctum', EnsureUserIsCarrierMiddleware::class])->prefix('carrier-frontend')
     ->group(function () {
         Route::post('/transport-request', [TransportRequestController::class, 'create']);
+        Route::post('/set-cost-model', [CarrierController::class, 'setCostModel']);
         Route::get('/map', [CarrierController::class, 'getMapData']);
     });
 
