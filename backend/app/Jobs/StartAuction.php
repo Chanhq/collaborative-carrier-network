@@ -34,7 +34,7 @@ class StartAuction implements ShouldQueue
         }
     }
 
-    public function failed(\Exception|OngoingAuctionFoundException $e): void
+    public function failed(\Throwable $e): void
     {
         Log::critical($e->getMessage(), $e->getTrace());
     }

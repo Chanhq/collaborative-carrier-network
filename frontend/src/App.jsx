@@ -8,6 +8,7 @@ import Box from '@mui/material/Box';
 import {red} from '@mui/material/colors';
 import AuthProvider from './lib/context/AuthContext';
 import React from 'react';
+import Settings from './components/Carrier/Settings';
 
 const primary = red[900]; // #f44336
 
@@ -38,6 +39,7 @@ function App() {
 					<Route path="/auth" element={<AuthenticationComponent />}/>
 					<Route path="/carrier" element={<CarrierHome />} />
 					<Route path="/auctioneer" element={<AuctioneerHome />} />
+					<Route path="/settings" element={<Settings />} />
 					<Route path="*" element={<NotFound/>} />
 				</Routes>
 			</BrowserRouter>

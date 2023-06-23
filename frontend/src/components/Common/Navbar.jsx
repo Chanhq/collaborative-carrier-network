@@ -1,25 +1,49 @@
 import {useContext} from 'react';
 import {AuthContext} from '../../lib/context/AuthContext';
 import {SpeedDial, SpeedDialAction, SpeedDialIcon} from '@mui/material';
+import PriceChangeIcon from '@mui/icons-material/PriceChange';
 import LogoutIcon from '@mui/icons-material/Logout';
 import authApi from '../../lib/api/auth';
 import windowLocationHelper from '../../lib/helper/window-location';
+import StartIcon from '@mui/icons-material/Start';
 import React from 'react';
-
+import auctionApi from '../../lib/api/auction';
 
 function NavBar() {
 	const { user, authenticated } = useContext(AuthContext);
 
-	function handleLogoutClick() {
+	const handleLogoutClick = async () => {
 		authApi.logout(user.token).then(() => {
 			alert('Logout successful!');
 			windowLocationHelper.redirectToAuthPage();
 		});
-	}
+	};
 
-	const actions = [
-		{ icon: <LogoutIcon />, name: 'Copy', onClick: handleLogoutClick},
+	const handleSettingsClick = () => {
+		windowLocationHelper.redirectTo('/settings');
+	};
+
+	const startAuction = async () => {
+		if (user !== null) {
+			auctionApi.startAuction(user.token).then((r) => {
+				if (r.response.status === 409) {
+					alert('There is already an ongoing auction');
+				} else {
+					alert('Successfully started auction transport requests selection process.');
+				}
+			});
+		}
+	};
+
+	let actions = [
+		{ icon: <LogoutIcon />, name: 'Logout', onClick: handleLogoutClick},
 	];
+
+	if (!user.isAuctioneer) {
+		actions.push({ icon: <PriceChangeIcon />, name: 'Cost/Price-Model Settings', onClick: handleSettingsClick});
+	} else {
+		actions.push({ icon: <StartIcon />, name: 'Start auction', onClick: startAuction});
+	}
 
 
 	return(
@@ -34,7 +58,7 @@ function NavBar() {
         			key={action.name}
         			icon={action.icon}
         			tooltipTitle={action.name}
-        			onClick={handleLogoutClick}
+        			onClick={action.onClick}
         		/>
         	))}
         </SpeedDial>

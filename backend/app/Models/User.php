@@ -54,7 +54,7 @@ class User extends Authenticatable
 
     public function transportRequestMinimumRevenue(): int
     {
-        return $this->tranport_request_minimum_revenue;
+        return $this->transport_request_minimum_revenue;
     }
 
     public function transportRequestCostBase(): int

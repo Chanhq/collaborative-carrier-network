@@ -10,6 +10,12 @@ use Fhaculty\Graph\Set\Vertices;
 
 class GetMapDataResponseMapper
 {
+    const COLOR_PATH_EDGE  = '#FF0000';
+
+    const COLOR_DEPOT_NODE = '#00FF00';
+
+    const COLOR_NODE  = '#000000';
+
     /**
      * @param Graph $map
      * @param Edge[] $optimalPath
@@ -44,7 +50,7 @@ class GetMapDataResponseMapper
                     'id' => (int)$edge->getAttribute('id'),
                     'source' => (int)$edge->getVertices()->getVertexFirst()->getId(),
                     'target' => (int)$edge->getVertices()->getVertexLast()->getId(),
-                    'color' => '#FF0000',
+                    'color' => self::COLOR_PATH_EDGE,
                 ];
             }
         }
@@ -86,7 +92,8 @@ class GetMapDataResponseMapper
                 'id' => (int)$vertex->getId(),
                 'x' => (int)$vertex->getAttribute('x'),
                 'y' => (int)$vertex->getAttribute('y'),
-                'size' => 1,
+                'size' => (int)$vertex->getId() === 1 ? 2 : 1,
+                'color' => (int)$vertex->getId() === 1 ? self::COLOR_DEPOT_NODE : self::COLOR_NODE
             ];
         }
         return $mappedVertices;
