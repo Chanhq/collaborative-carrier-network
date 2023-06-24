@@ -10,11 +10,11 @@ use Fhaculty\Graph\Set\Vertices;
 
 class GetMapDataResponseMapper
 {
-    const COLOR_PATH_EDGE  = '#FF0000';
+    private const COLOR_PATH_EDGE  = '#FF0000';
 
-    const COLOR_DEPOT_NODE = '#00FF00';
+    private const COLOR_DEPOT_NODE = '#00FF00';
 
-    const COLOR_NODE  = '#000000';
+    private const COLOR_NODE  = '#000000';
 
     /**
      * @param Graph $map
