@@ -9,6 +9,7 @@ import {red} from '@mui/material/colors';
 import AuthProvider from './lib/context/AuthContext';
 import React from 'react';
 import Settings from './components/Carrier/Settings';
+import { ThemeProvider, createTheme} from '@mui/material/styles';
 
 const primary = red[900]; // #f44336
 
@@ -30,20 +31,30 @@ function NotFound() {
 	);
 }
 
+const theme = createTheme({
+	palette: {
+		primary: {
+			main: '#383e42'
+		}
+	}
+});
+
 function App() {
 
 	return (
-		<AuthProvider>
-			<BrowserRouter>
-				<Routes>
-					<Route path="/auth" element={<AuthenticationComponent />}/>
-					<Route path="/carrier" element={<CarrierHome />} />
-					<Route path="/auctioneer" element={<AuctioneerHome />} />
-					<Route path="/settings" element={<Settings />} />
-					<Route path="*" element={<NotFound/>} />
-				</Routes>
-			</BrowserRouter>
-		</AuthProvider>
+		<ThemeProvider theme={theme}>
+			<AuthProvider>
+				<BrowserRouter>
+					<Routes>
+						<Route path="/auth" element={<AuthenticationComponent />}/>
+						<Route path="/carrier" element={<CarrierHome />} />
+						<Route path="/auctioneer" element={<AuctioneerHome />} />
+						<Route path="/settings" element={<Settings />} />
+						<Route path="*" element={<NotFound/>} />
+					</Routes>
+				</BrowserRouter>
+			</AuthProvider>
+		</ThemeProvider>
 	);
 }
 export default App;
