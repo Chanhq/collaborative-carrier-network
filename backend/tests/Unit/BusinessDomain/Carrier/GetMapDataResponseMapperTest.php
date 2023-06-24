@@ -23,7 +23,7 @@ class GetMapDataResponseMapperTest extends TestCase
         $this->assertArrayHasKey('x', $node);
         $this->assertArrayHasKey('y', $node);
         $this->assertArrayHasKey('size', $node);
-        $this->assertEquals(1, $node['size']);
+        $this->assertEquals(2, $node['size']);
 
         $this->assertEquals(1, \count($actual['edges']));
         $this->assertArrayHasKey('id', $edge);

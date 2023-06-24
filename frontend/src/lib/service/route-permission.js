@@ -23,6 +23,7 @@ import windowLocationHelper from '../helper/window-location';
 const routePermissions = new Map([
 	['/carrier', {carrier: true, auctioneer: false}],
 	['/auctioneer', {carrier: false, auctioneer: true}],
+	['/settings', {carrier: true, auctioneer: false}],
 ]);
 
 export default {

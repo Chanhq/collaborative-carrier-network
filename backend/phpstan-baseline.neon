@@ -136,6 +136,31 @@ parameters:
 			path: app/Models/User.php
 
 		-
+			message: "#^Access to an undefined property App\\\\Models\\\\User\\:\\:\\$transport_request_cost_base\\.$#"
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Models\\\\User\\:\\:\\$transport_request_cost_variable\\.$#"
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Models\\\\User\\:\\:\\$transport_request_minimum_revenue\\.$#"
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Models\\\\User\\:\\:\\$transport_request_price_base\\.$#"
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Models\\\\User\\:\\:\\$transport_request_price_variable\\.$#"
+			count: 1
+			path: app/Models/User.php
+
+		-
 			message: "#^Access to an undefined property App\\\\Models\\\\User\\:\\:\\$username\\.$#"
 			count: 1
 			path: app/Models/User.php

@@ -2,8 +2,8 @@
 
 namespace App\Jobs;
 
+use App\BusinessDomain\Auction\Exception\OngoingAuctionFoundException;
 use App\BusinessDomain\Auction\Service\AuctionManagementService;
-use App\Exceptions\BusinessDomain\Auction\Exception\OngoingAuctionFoundException;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -34,7 +34,7 @@ class StartAuction implements ShouldQueue
         }
     }
 
-    public function failed(\Exception|OngoingAuctionFoundException $e): void
+    public function failed(\Throwable $e): void
     {
         Log::critical($e->getMessage(), $e->getTrace());
     }

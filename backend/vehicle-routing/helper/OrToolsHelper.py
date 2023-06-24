@@ -39,4 +39,4 @@ def extract_optimal_path_from_solution(data, manager, routing, solution):
             }
             optimal_path_data['optimal_path'].append(edge)
 
-    return optimal_path_data;
+    return optimal_path_data

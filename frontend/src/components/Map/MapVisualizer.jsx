@@ -2,7 +2,8 @@ import { Sigma, EdgeShapes } from 'react-sigma';
 import { fetchMapData } from '../../lib/api/map';
 import { AuthContext } from '../../lib/context/AuthContext';
 import React, { useContext, useEffect, useState } from 'react';
-import { CircularProgress } from '@mui/material';
+import {CircularProgress, Stack} from '@mui/material';
+import Typography from '@mui/material/Typography';
 
 function MapVisualizer() {
 	const { user } = useContext(AuthContext);
@@ -28,23 +29,40 @@ function MapVisualizer() {
 	if (graph) {
 		return (
 			graph &&
-
-			<Sigma
-				graph={graph}
-				style={{ width: '1000px', height: '600px' }}
-				settings={{
-					drawEdges: true,
-					drawEdgeLabels: true,
-					clone: false
+			<div
+				style={{
+					display: 'flex',
+					alignItems: 'center',
+					justifyContent: 'center',
 				}}
 			>
-				<EdgeShapes default="curvedArrow" />
-			</Sigma>
+				<Stack spacing={1}>
+					<Typography align="center" variant="subtitle1">Optimal route for your transport requests:</Typography>
+					<Sigma
+						graph={graph}
+						style={{ width: '1000px', height: '600px' }}
+						settings={{
+							drawEdges: true,
+							drawEdgeLabels: true,
+							clone: false
+						}}
+					>
+						<EdgeShapes default="curvedArrow" />
+					</Sigma>
+				</Stack>
 
+			</div>
 		);
 	} else {
 		return (
-			<CircularProgress />
+			<div
+				style={{
+					position: 'absolute', left: '50%', top: '50%',
+					transform: 'translate(-50%, -50%)'
+				}}
+			>
+				<CircularProgress />
+			</div>
 		);
 	}
 
