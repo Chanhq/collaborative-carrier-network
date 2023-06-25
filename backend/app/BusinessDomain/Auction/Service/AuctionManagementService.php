@@ -118,8 +118,6 @@ class AuctionManagementService
      */
     private function submitBidsForCarriers(TransportRequest $transportRequest): void
     {
-        // Get the carriers eligible to bid on the transport request
-        $eligibleCarriers = $this->getEligibleCarriers();
 
         foreach ($eligibleCarriers as $carrier) {
             // Calculate the worth of the transport request for the carrier
@@ -131,36 +129,41 @@ class AuctionManagementService
     }
 
     /**
-     * Get the carriers eligible to bid on the transport request
-     *
-     * @return array<Carrier> // Should it be <User>?
-     */
-    private function getEligibleCarriers(): array
-    {
-        // Retrieve the eligible carriers from which folder
-
-        // Return an array of Carrier objects.
-    }
-
-    /**
      * Calculate the worth of the transport request for the carrier
      *
      * @param TransportRequest $transportRequest
-     * @param Carrier $carrier
+     * @param User $user
      * @return float
      */
-    private function calculateBidAmount(TransportRequest $transportRequest, Carrier $carrier): float
+    private function calculateBidAmount(TransportRequest $transportRequest, User $user): float // This function is similiar to getTransportRequestEligibleForAuction()
     {
-        // Calculate the transport cost and price for the transport request
-        $transportCost = $this->costCalculationService->calculateTransportRequestCost(
-            $transportRequest->pathWithTransportRequest,
-            $transportRequest->pathWithoutTransportRequest
-        );
-        $transportPrice = $this->priceCalculationService->calculatePriceForTransportRequest($transportRequest);
+        $pristineTransportRequests = TransportRequest::all()->where('status', '=', TransportRequestStatusEnum::Pristine);
 
-        // Adjust the bid amount based on the profitability or any other factors
-        $profitability = $transportPrice - $transportCost;
-        $bidAmount = $profitability * 0.8; // Should it be 80% of profitability
+        /** @var TransportRequest $candidateTransportRequest */
+        foreach ($pristineTransportRequests as $candidateTransportRequest) {
+            /** @var User $transportRequestIssuer */
+            $transportRequestIssuer = $candidateTransportRequest->user()->first();
+
+            $usersTransportRequests = $this->convertTransportRequests($transportRequestIssuer->transportRequests());
+            $usersTransportRequestsWithoutCandiate = $this->convertTransportRequests(
+                $candidateTransportRequest->user()->first()
+                ->transportRequests()->where('id', '!=', $candidateTransportRequest->id)
+            );
+
+            $optimalPathWithCandidate =
+               $this->vehicleRoutingWrapper->findOptimalPath($usersTransportRequests);
+            $optimalPathWithoutCandidate =
+               $this->vehicleRoutingWrapper->findOptimalPath($usersTransportRequestsWithoutCandiate);
+
+            $candidateRevenue =
+               $this->priceCalculationService->calculatePriceForTransportRequest($candidateTransportRequest)
+               - $this->costCalculationService->calculateTransportRequestCost(
+                   $optimalPathWithCandidate,
+                   $optimalPathWithoutCandidate
+               );
+            $a[] = $candidateRevenue;
+            $bidAmount[] = $candidateRevenue * 0.8;
+        }
 
         return $bidAmount;
     }
@@ -169,10 +172,10 @@ class AuctionManagementService
      * Submit the bid for the transport request from the carrier
      *
      * @param TransportRequest $transportRequest
-     * @param Carrier $carrier
+     * @param User $user
      * @param float $bidAmount
      */
-    private function submitBid(TransportRequest $transportRequest, Carrier $carrier, float $bidAmount): void
+    private function submitBid(TransportRequest $transportRequest, User $user, float $bidAmount): void
     {
         $auction = $transportRequest->auction;
 
@@ -187,6 +190,5 @@ class AuctionManagementService
         );
 
         $bid->save();
-
     }
 }
