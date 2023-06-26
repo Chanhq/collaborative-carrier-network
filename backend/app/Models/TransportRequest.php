@@ -17,7 +17,6 @@ class TransportRequest extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'requester_name',
         'origin_node',
         'destination_node',
         'status',
@@ -31,11 +30,6 @@ class TransportRequest extends Model
     public function id(): int
     {
         return $this->id;
-    }
-
-    public function requesterName(): string
-    {
-        return $this->requester_name;
     }
 
     public function originNode(): int

@@ -19,4 +19,13 @@ export default {
 			console.log(error);
 		}
 	},
+	addTransportRequest: async (token, data) => {
+		try {
+			let client = httpClient;
+			client.defaults.headers.post['Authorization'] = 'Bearer ' + token;
+			await client.post('api/carrier-frontend/transport-request', data);
+		} catch (error) {
+			console.log(error);
+		}
+	},
 };

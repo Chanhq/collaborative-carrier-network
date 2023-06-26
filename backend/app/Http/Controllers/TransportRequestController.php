@@ -15,7 +15,6 @@ class TransportRequestController extends Controller
     {
         try {
             $transportRequest = new TransportRequest([
-                'requester_name' => $request->validated('requester_name'),
                 'origin_node' => $request->validated('origin_node'),
                 'destination_node' => $request->validated('destination_node'),
             ]);
@@ -27,7 +26,6 @@ class TransportRequestController extends Controller
                 'status' => 'success',
                 'message' => 'Successfully added transport request for current user!',
                 'data' => [
-                    'requester_name' => $transportRequest->requesterName(),
                     'origin_node' => $transportRequest->originNode(),
                     'destination_node' => $transportRequest->destinationNode(),
                 ],

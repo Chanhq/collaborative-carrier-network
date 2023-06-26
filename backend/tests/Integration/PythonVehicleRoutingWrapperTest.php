@@ -23,7 +23,6 @@ class PythonVehicleRoutingWrapperTest extends TestCase
         /** @var User $user */
         $user = User::factory(1)->create()->first();
         $user->transportRequests()->save(new TransportRequest([
-            'requester_name' => 'testname',
             'origin_node' => 2,
             'destination_node' => 3,
         ]));

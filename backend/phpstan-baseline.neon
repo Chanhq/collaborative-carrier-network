@@ -111,11 +111,6 @@ parameters:
 			path: app/Models/TransportRequest.php
 
 		-
-			message: "#^Access to an undefined property App\\\\Models\\\\TransportRequest\\:\\:\\$requester_name\\.$#"
-			count: 1
-			path: app/Models/TransportRequest.php
-
-		-
 			message: "#^Access to an undefined property App\\\\Models\\\\TransportRequest\\:\\:\\$status\\.$#"
 			count: 1
 			path: app/Models/TransportRequest.php
