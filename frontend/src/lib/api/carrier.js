@@ -25,7 +25,7 @@ export default {
 			client.defaults.headers.post['Authorization'] = 'Bearer ' + token;
 			await client.post('api/carrier-frontend/transport-request', data);
 		} catch (error) {
-			console.log(error);
+			return error;
 		}
 	},
 };

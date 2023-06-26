@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\BusinessDomain\Carrier\GetMapDataResponseMapper;
 use App\BusinessDomain\VehicleRouting\PythonVehicleRoutingWrapper;
 use App\Facades\Map;
+use App\Http\Requests\CreateTransportRequestRequest;
 use App\Http\Requests\SetCostModelRequest;
 use App\Models\TransportRequest;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -106,5 +108,73 @@ class CarrierController extends Controller
                 'cost_model' => $costModel,
             ]
         ]);
+    }
+
+    public function addTransportRequest(CreateTransportRequestRequest $request): JsonResponse
+    {
+        try {
+            if (
+                TransportRequest::where([
+                'origin_node' => $request->validated('origin_node'),
+                'destination_node' => $request->validated('destination_node')
+                ])->get()->first() !== null
+            ) {
+                return new JsonResponse([
+                    'status' => 'error',
+                    'message' => 'Can not add already existing transport request a second time.',
+                    'data' => [],
+                ], Response::HTTP_CONFLICT);
+            }
+
+            /** @var User $user */
+            $user = Auth::user();
+            $currentTransportRequestSet = $user->transportRequests();
+            $newTransportRequestSetArray = $this->convertTransportRequests($currentTransportRequestSet);
+
+            $transportRequest = new TransportRequest([
+                'origin_node' => $request->validated('origin_node'),
+                'destination_node' => $request->validated('destination_node'),
+            ]);
+
+            $newTransportRequestSetArray[] = $transportRequest;
+            if (!$this->vehicleRoutingService->hasOptimalPath($newTransportRequestSetArray)) {
+                return new JsonResponse([
+                    'status' => 'error',
+                    'message' => 'Can not add already transport request that would make the routing infeasible.',
+                    'data' => [],
+                ], Response::HTTP_CONFLICT);
+            }
+
+            $currentTransportRequestSet->save($transportRequest);
+
+            return new JsonResponse([
+                'status' => 'success',
+                'message' => 'Successfully added transport request for current user!',
+                'data' => [
+                    'origin_node' => $transportRequest->originNode(),
+                    'destination_node' => $transportRequest->destinationNode(),
+                ],
+            ], Response::HTTP_CREATED);
+        } catch (\Throwable $e) {
+            return new JsonResponse([
+                'status' => 'error',
+                'message' => 'An unknown error occurred.',
+                'data' => $e->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * @return TransportRequest[]
+     */
+    private function convertTransportRequests(HasMany $transportRequests): array
+    {
+        $convertedTransportRequests = [];
+        /** @var TransportRequest $transportRequest */
+        foreach ($transportRequests->get() as $transportRequest) {
+            $convertedTransportRequests[] = $transportRequest;
+        }
+
+        return $convertedTransportRequests;
     }
 }

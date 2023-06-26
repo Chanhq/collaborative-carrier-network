@@ -68,8 +68,14 @@ function MapVisualizer() {
 			destination_node: deliveryNode,
 		};
 
-		await carrierApi.addTransportRequest(user.token, data);
-		window.location.reload(false);
+		await carrierApi.addTransportRequest(user.token, data).then((r) => {
+			const response = r.response;
+			if (response.status !== 201) {
+				alert(response.data.message);
+			} else {
+				window.location.reload(false);
+			}
+		});
 	};
 
 	if (graph) {
