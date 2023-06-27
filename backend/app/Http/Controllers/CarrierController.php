@@ -110,6 +110,28 @@ class CarrierController extends Controller
         ]);
     }
 
+    public function getTransportRequests(): JsonResponse
+    {
+        try {
+            /** @var User $user */
+            $user = Auth::user();
+
+            return new JsonResponse([
+                'status' => 'success',
+                'message' => '',
+                'data' => [
+                    'transport_requests' => $user->transportRequests()->get()->toArray(),
+                ]
+            ]);
+        } catch (\Throwable $e) {
+            return new JsonResponse([
+                'status' => 'error',
+                'message' => 'An unknown error occurred.',
+                'data' => $e->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
     public function addTransportRequest(CreateTransportRequestRequest $request): JsonResponse
     {
         try {

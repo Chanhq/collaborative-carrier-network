@@ -35,7 +35,6 @@ function Settings() {
 		if (user) {
 			try {
 				const costModel = await carrierApi.getCostModel(user.token);
-				console.log(costModel);
 				if (costModel) {
 					setVarCost(costModel.transport_request_cost_variable);
 					setFixedCost(costModel.transport_request_cost_base);

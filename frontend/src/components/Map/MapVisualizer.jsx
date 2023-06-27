@@ -70,7 +70,7 @@ function MapVisualizer() {
 
 		await carrierApi.addTransportRequest(user.token, data).then((r) => {
 			const response = r.response;
-			if (response.status !== 201) {
+			if (response && response.status !== 201) {
 				alert(response.data.message);
 			} else {
 				window.location.reload(false);
