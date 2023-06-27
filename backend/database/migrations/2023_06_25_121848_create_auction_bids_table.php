@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('auction_bids', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('auction_id');
-            $table->unsignedBigInteger('carrier_id');
+            $table->unsignedBigInteger('user_id');
             $table->decimal('bid_amount', 8, 2);
             $table->timestamps();
 
             $table->foreign('auction_id')->references('id')->on('auctions')->onDelete('cascade');
-            $table->foreign('carrier_id')->references('id')->on('carriers')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
