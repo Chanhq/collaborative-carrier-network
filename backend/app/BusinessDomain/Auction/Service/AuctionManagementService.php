@@ -45,7 +45,7 @@ class AuctionManagementService
                 $transportRequest->status = TransportRequestStatusEnum::Selected;
                 $transportRequest->auction()->associate($startedAuction);
                 $transportRequest->save();
-                $this->submitBidsForCarriers($transportRequest);
+                $this->submitBids($transportRequest);
             }
 
             $startedAuction->save();
@@ -116,28 +116,45 @@ class AuctionManagementService
      *
      * @param TransportRequest $transportRequest
      */
-    private function submitBidsForCarriers(TransportRequest $transportRequest): void
+    private function submitBids(TransportRequest $transportRequest): void
     {
+        $eligibleUsers = $this->getEligibleUsers($transportRequest);
 
-        foreach ($eligibleCarriers as $carrier) {
+        foreach ($eligibleUsers as $user) {
             // Calculate the worth of the transport request for the carrier
-            $bidAmount = $this->calculateBidAmount($transportRequest, $carrier);
+            $bidAmount = $this->calculateBidAmount();
 
             // Submit the bid
-            $this->submitBid($transportRequest, $carrier, $bidAmount);
+            $this->submitBid($transportRequest, $user, $bidAmount);
         }
+    }
+
+    /**
+     * Get the eligible carriers for the transport request
+     *
+     * @param TransportRequest $transportRequest
+     * @return array<User>
+     */
+    private function getEligibleUsers(TransportRequest $transportRequest): array
+    {
+        $eligibleUsers = [];
+
+        $eligibleUsers = User::all()->where('is_auctioneer', false)->all();
+
+        return $eligibleUsers;
     }
 
     /**
      * Calculate the worth of the transport request for the carrier
      *
-     * @param TransportRequest $transportRequest
-     * @param User $user
      * @return float
      */
-    private function calculateBidAmount(TransportRequest $transportRequest, User $user): float // This function is similiar to getTransportRequestEligibleForAuction()
+    private function calculateBidAmount(): float
     {
-        $pristineTransportRequests = TransportRequest::all()->where('status', '=', TransportRequestStatusEnum::Pristine);
+        $bidAmounts = [];
+
+        $pristineTransportRequests =
+            TransportRequest::all()->where('status', '=', TransportRequestStatusEnum::Pristine);
 
         /** @var TransportRequest $candidateTransportRequest */
         foreach ($pristineTransportRequests as $candidateTransportRequest) {
@@ -165,7 +182,7 @@ class AuctionManagementService
             $bidAmount[] = $candidateRevenue * 0.8;
         }
 
-        return $bidAmount;
+        return array_sum($bidAmounts);
     }
 
     /**
@@ -184,11 +201,9 @@ class AuctionManagementService
         }
 
         // Create or update the bid for the carrier in the auction
-        $bid = AuctionBid::updateOrCreate(
-            ['auction_id' => $auction->id, 'carrier_id' => $carrier->id],
+        AuctionBid::query()->updateOrCreate(
+            ['auction_id' => $auction->id, 'carrier_id' => $user->username()],
             ['bid_amount' => $bidAmount]
         );
-
-        $bid->save();
     }
 }

@@ -21,8 +21,8 @@ class AuctionBid extends Model
         return $this->belongsTo(Auction::class);
     }
 
-    public function carrier(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(Carrier::class);
+        return $this->belongsTo(User::class);
     }
 }
