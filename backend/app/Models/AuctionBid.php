@@ -12,7 +12,7 @@ class AuctionBid extends Model
 
     protected $fillable = [
         'auction_id',
-        'carrier_id',
+        'user_id',
         'bid_amount',
     ];
 
