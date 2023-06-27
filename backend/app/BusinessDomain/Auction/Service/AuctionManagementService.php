@@ -159,12 +159,11 @@ class AuctionManagementService
         /** @var TransportRequest $candidateTransportRequest */
         foreach ($pristineTransportRequests as $candidateTransportRequest) {
             /** @var User $transportRequestIssuer */
-            $transportRequestIssuer = $candidateTransportRequest->user()->first();
+            $transportRequestIssuer = $candidateTransportRequest->user();
 
             $usersTransportRequests = $this->convertTransportRequests($transportRequestIssuer->transportRequests());
             $usersTransportRequestsWithoutCandiate = $this->convertTransportRequests(
-                $candidateTransportRequest->user()->first()
-                ->transportRequests()->where('id', '!=', $candidateTransportRequest->id)
+                $transportRequestIssuer->transportRequests()->where('id', '!=', $candidateTransportRequest->id())
             );
 
             $optimalPathWithCandidate =
@@ -194,7 +193,7 @@ class AuctionManagementService
      */
     private function submitBid(TransportRequest $transportRequest, User $user, float $bidAmount): void
     {
-        $auction = $transportRequest->auction;
+        $auction = $transportRequest->auction()->first();
 
         if (!$auction) {
             throw new \InvalidArgumentException('Transport request does not belong to any auction.');
@@ -202,7 +201,7 @@ class AuctionManagementService
 
         // Create or update the bid for the carrier in the auction
         AuctionBid::query()->updateOrCreate(
-            ['auction_id' => $auction->id, 'carrier_id' => $user->username()],
+            ['auction_id' => $auction->id(), 'user_id' => $user->username()],
             ['bid_amount' => $bidAmount]
         );
     }
