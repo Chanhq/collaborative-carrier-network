@@ -9,7 +9,6 @@ function TransportRequestsTable() {
 	const [ transportRequests, setTransportRequests ] = useState(null);
 
 	const columns = [
-		{ field: 'requester_name', headerName: 'Requester Name', width: 170 },
 		{ field: 'origin_node', headerName: 'Origin Node', width: 130 },
 		{ field: 'destination_node', headerName: 'Destination Node', width: 130 },
 	];

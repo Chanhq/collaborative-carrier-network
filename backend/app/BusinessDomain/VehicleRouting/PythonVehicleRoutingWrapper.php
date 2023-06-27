@@ -8,6 +8,7 @@ use App\Models\TransportRequest;
 use Fhaculty\Graph\Edge\Base;
 use Fhaculty\Graph\Vertex;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class PythonVehicleRoutingWrapper
 {
@@ -63,10 +64,16 @@ class PythonVehicleRoutingWrapper
             $jsonBody = '';
         }
 
-        $optimalPathJson = Http::withHeaders(['Content-Type' => 'application/json'])
-            ->withBody($jsonBody)
-            ->get('localhost:5000')
-            ->body();
+        try {
+            $optimalPathJson = Http::withHeaders(['Content-Type' => 'application/json'])
+                ->withBody($jsonBody)
+                ->get('localhost:5000')
+                ->body();
+        } catch (\Throwable $e) {
+            Log::error($e->getMessage(), $e->getTrace());
+            return [];
+        }
+
 
         if ($optimalPathJson === '') {
             return [];

@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
 
-            $table->string('requester_name');
             $table->integer('origin_node');
             $table->integer('destination_node');
             $table->timestamps();

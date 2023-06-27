@@ -59,7 +59,6 @@ class DatabaseSeeder extends Seeder
                         $destination_node_id = random_int(2, MapVertex::max('id'));
                     } while ($origin_node_id === $destination_node_id);
                     $transportRequest = new TransportRequest([
-                        'requester_name' => 'Some requester name',
                         'origin_node' => $origin_node_id,
                         'destination_node' => $destination_node_id,
                     ]);

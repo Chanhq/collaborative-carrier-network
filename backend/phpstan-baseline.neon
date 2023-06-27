@@ -46,6 +46,11 @@ parameters:
 			path: app/Http/Controllers/AuthenticationController.php
 
 		-
+			message: "#^Call to an undefined static method App\\\\Models\\\\TransportRequest\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Controllers/CarrierController.php
+
+		-
 			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$is_auctioneer\\.$#"
 			count: 1
 			path: app/Http/Middleware/Authorization/EnsureUserIsAuctioneerMiddleware.php
@@ -107,11 +112,6 @@ parameters:
 
 		-
 			message: "#^Access to an undefined property App\\\\Models\\\\TransportRequest\\:\\:\\$origin_node\\.$#"
-			count: 1
-			path: app/Models/TransportRequest.php
-
-		-
-			message: "#^Access to an undefined property App\\\\Models\\\\TransportRequest\\:\\:\\$requester_name\\.$#"
 			count: 1
 			path: app/Models/TransportRequest.php
 

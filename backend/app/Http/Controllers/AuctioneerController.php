@@ -13,7 +13,7 @@ class AuctioneerController extends Controller
 {
     public function getForAuctionSelectedTransportRequests(): JsonResponse
     {
-        $transportRequests = TransportRequest::select(['id', 'requester_name', 'origin_node', 'destination_node'])
+        $transportRequests = TransportRequest::select(['id', 'origin_node', 'destination_node'])
             ->where('status', TransportRequestStatusEnum::Selected)
             ->get()
             ->toArray();
