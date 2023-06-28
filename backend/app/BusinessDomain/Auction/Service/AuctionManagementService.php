@@ -68,34 +68,16 @@ class AuctionManagementService
 
         /** @var TransportRequest $candidateTransportRequest */
         foreach ($pristineTransportRequests as $candidateTransportRequest) {
-            /** @var User $transportRequestIssuer */
-            $transportRequestIssuer = $candidateTransportRequest->user()->first();
 
-            $usersTransportRequests = $this->convertTransportRequests($transportRequestIssuer->transportRequests());
-            $usersTransportRequestsWithoutCandiate = $this->convertTransportRequests(
-                $candidateTransportRequest->user()->first()
-                ->transportRequests()->where('id', '!=', $candidateTransportRequest->id)
-            );
+            $candidateRevenue = $this->calculateRevenue($candidateTransportRequest);
 
-            $optimalPathWithCandidate =
-               $this->vehicleRoutingWrapper->findOptimalPath($usersTransportRequests);
-            $optimalPathWithoutCandidate =
-               $this->vehicleRoutingWrapper->findOptimalPath($usersTransportRequestsWithoutCandiate);
-
-            $candidateRevenue =
-               $this->priceCalculationService->calculatePriceForTransportRequest($candidateTransportRequest)
-               - $this->costCalculationService->calculateTransportRequestCost(
-                   $optimalPathWithCandidate,
-                   $optimalPathWithoutCandidate
-               );
-            $a[] = $candidateRevenue;
             if ($candidateRevenue < self::REVENUE_THRESHOLD) {
                 $eligibleTransportRequests[] = $candidateTransportRequest;
             }
         }
-        //dd($a);
         return $eligibleTransportRequests;
     }
+
 
     /**
      * @return TransportRequest[]
@@ -112,6 +94,38 @@ class AuctionManagementService
     }
 
     /**
+     * Calculate the revenue for the optimal path
+     *
+     * @param TransportRequest $candidateTransportRequest
+     * @return float
+     */
+    private function calculateRevenue(TransportRequest $candidateTransportRequest): float
+    {
+        /** @var User $transportRequestIssuer */
+        $transportRequestIssuer = $candidateTransportRequest->user()->first();
+
+        $usersTransportRequests = $this->convertTransportRequests($transportRequestIssuer->transportRequests());
+        $usersTransportRequestsWithoutCandiate = $this->convertTransportRequests(
+                $candidateTransportRequest->user()->first()
+                ->transportRequests()->where('id', '!=', $candidateTransportRequest->id)
+        );
+
+        $optimalPathWithCandidate =
+            $this->vehicleRoutingWrapper->findOptimalPath($usersTransportRequests);
+         $optimalPathWithoutCandidate =
+            $this->vehicleRoutingWrapper->findOptimalPath($usersTransportRequestsWithoutCandiate);
+
+        $candidateRevenue =
+            $this->priceCalculationService->calculatePriceForTransportRequest($candidateTransportRequest)
+            - $this->costCalculationService->calculateTransportRequestCost(
+                $optimalPathWithCandidate,
+                $optimalPathWithoutCandidate
+            );
+
+        return $candidateRevenue;
+    }
+
+    /**
      * Calculate and submit bids for carriers
      *
      * @param TransportRequest $transportRequest
@@ -121,11 +135,10 @@ class AuctionManagementService
         $eligibleUsers = $this->getEligibleUsers($transportRequest);
 
         foreach ($eligibleUsers as $user) {
-            // Calculate the worth of the transport request for the carrier
+
             $bidAmount = $this->calculateBidAmount();
 
-            // Submit the bid
-            $this->submitBid($transportRequest, $user, $bidAmount);
+            $this->storeAuctionBid($transportRequest, $user, $bidAmount);
         }
     }
 
@@ -158,26 +171,9 @@ class AuctionManagementService
 
         /** @var TransportRequest $candidateTransportRequest */
         foreach ($pristineTransportRequests as $candidateTransportRequest) {
-            /** @var User $transportRequestIssuer */
-            $transportRequestIssuer = $candidateTransportRequest->user();
 
-            $usersTransportRequests = $this->convertTransportRequests($transportRequestIssuer->transportRequests());
-            $usersTransportRequestsWithoutCandiate = $this->convertTransportRequests(
-                $transportRequestIssuer->transportRequests()->where('id', '!=', $candidateTransportRequest->id())
-            );
+            $candidateRevenue = $this->calculateRevenue($candidateTransportRequest);
 
-            $optimalPathWithCandidate =
-               $this->vehicleRoutingWrapper->findOptimalPath($usersTransportRequests);
-            $optimalPathWithoutCandidate =
-               $this->vehicleRoutingWrapper->findOptimalPath($usersTransportRequestsWithoutCandiate);
-
-            $candidateRevenue =
-               $this->priceCalculationService->calculatePriceForTransportRequest($candidateTransportRequest)
-               - $this->costCalculationService->calculateTransportRequestCost(
-                   $optimalPathWithCandidate,
-                   $optimalPathWithoutCandidate
-               );
-            $a[] = $candidateRevenue;
             $bidAmount[] = $candidateRevenue * 0.8;
         }
 
@@ -191,7 +187,7 @@ class AuctionManagementService
      * @param User $user
      * @param float $bidAmount
      */
-    private function submitBid(TransportRequest $transportRequest, User $user, float $bidAmount): void
+    private function storeAuctionBid(TransportRequest $transportRequest, User $user, float $bidAmount): void
     {
         $auction = $transportRequest->auction()->first();
 
