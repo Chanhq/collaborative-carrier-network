@@ -68,7 +68,6 @@ class AuctionManagementService
 
         /** @var TransportRequest $candidateTransportRequest */
         foreach ($pristineTransportRequests as $candidateTransportRequest) {
-
             $candidateRevenue = $this->calculateRevenue($candidateTransportRequest);
 
             if ($candidateRevenue < self::REVENUE_THRESHOLD) {
@@ -106,7 +105,7 @@ class AuctionManagementService
 
         $usersTransportRequests = $this->convertTransportRequests($transportRequestIssuer->transportRequests());
         $usersTransportRequestsWithoutCandiate = $this->convertTransportRequests(
-                $candidateTransportRequest->user()->first()
+            $candidateTransportRequest->user()->first()
                 ->transportRequests()->where('id', '!=', $candidateTransportRequest->id)
         );
 
@@ -135,7 +134,6 @@ class AuctionManagementService
         $eligibleUsers = $this->getEligibleUsers($transportRequest);
 
         foreach ($eligibleUsers as $user) {
-
             $bidAmount = $this->calculateBidAmount();
 
             $this->storeAuctionBid($transportRequest, $user, $bidAmount);
@@ -171,10 +169,9 @@ class AuctionManagementService
 
         /** @var TransportRequest $candidateTransportRequest */
         foreach ($pristineTransportRequests as $candidateTransportRequest) {
-
             $candidateRevenue = $this->calculateRevenue($candidateTransportRequest);
 
-            $bidAmount[] = $candidateRevenue * 0.8;
+            $bidAmounts[] = $candidateRevenue * 0.8;
         }
 
         return array_sum($bidAmounts);
