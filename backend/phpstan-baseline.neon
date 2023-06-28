@@ -46,6 +46,11 @@ parameters:
 			path: app/Http/Controllers/AuthenticationController.php
 
 		-
+			message: "#^Call to an undefined static method App\\\\Models\\\\TransportRequest\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Controllers/CarrierController.php
+
+		-
 			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$is_auctioneer\\.$#"
 			count: 1
 			path: app/Http/Middleware/Authorization/EnsureUserIsAuctioneerMiddleware.php
@@ -111,11 +116,6 @@ parameters:
 			path: app/Models/TransportRequest.php
 
 		-
-			message: "#^Access to an undefined property App\\\\Models\\\\TransportRequest\\:\\:\\$requester_name\\.$#"
-			count: 1
-			path: app/Models/TransportRequest.php
-
-		-
 			message: "#^Access to an undefined property App\\\\Models\\\\TransportRequest\\:\\:\\$status\\.$#"
 			count: 1
 			path: app/Models/TransportRequest.php
@@ -132,6 +132,31 @@ parameters:
 
 		-
 			message: "#^Access to an undefined property App\\\\Models\\\\User\\:\\:\\$password\\.$#"
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Models\\\\User\\:\\:\\$transport_request_cost_base\\.$#"
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Models\\\\User\\:\\:\\$transport_request_cost_variable\\.$#"
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Models\\\\User\\:\\:\\$transport_request_minimum_revenue\\.$#"
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Models\\\\User\\:\\:\\$transport_request_price_base\\.$#"
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Models\\\\User\\:\\:\\$transport_request_price_variable\\.$#"
 			count: 1
 			path: app/Models/User.php
 

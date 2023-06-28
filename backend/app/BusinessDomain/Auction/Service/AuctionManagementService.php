@@ -2,12 +2,11 @@
 
 namespace App\BusinessDomain\Auction\Service;
 
+use App\BusinessDomain\Auction\Exception\OngoingAuctionFoundException;
 use App\BusinessDomain\RevenueCalculation\Service\TransportCostCalculationService;
 use App\BusinessDomain\RevenueCalculation\Service\TransportPriceCalculationService;
 use App\BusinessDomain\VehicleRouting\PythonVehicleRoutingWrapper;
-use App\Exceptions\BusinessDomain\Auction\Exception\OngoingAuctionFoundException;
 use App\Models\Auction;
-use App\Models\Enum\AuctionStatusEnum;
 use App\Models\Enum\TransportRequestStatusEnum;
 use App\Models\TransportRequest;
 use App\Models\User;
@@ -32,8 +31,6 @@ class AuctionManagementService
      */
     public function startAuction(): void
     {
-        $selectedTransporRequests = [];
-
         DB::beginTransaction();
         try {
             $eligibleTransportRequests = $this->getTransportRequestEligibleForAuction();
@@ -114,14 +111,15 @@ class AuctionManagementService
          $optimalPathWithoutCandidate =
             $this->vehicleRoutingWrapper->findOptimalPath($usersTransportRequestsWithoutCandiate);
 
-        $candidateRevenue =
-            $this->priceCalculationService->calculatePriceForTransportRequest($candidateTransportRequest)
-            - $this->costCalculationService->calculateTransportRequestCost(
-                $optimalPathWithCandidate,
-                $optimalPathWithoutCandidate
-            );
-
-        return $candidateRevenue;
+        return $this->priceCalculationService->calculatePriceForTransportRequest(
+            $candidateTransportRequest,
+            $transportRequestIssuer
+        )
+        - $this->costCalculationService->calculateTransportRequestCost(
+            $optimalPathWithCandidate,
+            $optimalPathWithoutCandidate,
+            $transportRequestIssuer,
+        );
     }
 
     /**

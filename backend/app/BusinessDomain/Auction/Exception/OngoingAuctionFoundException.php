@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Exceptions\BusinessDomain\Auction\Exception;
+namespace App\BusinessDomain\Auction\Exception;
 
 use Exception;
 

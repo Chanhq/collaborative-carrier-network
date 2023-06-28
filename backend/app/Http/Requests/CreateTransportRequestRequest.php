@@ -22,7 +22,6 @@ class CreateTransportRequestRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'requester_name' => 'required|string|max:256',
             'origin_node' => 'required|Integer|exists:map_vertices,id',
             'destination_node' => 'required|Integer|exists:map_vertices,id|different:origin_node',
         ];

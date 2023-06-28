@@ -10,12 +10,18 @@ use Fhaculty\Graph\Set\Vertices;
 
 class GetMapDataResponseMapper
 {
+    private const COLOR_PATH_EDGE  = '#FF0000';
+
+    private const COLOR_DEPOT_NODE = '#00FF00';
+
+    private const COLOR_NODE  = '#000000';
+
     /**
      * @param Graph $map
      * @param Edge[] $optimalPath
      * @return  array{
      *      edges: array<array{id: int, source: int, target: int, color: string}>,
-     *      nodes: array<array{id: int, x: int, y: int, size: int}>
+     *      nodes: array<array{id: int, x: int, y: int, size: float}>
      *}
      */
     public function mapResponse(Graph $map, array $optimalPath): array
@@ -44,7 +50,7 @@ class GetMapDataResponseMapper
                     'id' => (int)$edge->getAttribute('id'),
                     'source' => (int)$edge->getVertices()->getVertexFirst()->getId(),
                     'target' => (int)$edge->getVertices()->getVertexLast()->getId(),
-                    'color' => '#FF0000',
+                    'color' => self::COLOR_PATH_EDGE,
                 ];
             }
         }
@@ -75,7 +81,7 @@ class GetMapDataResponseMapper
      *      id: int,
      *      x: int,
      *      y: int,
-     *      size: int,
+     *      size: float,
      * }>
      */
     private function mapVerticesToArray(Vertices $vertices): array
@@ -86,7 +92,9 @@ class GetMapDataResponseMapper
                 'id' => (int)$vertex->getId(),
                 'x' => (int)$vertex->getAttribute('x'),
                 'y' => (int)$vertex->getAttribute('y'),
-                'size' => 1,
+                'size' => (int)$vertex->getId() === 1 ? 2.0 : 1.5,
+                'color' => (int)$vertex->getId() === 1 ? self::COLOR_DEPOT_NODE : self::COLOR_NODE,
+                'label' => (int)$vertex->getId() === 1 ? '' : 'ID: ' . $vertex->getId(),
             ];
         }
         return $mappedVertices;
