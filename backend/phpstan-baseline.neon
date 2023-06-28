@@ -16,11 +16,6 @@ parameters:
 			path: app/BusinessDomain/Auction/Service/AuctionManagementService.php
 
 		-
-			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\:\\:where\\(\\)\\.$#"
-			count: 1
-			path: app/BusinessDomain/Auction/Service/AuctionManagementService.php
-
-		-
 			message: "#^Call to an undefined static method App\\\\Models\\\\User\\:\\:where\\(\\)\\.$#"
 			count: 3
 			path: app/BusinessDomain/Authentication/Service/AuthenticationService.php
