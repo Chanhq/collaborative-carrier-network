@@ -96,6 +96,11 @@ parameters:
 			path: app/Infrastructure/GraphML/GraphMlLoader.php
 
 		-
+			message: "#^Access to an undefined property App\\\\Models\\\\Auction\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Models/Auction.php
+
+		-
 			message: "#^Access to an undefined property App\\\\Models\\\\Auction\\:\\:\\$status\\.$#"
 			count: 1
 			path: app/Models/Auction.php
@@ -124,6 +129,11 @@ parameters:
 			message: "#^Property App\\\\Models\\\\TransportRequest\\:\\:\\$casts type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/Models/TransportRequest.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Models\\\\User\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Models/User.php
 
 		-
 			message: "#^Access to an undefined property App\\\\Models\\\\User\\:\\:\\$is_auctioneer\\.$#"

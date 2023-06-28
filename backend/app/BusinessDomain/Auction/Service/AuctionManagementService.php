@@ -192,7 +192,7 @@ class AuctionManagementService
 
         // Create or update the bid for the carrier in the auction
         AuctionBid::query()->updateOrCreate(
-            ['auction_id' => $auction->id(), 'user_id' => $user->username()],
+            ['auction_id' => $auction->id(), 'user_id' => $user->id()],
             ['bid_amount' => $bidAmount]
         );
     }

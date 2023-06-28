@@ -30,6 +30,11 @@ class Auction extends Model
         'status' => AuctionStatusEnum::class,
     ];
 
+    public function id(): int
+    {
+        return $this->id;
+    }
+
     public function status(): AuctionStatusEnum
     {
         return $this->status;

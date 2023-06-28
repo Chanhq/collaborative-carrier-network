@@ -52,6 +52,11 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function id(): int
+    {
+        return $this->id;
+    }
+
     public function transportRequestMinimumRevenue(): int
     {
         return $this->transport_request_minimum_revenue;
