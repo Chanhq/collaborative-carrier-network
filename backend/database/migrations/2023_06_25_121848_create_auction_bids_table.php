@@ -15,11 +15,16 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('auction_id');
             $table->unsignedBigInteger('user_id');
-            $table->decimal('bid_amount', 8, 2);
+            $table->unsignedBigInteger('transport_request_id');
+            $table->decimal('bid_amount');
             $table->timestamps();
 
             $table->foreign('auction_id')->references('id')->on('auctions')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('transport_request_id')
+                ->references('id')
+                ->on('transport_requests')
+                ->onDelete('cascade');
         });
     }
 

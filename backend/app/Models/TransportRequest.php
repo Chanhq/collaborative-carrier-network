@@ -6,6 +6,7 @@ use App\Models\Enum\TransportRequestStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class TransportRequest extends Model
 {
@@ -55,5 +56,10 @@ class TransportRequest extends Model
     public function auction(): BelongsTo
     {
         return $this->belongsTo(Auction::class);
+    }
+
+    public function bids(): HasMany
+    {
+        return $this->hasMany(AuctionBid::class);
     }
 }

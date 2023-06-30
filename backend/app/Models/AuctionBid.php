@@ -13,8 +13,14 @@ class AuctionBid extends Model
     protected $fillable = [
         'auction_id',
         'user_id',
+        'transport_request_id',
         'bid_amount',
     ];
+
+    public function transportRequest(): BelongsTo
+    {
+        return $this->belongsTo(TransportRequest::class);
+    }
 
     public function auction(): BelongsTo
     {

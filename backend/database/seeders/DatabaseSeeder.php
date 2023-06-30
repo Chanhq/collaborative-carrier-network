@@ -26,6 +26,8 @@ class DatabaseSeeder extends Seeder
         if (User::all()->count() === 0) {
             User::factory(1)->create(['is_auctioneer' => true]);
             User::factory(1)->create(['is_auctioneer' => false]);
+            User::factory(1)->create(['is_auctioneer' => false]);
+            User::factory(1)->create(['is_auctioneer' => false]);
         }
 
         $mapVertices = Map::vertices();

@@ -2,18 +2,19 @@
 
 namespace App\BusinessDomain\Auction\Service;
 
+use App\BusinessDomain\Auction\Exception\OngoingAuctionFoundException;
 use App\BusinessDomain\RevenueCalculation\Service\TransportCostCalculationService;
 use App\BusinessDomain\RevenueCalculation\Service\TransportPriceCalculationService;
 use App\BusinessDomain\VehicleRouting\PythonVehicleRoutingWrapper;
-use App\Exceptions\BusinessDomain\Auction\Exception\OngoingAuctionFoundException;
 use App\Models\Auction;
-use App\Models\Enum\AuctionStatusEnum;
 use App\Models\Enum\TransportRequestStatusEnum;
 use App\Models\TransportRequest;
 use App\Models\User;
 use App\Models\AuctionBid;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class AuctionManagementService
 {
@@ -27,13 +28,10 @@ class AuctionManagementService
     }
 
     /**
-     * @throws OngoingAuctionFoundException
-     * @throws \Throwable|OngoingAuctionFoundException
+     * @throws Throwable|OngoingAuctionFoundException
      */
     public function startAuction(): void
     {
-        $selectedTransporRequests = [];
-
         DB::beginTransaction();
         try {
             $eligibleTransportRequests = $this->getTransportRequestEligibleForAuction();
@@ -47,6 +45,8 @@ class AuctionManagementService
                 $transportRequest->save();
                 $this->submitBids($transportRequest);
             }
+
+            $this->evaluateBids($eligibleTransportRequests);
 
             $startedAuction->save();
         } catch (\Throwable $e) {
@@ -131,10 +131,16 @@ class AuctionManagementService
      */
     private function submitBids(TransportRequest $transportRequest): void
     {
-        $eligibleUsers = $this->getEligibleUsers($transportRequest);
+        $eligibleUsers = $this->getEligibleUsers();
+        /** @var User $transportRequestIssuer */
+        $transportRequestIssuer = $transportRequest->user()->first();
 
         foreach ($eligibleUsers as $user) {
-            $bidAmount = $this->calculateBidAmount();
+            if ($user->id() === $transportRequestIssuer->id()) {
+                continue;
+            }
+
+            $bidAmount = $this->calculateBidAmount() + (float)random_int(1, 10);
 
             $this->storeAuctionBid($transportRequest, $user, $bidAmount);
         }
@@ -143,16 +149,11 @@ class AuctionManagementService
     /**
      * Get the eligible carriers for the transport request
      *
-     * @param TransportRequest $transportRequest
      * @return array<User>
      */
-    private function getEligibleUsers(TransportRequest $transportRequest): array
+    private function getEligibleUsers(): array
     {
-        $eligibleUsers = [];
-
-        $eligibleUsers = User::all()->where('is_auctioneer', false)->all();
-
-        return $eligibleUsers;
+        return User::all()->where('is_auctioneer', false)->all();
     }
 
     /**
@@ -179,23 +180,44 @@ class AuctionManagementService
 
     /**
      * Submit the bid for the transport request from the carrier
-     *
-     * @param TransportRequest $transportRequest
-     * @param User $user
-     * @param float $bidAmount
      */
     private function storeAuctionBid(TransportRequest $transportRequest, User $user, float $bidAmount): void
     {
+        /** @var Auction $auction */
         $auction = $transportRequest->auction()->first();
 
         if (!$auction) {
             throw new \InvalidArgumentException('Transport request does not belong to any auction.');
         }
 
+        Log::notice('Bid', [
+            'auction_id' => $auction->id(),
+            'user_id' => $user->id(),
+            'transport_request_id' => $transportRequest->id(),
+            'bid_amount' => $bidAmount,
+        ] );
+
+
         // Create or update the bid for the carrier in the auction
-        AuctionBid::query()->updateOrCreate(
-            ['auction_id' => $auction->id(), 'user_id' => $user->username()],
-            ['bid_amount' => $bidAmount]
-        );
+        $bid = new AuctionBid([
+            'auction_id' => $auction->id(),
+            'user_id' => $user->id(),
+            'transport_request_id' => $transportRequest->id(),
+            'bid_amount' => $bidAmount,
+        ]);
+        $bid->save();
+    }
+
+    /**
+     * @param array<TransportRequest> $auctionedTransportRequests
+     */
+    private function evaluateBids(array $auctionedTransportRequests): void
+    {
+        foreach ($auctionedTransportRequests as $transportRequest) {
+            $bids = $transportRequest->bids()->orderBy('bid_amount', 'desc')->get()->all();
+            $winningBid = $bids[0];
+            $priceDefiningBid = $bids[1];
+            $winningCarrier = User::find($winningBid['user_id']);
+        }
     }
 }
