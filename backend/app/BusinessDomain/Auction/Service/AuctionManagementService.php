@@ -114,14 +114,15 @@ class AuctionManagementService
          $optimalPathWithoutCandidate =
             $this->vehicleRoutingWrapper->findOptimalPath($usersTransportRequestsWithoutCandiate);
 
-        $candidateRevenue =
-            $this->priceCalculationService->calculatePriceForTransportRequest($candidateTransportRequest)
-            - $this->costCalculationService->calculateTransportRequestCost(
-                $optimalPathWithCandidate,
-                $optimalPathWithoutCandidate
-            );
-
-        return $candidateRevenue;
+        return $this->priceCalculationService->calculatePriceForTransportRequest(
+            $candidateTransportRequest,
+            $transportRequestIssuer
+        )
+        - $this->costCalculationService->calculateTransportRequestCost(
+            $optimalPathWithCandidate,
+            $optimalPathWithoutCandidate,
+            $transportRequestIssuer,
+        );
     }
 
     /**
