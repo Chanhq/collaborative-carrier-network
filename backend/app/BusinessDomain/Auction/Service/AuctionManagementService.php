@@ -209,6 +209,12 @@ class AuctionManagementService
         $bid->save();
     }
 
+    public function markAsCompleted(): void
+    {
+        $this->status() = TransportRequestStatusEnum::Completed;
+        $this->save();
+    }
+
     /**
      * @param array<TransportRequest> $auctionedTransportRequests
      */
@@ -219,6 +225,16 @@ class AuctionManagementService
             $winningBid = $bids[0];
             $priceDefiningBid = $bids[1];
             $winningCarrier = User::find($winningBid['user_id']);
+            Log::notice('Bids', $bids);
+            $transportRequest->user()->associate($winningCarrier);
+            $transportRequest->markAsCompleted();
+            $transportRequest->save();
+
+            BidEvaluation::create([
+                'user_id' => $winningCarrier->id,
+                'transport_request_id' => $transportRequest->id,
+            ]);
         }
+
     }
 }
