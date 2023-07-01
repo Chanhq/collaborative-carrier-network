@@ -31,7 +31,7 @@ function MapVisualizer() {
 	}, []);
 
 	const handleAddTransportRequestSubmit = async () => {
-		const allowedNodes = Array.from({length: 69}, (_, i) => i + 1);
+		const allowedNodes = Array.from({length: 69}, (_, i) => i);
 
 		function validateTransportRequestNodeInputs() {
 			if (pickupNode === null || deliveryNode === null || pickupNode === '' || pickupNode === '') {
@@ -44,7 +44,7 @@ function MapVisualizer() {
 				return false;
 			}
 
-			if (parseInt(pickupNode) === 1 || parseInt(deliveryNode) === 1) {
+			if (parseInt(pickupNode) === 0 || parseInt(deliveryNode) === 0) {
 				alert('Pickup or delivery node must not be the depot');
 				return false;
 			}
