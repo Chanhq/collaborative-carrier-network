@@ -94,7 +94,7 @@ class GetMapDataResponseMapper
                 'y' => (int)$vertex->getAttribute('y'),
                 'size' => (int)$vertex->getId() === 1 ? 2.0 : 1.5,
                 'color' => (int)$vertex->getId() === 1 ? self::COLOR_DEPOT_NODE : self::COLOR_NODE,
-                'label' => (int)$vertex->getId() === 1 ? '' : 'ID: ' . $vertex->getId(),
+                'label' => (int)$vertex->getId() === 1 ? '' : 'ID: ' . ((int)$vertex->getId() - 1),
             ];
         }
         return $mappedVertices;

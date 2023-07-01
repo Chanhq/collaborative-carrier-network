@@ -23,7 +23,7 @@ def optimalpath():
     or_tool_data = {
         'distance_matrix': GraphMapper.to_distance_matrix(mapNodes),
         'pickups_deliveries': TransportrequestMapper.to_pickups_deliveries(request.json.get('transport_requests')),
-        'depot': 1,
+        'depot': 0,
         'num_vehicles': 1,
     }
 
@@ -52,6 +52,13 @@ def optimalpath():
         dimension_name)
     distance_dimension = routing.GetDimensionOrDie(dimension_name)
     distance_dimension.SetGlobalSpanCostCoefficient(100)
+
+    involvedNodes = list(set([item for sub_list in or_tool_data['pickups_deliveries'] for item in sub_list]))
+    involvedNodes.append(0)
+
+    for node in range(70):
+        if node not in involvedNodes:
+            routing.AddDisjunction([manager.NodeToIndex(node)], 10)
 
     for transport_request in or_tool_data['pickups_deliveries']:
         pickup_index = manager.NodeToIndex(transport_request[0])
