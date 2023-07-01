@@ -22,7 +22,7 @@ class MapGenerator
     public function generateGraphWithCoords(): Graph
     {
         $newGraph = new Graph();
-        $vertexId = 1;
+        $vertexId = 0;
 
         for ($row = 0; $row < 70; $row++) {
             $vertex = $newGraph->createVertex($vertexId);
@@ -31,7 +31,7 @@ class MapGenerator
             $vertexId++;
         }
 
-        $edgeId = 1;
+        $edgeId = 0;
         foreach ($newGraph->getVertices()->getVector() as $vertex1) {
             foreach ($newGraph->getVertices()->getVector() as $vertex2) {
                 if (
