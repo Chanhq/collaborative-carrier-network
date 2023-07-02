@@ -36,12 +36,12 @@ class TransportPriceCalculationService
      */
     public function calculatePriceForTransportRequestSet(array $transportRequests, User $user): int
     {
-        $cumCost = 0;
+        $cumPrice = 0;
 
         foreach ($transportRequests as $transportRequest) {
-            $cumCost += $this->calculatePriceForTransportRequest($transportRequest, $user);
+            $cumPrice += $this->calculatePriceForTransportRequest($transportRequest, $user);
         }
 
-        return $cumCost;
+        return $cumPrice;
     }
 }

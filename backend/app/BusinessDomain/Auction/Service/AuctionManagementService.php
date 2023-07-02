@@ -6,15 +6,14 @@ use App\BusinessDomain\Auction\Exception\OngoingAuctionFoundException;
 use App\BusinessDomain\RevenueCalculation\Service\TransportCostCalculationService;
 use App\BusinessDomain\RevenueCalculation\Service\TransportPriceCalculationService;
 use App\BusinessDomain\VehicleRouting\PythonVehicleRoutingWrapper;
+use App\Infrastructure\Eloquent\HasManyRelationShipToArrayConverter;
 use App\Models\Auction;
 use App\Models\AuctionEvaluation;
 use App\Models\Enum\TransportRequestStatusEnum;
 use App\Models\TransportRequest;
 use App\Models\User;
 use App\Models\AuctionBid;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class AuctionManagementService
@@ -25,13 +24,15 @@ class AuctionManagementService
         private readonly TransportCostCalculationService $costCalculationService,
         private readonly TransportPriceCalculationService $priceCalculationService,
         private readonly PythonVehicleRoutingWrapper $vehicleRoutingWrapper,
+        private readonly HasManyRelationShipToArrayConverter $toArrayConverter,
     ) {
     }
 
     /**
      * @throws Throwable|OngoingAuctionFoundException
+     * @return array<int, float> maps user_id to the price he has to pay for bought transport requests in the auction
      */
-    public function startAuction(): void
+    public function auctionTransportRequests(): array
     {
         DB::beginTransaction();
         try {
@@ -47,14 +48,45 @@ class AuctionManagementService
                 $this->submitBids($transportRequest);
             }
 
-            $this->evaluateBids($eligibleTransportRequests);
-
+            $auctionPriceUserMap = $this->evaluateBids($eligibleTransportRequests);
             $startedAuction->save();
         } catch (\Throwable $e) {
             DB::rollBack();
             throw $e;
         }
         DB::commit();
+
+        return $auctionPriceUserMap;
+    }
+
+    /**
+     * @param array<int, float>  $auctionPriceUserMap
+     * maps user_id to the price he has to pay for bought transport requests in the auction
+     */
+    public function evaluateAuction(array $auctionPriceUserMap): void
+    {
+        /** @var Auction $currentlyOngoingAuction */
+        $currentlyOngoingAuction = Auction::active()->get()->first();
+
+        foreach ($auctionPriceUserMap as $userId => $priceToPay) {
+            /** @var User $user */
+            $user = User::find($userId);
+
+            $revenueGain = $this->priceCalculationService->calculatePriceForTransportRequestSet(
+                $this->toArrayConverter->convert($user->transportRequests()),
+                $user
+                )
+                - $user->transportRequestSetRevenue();
+
+            $bidEvaluation = new AuctionEvaluation([
+                'auction_id' => $currentlyOngoingAuction->id(),
+                'user_id' => $userId,
+                'price_to_pay' => $priceToPay,
+                'revenue_gain' => $revenueGain,
+            ]);
+
+            $bidEvaluation->save();
+        }
     }
 
     /**
@@ -69,6 +101,7 @@ class AuctionManagementService
 
         /** @var TransportRequest $candidateTransportRequest */
         foreach ($pristineTransportRequests as $candidateTransportRequest) {
+
             $candidateRevenue = $this->calculateRevenue($candidateTransportRequest);
 
             if ($candidateRevenue < self::REVENUE_THRESHOLD) {
@@ -78,34 +111,20 @@ class AuctionManagementService
         return $eligibleTransportRequests;
     }
 
-
-    /**
-     * @return TransportRequest[]
-     */
-    private function convertTransportRequests(HasMany $transportRequests): array
-    {
-        $convertedTransportRequests = [];
-        /** @var TransportRequest $transportRequest */
-        foreach ($transportRequests->get() as $transportRequest) {
-            $convertedTransportRequests[] = $transportRequest;
-        }
-
-        return $convertedTransportRequests;
-    }
-
     /**
      * Calculate the revenue for the optimal path
      *
      * @param TransportRequest $candidateTransportRequest
      * @return float
+     * @throws \JsonException
      */
     private function calculateRevenue(TransportRequest $candidateTransportRequest): float
     {
         /** @var User $transportRequestIssuer */
         $transportRequestIssuer = $candidateTransportRequest->user()->first();
 
-        $usersTransportRequests = $this->convertTransportRequests($transportRequestIssuer->transportRequests());
-        $usersTransportRequestsWithoutCandiate = $this->convertTransportRequests(
+        $usersTransportRequests = $this->toArrayConverter->convert($transportRequestIssuer->transportRequests());
+        $usersTransportRequestsWithoutCandidate = $this->toArrayConverter->convert(
             $candidateTransportRequest->user()->first()
                 ->transportRequests()->where('id', '!=', $candidateTransportRequest->id)
         );
@@ -113,7 +132,7 @@ class AuctionManagementService
         $optimalPathWithCandidate =
             $this->vehicleRoutingWrapper->findOptimalPath($usersTransportRequests);
          $optimalPathWithoutCandidate =
-            $this->vehicleRoutingWrapper->findOptimalPath($usersTransportRequestsWithoutCandiate);
+            $this->vehicleRoutingWrapper->findOptimalPath($usersTransportRequestsWithoutCandidate);
 
         return $this->priceCalculationService->calculatePriceForTransportRequest(
             $candidateTransportRequest,
@@ -133,7 +152,7 @@ class AuctionManagementService
      */
     private function submitBids(TransportRequest $transportRequest): void
     {
-        $eligibleUsers = $this->getEligibleUsers();
+        $eligibleUsers = User::carriers();
         /** @var User $transportRequestIssuer */
         $transportRequestIssuer = $transportRequest->user()->first();
 
@@ -142,42 +161,22 @@ class AuctionManagementService
                 continue;
             }
 
-            $bidAmount = $this->calculateBidAmount() + (float)random_int(1, 10);
+            $pristineTransportRequests =
+                TransportRequest::all()->where('status', '=', TransportRequestStatusEnum::Selected);
 
-            $this->storeAuctionBid($transportRequest, $user, $bidAmount);
+            /** @var TransportRequest $candidateTransportRequest */
+            foreach ($pristineTransportRequests as $candidateTransportRequest) {
+                $bidAmount = 0;
+
+                $bidAmount = $this->calculateRevenue($candidateTransportRequest) * 0.8;
+
+                if ($bidAmount <= 0) {
+                    continue;
+                }
+
+                $this->storeAuctionBid($transportRequest, $user, $bidAmount);
+            }
         }
-    }
-
-    /**
-     * Get the eligible carriers for the transport request
-     *
-     * @return array<User>
-     */
-    private function getEligibleUsers(): array
-    {
-        return User::all()->where('is_auctioneer', false)->all();
-    }
-
-    /**
-     * Calculate the worth of the transport request for the carrier
-     *
-     * @return float
-     */
-    private function calculateBidAmount(): float
-    {
-        $bidAmounts = [];
-
-        $pristineTransportRequests =
-            TransportRequest::all()->where('status', '=', TransportRequestStatusEnum::Pristine);
-
-        /** @var TransportRequest $candidateTransportRequest */
-        foreach ($pristineTransportRequests as $candidateTransportRequest) {
-            $candidateRevenue = $this->calculateRevenue($candidateTransportRequest);
-
-            $bidAmounts[] = $candidateRevenue * 0.8;
-        }
-
-        return array_sum($bidAmounts);
     }
 
     /**
@@ -192,14 +191,6 @@ class AuctionManagementService
             throw new \InvalidArgumentException('Transport request does not belong to any auction.');
         }
 
-        Log::notice('Bid', [
-            'auction_id' => $auction->id(),
-            'user_id' => $user->id(),
-            'transport_request_id' => $transportRequest->id(),
-            'bid_amount' => $bidAmount,
-        ] );
-
-
         // Create or update the bid for the carrier in the auction
         $bid = new AuctionBid([
             'auction_id' => $auction->id(),
@@ -212,9 +203,12 @@ class AuctionManagementService
 
     /**
      * @param array<TransportRequest> $auctionedTransportRequests
+     * @return array<int, float> maps user_id to the price he has to pay for bought transport requests in the auction
      */
-    private function evaluateBids(array $auctionedTransportRequests): void
+    private function evaluateBids(array $auctionedTransportRequests): array
     {
+        $auctionPriceUserMap = [];
+
         foreach ($auctionedTransportRequests as $transportRequest) {
             $bids = $transportRequest->bids()->orderBy('bid_amount', 'desc')->get()->all();
 
@@ -223,30 +217,27 @@ class AuctionManagementService
                 continue;
             }
 
+            $winningBid = $bids[0];
+
             if (count($bids) > 1) {
-                $winningBid = $bids[0];
                 $priceDefiningBid = $bids[1];
             } else {
-                $winningBid = $bids[0];
                 $priceDefiningBid = $bids[0];
             }
 
+            if (array_key_exists($winningBid['user_id'], $auctionPriceUserMap)) {
+                $auctionPriceUserMap[$winningBid['user_id']] += $priceDefiningBid['bid_amount'];
+            } else {
+                $auctionPriceUserMap[$winningBid['user_id']] = $priceDefiningBid['bid_amount'];
+            }
 
             /** @var User $winningCarrier */
             $winningCarrier = User::find($winningBid['user_id']);
             $transportRequest->user()->associate($winningCarrier);
-            $transportRequest->markAsCompleted();
+            $transportRequest->markAsSold();
             $transportRequest->save();
-
-            Log::notice('Bids', $bids);
-            $bidEvaluation = new AuctionEvaluation([
-                'auction_id' => $winningBid['auction_id'],
-                'user_id' => $winningCarrier->id(),
-                'transport_request_id' => $transportRequest->id(),
-            ]);
-
-            $bidEvaluation->save();
         }
 
+        return $auctionPriceUserMap;
     }
 }

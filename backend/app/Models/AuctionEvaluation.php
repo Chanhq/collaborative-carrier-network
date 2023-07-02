@@ -13,8 +13,8 @@ class AuctionEvaluation extends Model
     protected $fillable = [
         'auction_id',
         'user_id',
-        'transport_request_id',
         'revenue_gain',
+        'price_to_pay',
     ];
 
     public function id(): int
@@ -22,14 +22,21 @@ class AuctionEvaluation extends Model
         return $this->id;
     }
 
+    public function revenueGain(): float
+    {
+        return $this->revenue_gain;
+    }
+
+
+    public function priceToPay(): float
+    {
+        return $this->price_to_pay;
+    }
+
+
 
     public function user()
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function transportRequest()
-    {
-        return $this->belongsTo(TransportRequest::class);
     }
 }

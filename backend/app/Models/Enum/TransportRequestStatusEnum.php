@@ -6,6 +6,7 @@ enum TransportRequestStatusEnum: string
 {
     case Pristine = 'pristine';
     case Selected = 'selected';
-    case Completed = 'completed';
+    case Sold = 'sold';
     case Unsold = 'unsold';
+    case Completed = 'completed';
 }

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\BusinessDomain\RevenueCalculation\Service\TransportPriceCalculationService;
 use App\BusinessDomain\VehicleRouting\PythonVehicleRoutingWrapper;
 use App\Facades\Map;
 use App\Models\MapVertex;
@@ -13,8 +14,10 @@ use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
-    public function __construct(private readonly PythonVehicleRoutingWrapper $vehicleRoutingService)
-    {
+    public function __construct(
+        private readonly PythonVehicleRoutingWrapper $vehicleRoutingService,
+        private readonly TransportPriceCalculationService $priceCalculationService,
+    ){
     }
 
     /**
@@ -24,9 +27,10 @@ class DatabaseSeeder extends Seeder
     {
         $output = $this->command->getOutput();
         if (User::all()->count() === 0) {
-            User::factory(1)->create(['is_auctioneer' => true]);
-            User::factory(1)->create(['is_auctioneer' => false]);
-            User::factory(1)->create(['is_auctioneer' => false]);
+            User::factory(1)->create(['username' => 'auctioneer', 'is_auctioneer' => true]);
+            User::factory(1)->create(['username' => 'carrier1', 'is_auctioneer' => false]);
+            User::factory(1)->create(['username' => 'carrier2', 'is_auctioneer' => false]);
+            User::factory(1)->create(['username' => 'carrier3', 'is_auctioneer' => false]);
         }
 
         $mapVertices = Map::vertices();
@@ -75,6 +79,14 @@ class DatabaseSeeder extends Seeder
                 }
                 $trBar->finish();
                 $user->transportRequests()->saveMany($transportRequests);
+
+                $user->transport_request_set_revenue =
+                    $this->priceCalculationService->calculatePriceForTransportRequestSet(
+                        $transportRequests,
+                        $user
+                    );
+                $user->save();
+
                 $userBar->advance();
             }
             $userBar->finish();

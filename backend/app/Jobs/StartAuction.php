@@ -29,7 +29,8 @@ class StartAuction implements ShouldQueue
     public function handle(AuctionManagementService $auctionManagementService): void
     {
         try {
-            $auctionManagementService->startAuction();
+            $auctionPriceUserMap = $auctionManagementService->auctionTransportRequests();
+            $auctionManagementService->evaluateAuction($auctionPriceUserMap);
         } catch (OngoingAuctionFoundException | Throwable $e) {
             $this->failed($e);
         }

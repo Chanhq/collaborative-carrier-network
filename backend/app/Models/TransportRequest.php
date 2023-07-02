@@ -21,7 +21,7 @@ class TransportRequest extends Model
         'origin_node',
         'destination_node',
         'status',
-        'auction_id'
+        'auction_id',
     ];
 
     protected $casts = [
@@ -48,6 +48,11 @@ class TransportRequest extends Model
         return $this->status;
     }
 
+    public function revenue(): float
+    {
+        return $this->revenue;
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -61,6 +66,12 @@ class TransportRequest extends Model
     public function bids(): HasMany
     {
         return $this->hasMany(AuctionBid::class);
+    }
+
+    public function markAsSold(): void
+    {
+        $this->status = TransportRequestStatusEnum::Sold;
+        $this->save();
     }
 
     public function markAsCompleted(): void

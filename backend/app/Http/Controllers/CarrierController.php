@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\BusinessDomain\Carrier\GetMapDataResponseMapper;
+use App\BusinessDomain\RevenueCalculation\Service\TransportPriceCalculationService;
 use App\BusinessDomain\VehicleRouting\PythonVehicleRoutingWrapper;
 use App\Facades\Map;
 use App\Http\Requests\CreateTransportRequestRequest;
 use App\Http\Requests\SetCostModelRequest;
+use App\Infrastructure\Eloquent\HasManyRelationShipToArrayConverter;
+use App\Models\Auction;
 use App\Models\TransportRequest;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -19,7 +22,9 @@ class CarrierController extends Controller
 {
     public function __construct(
         private readonly PythonVehicleRoutingWrapper $vehicleRoutingService,
-        private readonly GetMapDataResponseMapper $responseMapper
+        private readonly GetMapDataResponseMapper $responseMapper,
+        private readonly TransportPriceCalculationService $priceCalculationService,
+        private readonly HasManyRelationShipToArrayConverter $toArrayConverter,
     ) {
     }
 
@@ -148,18 +153,26 @@ class CarrierController extends Controller
                 ], Response::HTTP_CONFLICT);
             }
 
+            if (Auction::active()->get()->first()) {
+                return new JsonResponse([
+                    'status' => 'error',
+                    'message' => 'Can not add transport requests when there is an ongoing auction.',
+                    'data' => [],
+                ], Response::HTTP_CONFLICT);
+            }
+
             /** @var User $user */
             $user = Auth::user();
             $currentTransportRequestSet = $user->transportRequests();
-            $newTransportRequestSetArray = $this->convertTransportRequests($currentTransportRequestSet);
 
-            $transportRequest = new TransportRequest([
-                'origin_node' => $request->validated('origin_node'),
-                'destination_node' => $request->validated('destination_node'),
-            ]);
+            $transportRequest = $this->createNewTransportRequest(
+                $currentTransportRequestSet,
+                $request->validated('origin_node'),
+                $request->validated('destination_node'),
+                $user,
+            );
 
-            $newTransportRequestSetArray[] = $transportRequest;
-            if (!$this->vehicleRoutingService->hasOptimalPath($newTransportRequestSetArray)) {
+            if ($transportRequest === null) {
                 return new JsonResponse([
                     'status' => 'error',
                     'message' => 'Can not add already transport request that would make the routing infeasible.',
@@ -186,17 +199,31 @@ class CarrierController extends Controller
         }
     }
 
-    /**
-     * @return TransportRequest[]
-     */
-    private function convertTransportRequests(HasMany $transportRequests): array
-    {
-        $convertedTransportRequests = [];
-        /** @var TransportRequest $transportRequest */
-        foreach ($transportRequests->get() as $transportRequest) {
-            $convertedTransportRequests[] = $transportRequest;
+    private function createNewTransportRequest(
+        HasMany $currentTransportRequestSet,
+        int $originNode,
+        int $destinationNode,
+        User $user,
+    ): ?TransportRequest {
+        $newTransportRequestSetArray = $this->toArrayConverter->convert($currentTransportRequestSet);
+
+        $transportRequest = new TransportRequest([
+            'origin_node' => $originNode,
+            'destination_node' => $destinationNode,
+        ]);
+
+        $newTransportRequestSetArray[] = $transportRequest;
+        if (!$this->vehicleRoutingService->hasOptimalPath($newTransportRequestSetArray)) {
+            return null;
         }
 
-        return $convertedTransportRequests;
+        $user->transport_request_set_revenue =
+            $this->priceCalculationService->calculatePriceForTransportRequestSet(
+                $newTransportRequestSetArray,
+                $user
+            );
+        $user->save();
+
+        return $transportRequest;
     }
 }

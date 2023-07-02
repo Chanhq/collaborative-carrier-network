@@ -31,6 +31,7 @@ class User extends Authenticatable
         'transport_request_cost_variable',
         'transport_request_price_base',
         'transport_request_price_variable',
+        'transport_request_set_revenue'
     ];
 
     /**
@@ -55,6 +56,11 @@ class User extends Authenticatable
     public function id(): int
     {
         return $this->id;
+    }
+
+    public function transportRequestSetRevenue(): int
+    {
+        return $this->transport_request_set_revenue;
     }
 
     public function transportRequestMinimumRevenue(): int
@@ -100,5 +106,13 @@ class User extends Authenticatable
     public function transportRequests(): HasMany
     {
         return $this->hasMany(TransportRequest::class);
+    }
+
+    /**
+     * @return array<User>
+     */
+    public static function carriers(): array
+    {
+        return User::all()->where('is_auctioneer', false)->all();
     }
 }

@@ -15,13 +15,12 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('auction_id');
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('transport_request_id');
             $table->float('revenue_gain')->default(0);
+            $table->float('price_to_pay')->default(0);
             $table->timestamps();
 
             $table->foreign('auction_id')->references('id')->on('auctions');
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('transport_request_id')->references('id')->on('transport_requests');
         });
     }
 
