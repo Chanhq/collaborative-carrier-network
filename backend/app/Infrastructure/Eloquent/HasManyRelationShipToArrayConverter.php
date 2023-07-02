@@ -2,13 +2,14 @@
 
 namespace App\Infrastructure\Eloquent;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class HasManyRelationShipToArrayConverter
 {
     /**
      * @param HasMany $relationship
-     * @return array
+     * @return array<Model>
      */
     public function convert(HasMany $relationship): array
     {

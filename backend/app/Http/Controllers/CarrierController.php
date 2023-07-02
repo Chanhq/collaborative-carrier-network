@@ -153,7 +153,7 @@ class CarrierController extends Controller
                 ], Response::HTTP_CONFLICT);
             }
 
-            if (Auction::active()->get()->first()) {
+            if (!empty(Auction::active()->get())) {
                 return new JsonResponse([
                     'status' => 'error',
                     'message' => 'Can not add transport requests when there is an ongoing auction.',
@@ -205,6 +205,7 @@ class CarrierController extends Controller
         int $destinationNode,
         User $user,
     ): ?TransportRequest {
+        /** @var array<TransportRequest> $newTransportRequestSetArray */
         $newTransportRequestSetArray = $this->toArrayConverter->convert($currentTransportRequestSet);
 
         $transportRequest = new TransportRequest([
@@ -217,11 +218,12 @@ class CarrierController extends Controller
             return null;
         }
 
-        $user->transport_request_set_revenue =
+        $user->setTransportRequestSetRevenuePreAuction(
             $this->priceCalculationService->calculatePriceForTransportRequestSet(
                 $newTransportRequestSetArray,
                 $user
-            );
+            )
+        );
         $user->save();
 
         return $transportRequest;

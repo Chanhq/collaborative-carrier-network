@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('username')->unique();
             $table->string('password');
-            $table->float('transport_request_set_revenue')->default(0);
+            $table->float('transport_request_set_revenue_pre_auction')->default(0);
             $table->timestamps();
         });
     }

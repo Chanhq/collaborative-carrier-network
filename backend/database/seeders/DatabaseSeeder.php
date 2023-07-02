@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
     public function __construct(
         private readonly PythonVehicleRoutingWrapper $vehicleRoutingService,
         private readonly TransportPriceCalculationService $priceCalculationService,
-    ){
+    ) {
     }
 
     /**
@@ -79,12 +79,12 @@ class DatabaseSeeder extends Seeder
                 $trBar->finish();
                 $user->transportRequests()->saveMany($transportRequests);
 
-                $user->transport_request_set_revenue =
+                $user->setTransportRequestSetRevenuePreAuction(
                     $this->priceCalculationService->calculatePriceForTransportRequestSet(
                         $transportRequests,
                         $user
-                    );
-                $user->save();
+                    )
+                );
 
                 $userBar->advance();
             }

@@ -31,7 +31,7 @@ class User extends Authenticatable
         'transport_request_cost_variable',
         'transport_request_price_base',
         'transport_request_price_variable',
-        'transport_request_set_revenue'
+        'transport_request_set_revenue_pre_auction'
     ];
 
     /**
@@ -58,9 +58,9 @@ class User extends Authenticatable
         return $this->id;
     }
 
-    public function transportRequestSetRevenue(): int
+    public function transportRequestSetRevenuePreAuction(): int
     {
-        return $this->transport_request_set_revenue;
+        return $this->transport_request_set_revenue_pre_auction;
     }
 
     public function transportRequestMinimumRevenue(): int
@@ -101,6 +101,13 @@ class User extends Authenticatable
     public function isAuctioneer(): bool
     {
         return $this->is_auctioneer;
+    }
+
+    public function setTransportRequestSetRevenuePreAuction(float $value): User
+    {
+        $this->transport_request_set_revenue_pre_auction = $value;
+        $this->save();
+        return $this;
     }
 
     public function transportRequests(): HasMany
