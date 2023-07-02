@@ -174,7 +174,7 @@ class AuctionManagementService
             foreach ($pristineTransportRequests as $candidateTransportRequest) {
                 $bidAmount = 0;
 
-                $bidAmount = $this->calculateRevenue($candidateTransportRequest) * 0.5;
+                $bidAmount = $this->calculateRevenue($candidateTransportRequest) * 0.8;
 
                 if ($bidAmount <= 0) {
                     continue;
