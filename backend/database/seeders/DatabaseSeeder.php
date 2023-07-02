@@ -41,11 +41,10 @@ class DatabaseSeeder extends Seeder
                 MapVertex::factory(1)->create(['id' => $id]);
             }
         }
-
+        /*
         if (TransportRequest::all()->count() === 0) {
             $userBar = $output->createProgressBar(count(User::all()) - 1);
             $userBar->start();
-            /** @var User $user */
             foreach (User::all() as $user) {
                 if ($user->isAuctioneer()) {
                     continue;
@@ -90,6 +89,6 @@ class DatabaseSeeder extends Seeder
                 $userBar->advance();
             }
             $userBar->finish();
-        }
+        }*/
     }
 }
