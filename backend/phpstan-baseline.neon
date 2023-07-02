@@ -56,6 +56,11 @@ parameters:
 			path: app/Http/Controllers/CarrierController.php
 
 		-
+			message: "#^Cannot call method isEmpty\\(\\) on array\\<Illuminate\\\\Database\\\\Eloquent\\\\Builder\\>\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\.$#"
+			count: 1
+			path: app/Http/Controllers/CarrierController.php
+
+		-
 			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$is_auctioneer\\.$#"
 			count: 1
 			path: app/Http/Middleware/Authorization/EnsureUserIsAuctioneerMiddleware.php
@@ -209,13 +214,3 @@ parameters:
 			message: "#^Access to an undefined property App\\\\Models\\\\User\\:\\:\\$username\\.$#"
 			count: 1
 			path: app/Models/User.php
-
-		-
-			message: "#^Property Database\\\\Seeders\\\\DatabaseSeeder\\:\\:\\$priceCalculationService is never read, only written\\.$#"
-			count: 1
-			path: database/seeders/DatabaseSeeder.php
-
-		-
-			message: "#^Property Database\\\\Seeders\\\\DatabaseSeeder\\:\\:\\$vehicleRoutingService is never read, only written\\.$#"
-			count: 1
-			path: database/seeders/DatabaseSeeder.php

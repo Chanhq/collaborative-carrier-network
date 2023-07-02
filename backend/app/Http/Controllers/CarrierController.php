@@ -153,7 +153,7 @@ class CarrierController extends Controller
                 ], Response::HTTP_CONFLICT);
             }
 
-            if (!empty(Auction::active()->get())) {
+            if (!Auction::active()->get()->isEmpty()) {
                 return new JsonResponse([
                     'status' => 'error',
                     'message' => 'Can not add transport requests when there is an ongoing auction.',
