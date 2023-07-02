@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('transport_requests', function (Blueprint $table) {
-            $table->enum('status', ['pristine', 'selected'])->default('pristine');
+            $table->enum('status', ['pristine', 'selected', 'sold' ,'unsold', 'completed'])->default('pristine');
         });
     }
 

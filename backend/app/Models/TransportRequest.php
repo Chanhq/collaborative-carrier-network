@@ -6,6 +6,7 @@ use App\Models\Enum\TransportRequestStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class TransportRequest extends Model
 {
@@ -20,7 +21,7 @@ class TransportRequest extends Model
         'origin_node',
         'destination_node',
         'status',
-        'auction_id'
+        'auction_id',
     ];
 
     protected $casts = [
@@ -47,6 +48,11 @@ class TransportRequest extends Model
         return $this->status;
     }
 
+    public function revenue(): float
+    {
+        return $this->revenue;
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -55,5 +61,28 @@ class TransportRequest extends Model
     public function auction(): BelongsTo
     {
         return $this->belongsTo(Auction::class);
+    }
+
+    public function bids(): HasMany
+    {
+        return $this->hasMany(AuctionBid::class);
+    }
+
+    public function markAsSold(): void
+    {
+        $this->status = TransportRequestStatusEnum::Sold;
+        $this->save();
+    }
+
+    public function markAsCompleted(): void
+    {
+        $this->status = TransportRequestStatusEnum::Completed;
+        $this->save();
+    }
+
+    public function markAsUnsold(): void
+    {
+        $this->status = TransportRequestStatusEnum::Unsold;
+        $this->save();
     }
 }

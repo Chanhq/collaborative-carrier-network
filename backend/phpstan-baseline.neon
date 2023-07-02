@@ -16,6 +16,11 @@ parameters:
 			path: app/BusinessDomain/Auction/Service/AuctionManagementService.php
 
 		-
+			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\:\\:orderBy\\(\\)\\.$#"
+			count: 1
+			path: app/BusinessDomain/Auction/Service/AuctionManagementService.php
+
+		-
 			message: "#^Call to an undefined static method App\\\\Models\\\\User\\:\\:where\\(\\)\\.$#"
 			count: 3
 			path: app/BusinessDomain/Authentication/Service/AuthenticationService.php
@@ -47,6 +52,11 @@ parameters:
 
 		-
 			message: "#^Call to an undefined static method App\\\\Models\\\\TransportRequest\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Controllers/CarrierController.php
+
+		-
+			message: "#^Cannot call method isEmpty\\(\\) on array\\<Illuminate\\\\Database\\\\Eloquent\\\\Builder\\>\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\.$#"
 			count: 1
 			path: app/Http/Controllers/CarrierController.php
 
@@ -106,6 +116,26 @@ parameters:
 			path: app/Models/Auction.php
 
 		-
+			message: "#^Access to an undefined property App\\\\Models\\\\AuctionEvaluation\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Models/AuctionEvaluation.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Models\\\\AuctionEvaluation\\:\\:\\$price_to_pay\\.$#"
+			count: 1
+			path: app/Models/AuctionEvaluation.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Models\\\\AuctionEvaluation\\:\\:\\$revenue_gain\\.$#"
+			count: 1
+			path: app/Models/AuctionEvaluation.php
+
+		-
+			message: "#^Method App\\\\Models\\\\AuctionEvaluation\\:\\:user\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Models/AuctionEvaluation.php
+
+		-
 			message: "#^Access to an undefined property App\\\\Models\\\\TransportRequest\\:\\:\\$destination_node\\.$#"
 			count: 1
 			path: app/Models/TransportRequest.php
@@ -121,8 +151,13 @@ parameters:
 			path: app/Models/TransportRequest.php
 
 		-
-			message: "#^Access to an undefined property App\\\\Models\\\\TransportRequest\\:\\:\\$status\\.$#"
+			message: "#^Access to an undefined property App\\\\Models\\\\TransportRequest\\:\\:\\$revenue\\.$#"
 			count: 1
+			path: app/Models/TransportRequest.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Models\\\\TransportRequest\\:\\:\\$status\\.$#"
+			count: 4
 			path: app/Models/TransportRequest.php
 
 		-
@@ -171,11 +206,11 @@ parameters:
 			path: app/Models/User.php
 
 		-
-			message: "#^Access to an undefined property App\\\\Models\\\\User\\:\\:\\$username\\.$#"
-			count: 1
+			message: "#^Access to an undefined property App\\\\Models\\\\User\\:\\:\\$transport_request_set_revenue_pre_auction\\.$#"
+			count: 2
 			path: app/Models/User.php
 
 		-
-			message: "#^Class Database\\\\Factories\\\\UserFactory extends generic class Illuminate\\\\Database\\\\Eloquent\\\\Factories\\\\Factory but does not specify its types\\: TModel$#"
+			message: "#^Access to an undefined property App\\\\Models\\\\User\\:\\:\\$username\\.$#"
 			count: 1
-			path: database/factories/UserFactory.php
+			path: app/Models/User.php

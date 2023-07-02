@@ -7,6 +7,7 @@ use App\Models\Auction;
 use App\Models\Enum\TransportRequestStatusEnum;
 use App\Models\TransportRequest;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 class AuctioneerController extends Controller

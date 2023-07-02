@@ -10,6 +10,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class StartAuction implements ShouldQueue
 {
@@ -28,8 +29,9 @@ class StartAuction implements ShouldQueue
     public function handle(AuctionManagementService $auctionManagementService): void
     {
         try {
-            $auctionManagementService->startAuction();
-        } catch (OngoingAuctionFoundException $e) {
+            $auctionPriceUserMap = $auctionManagementService->auctionTransportRequests();
+            $auctionManagementService->evaluateAuction($auctionPriceUserMap);
+        } catch (OngoingAuctionFoundException | Throwable $e) {
             $this->failed($e);
         }
     }
