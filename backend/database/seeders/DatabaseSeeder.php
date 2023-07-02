@@ -27,7 +27,6 @@ class DatabaseSeeder extends Seeder
             User::factory(1)->create(['is_auctioneer' => true]);
             User::factory(1)->create(['is_auctioneer' => false]);
             User::factory(1)->create(['is_auctioneer' => false]);
-            User::factory(1)->create(['is_auctioneer' => false]);
         }
 
         $mapVertices = Map::vertices();
@@ -48,8 +47,6 @@ class DatabaseSeeder extends Seeder
                     continue;
                 }
 
-                $destination_node_id = 0;
-                $origin_node_id = 0;
                 $transportRequests = [];
                 $trBar = $output->createProgressBar(3);
                 $trBar->start();
@@ -78,7 +75,6 @@ class DatabaseSeeder extends Seeder
                 }
                 $trBar->finish();
                 $user->transportRequests()->saveMany($transportRequests);
-                $transportRequests = [];
                 $userBar->advance();
             }
             $userBar->finish();

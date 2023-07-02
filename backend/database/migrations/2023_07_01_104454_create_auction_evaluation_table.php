@@ -11,15 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bid_evaluation', function (Blueprint $table) {
+        Schema::create('auction_evaluations', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('bid_id');
+            $table->unsignedBigInteger('auction_id');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('transport_request_id');
-            $table->float('revenue_gain');
+            $table->float('revenue_gain')->default(0);
             $table->timestamps();
 
-            $table->foreign('bid_id')->references('id')->on('auction_bids');
+            $table->foreign('auction_id')->references('id')->on('auctions');
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('transport_request_id')->references('id')->on('transport_requests');
         });
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bid_evaluation');
+        Schema::dropIfExists('auction_evaluations');
     }
 };

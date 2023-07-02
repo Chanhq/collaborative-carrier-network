@@ -62,4 +62,16 @@ class TransportRequest extends Model
     {
         return $this->hasMany(AuctionBid::class);
     }
+
+    public function markAsCompleted(): void
+    {
+        $this->status = TransportRequestStatusEnum::Completed;
+        $this->save();
+    }
+
+    public function markAsUnsold(): void
+    {
+        $this->status = TransportRequestStatusEnum::Unsold;
+        $this->save();
+    }
 }

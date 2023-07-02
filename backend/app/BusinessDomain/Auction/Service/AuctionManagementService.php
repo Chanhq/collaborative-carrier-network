@@ -7,6 +7,7 @@ use App\BusinessDomain\RevenueCalculation\Service\TransportCostCalculationServic
 use App\BusinessDomain\RevenueCalculation\Service\TransportPriceCalculationService;
 use App\BusinessDomain\VehicleRouting\PythonVehicleRoutingWrapper;
 use App\Models\Auction;
+use App\Models\AuctionEvaluation;
 use App\Models\Enum\TransportRequestStatusEnum;
 use App\Models\TransportRequest;
 use App\Models\User;
@@ -209,12 +210,6 @@ class AuctionManagementService
         $bid->save();
     }
 
-    public function markAsCompleted(): void
-    {
-        $this->status() = TransportRequestStatusEnum::Completed;
-        $this->save();
-    }
-
     /**
      * @param array<TransportRequest> $auctionedTransportRequests
      */
@@ -222,18 +217,35 @@ class AuctionManagementService
     {
         foreach ($auctionedTransportRequests as $transportRequest) {
             $bids = $transportRequest->bids()->orderBy('bid_amount', 'desc')->get()->all();
-            $winningBid = $bids[0];
-            $priceDefiningBid = $bids[1];
+
+            if (empty($bids)) {
+                $transportRequest->markAsUnsold();
+                continue;
+            }
+
+            if (count($bids) > 1) {
+                $winningBid = $bids[0];
+                $priceDefiningBid = $bids[1];
+            } else {
+                $winningBid = $bids[0];
+                $priceDefiningBid = $bids[0];
+            }
+
+
+            /** @var User $winningCarrier */
             $winningCarrier = User::find($winningBid['user_id']);
-            Log::notice('Bids', $bids);
             $transportRequest->user()->associate($winningCarrier);
             $transportRequest->markAsCompleted();
             $transportRequest->save();
 
-            BidEvaluation::create([
-                'user_id' => $winningCarrier->id,
-                'transport_request_id' => $transportRequest->id,
+            Log::notice('Bids', $bids);
+            $bidEvaluation = new AuctionEvaluation([
+                'auction_id' => $winningBid['auction_id'],
+                'user_id' => $winningCarrier->id(),
+                'transport_request_id' => $transportRequest->id(),
             ]);
+
+            $bidEvaluation->save();
         }
 
     }
