@@ -151,6 +151,11 @@ class User extends Authenticatable
         return $this->hasMany(TransportRequest::class);
     }
 
+    public function auctionEvaluations(): HasMany
+    {
+        return $this->hasMany(AuctionEvaluation::class);
+    }
+
     /**
      * @return array<User>
      */

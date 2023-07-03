@@ -10,8 +10,10 @@ use App\Http\Requests\CreateTransportRequestRequest;
 use App\Http\Requests\SetCostModelRequest;
 use App\Infrastructure\Eloquent\HasManyRelationShipToArrayConverter;
 use App\Models\Auction;
+use App\Models\AuctionEvaluation;
 use App\Models\TransportRequest;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -153,7 +155,7 @@ class CarrierController extends Controller
                 ], Response::HTTP_CONFLICT);
             }
 
-            if (!Auction::active()->get()->isEmpty()) {
+            if (Auction::active()->get()->isNotEmpty() || Auction::inactive()->get()->isNotEmpty()) {
                 return new JsonResponse([
                     'status' => 'error',
                     'message' => 'Can not add transport requests when there is an ongoing auction.',
@@ -197,6 +199,29 @@ class CarrierController extends Controller
                 'data' => $e->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+    }
+
+    public function getAuctionEvaluationData(): JsonResponse
+    {
+        /** @var User $user */
+        $user = Auth::user();
+        $auctionEvaluations = $user->auctionEvaluations()->get(['auction_id', 'revenue_gain', 'price_to_pay']);
+
+        if ($auctionEvaluations->isEmpty()) {
+            return new JsonResponse([
+                'status' => 'success',
+                'message' => 'No evaluation data found for user.',
+                'data' => [],
+            ], Response::HTTP_NO_CONTENT);
+        }
+
+        $auctionEvaluationData = $auctionEvaluations->sortBy('auction_id')->toArray();
+
+        return new JsonResponse([
+            'status' => 'success',
+            'message' => '',
+            'data' => $auctionEvaluationData,
+        ]);
     }
 
     private function createNewTransportRequest(

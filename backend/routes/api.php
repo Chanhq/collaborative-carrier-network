@@ -31,9 +31,10 @@ Route::middleware(['auth:sanctum', EnsureUserIsCarrierMiddleware::class])->prefi
     ->group(function () {
         Route::get('/transport-request', [CarrierController::class, 'getTransportRequests']);
         Route::post('/transport-request', [CarrierController::class, 'addTransportRequest']);
-        Route::post('/cost-model', [CarrierController::class, 'setCostModel']);
         Route::get('/cost-model', [CarrierController::class, 'getCostModel']);
+        Route::post('/cost-model', [CarrierController::class, 'setCostModel']);
         Route::get('/map', [CarrierController::class, 'getMapData']);
+        Route::get('/auction-evaluation', [CarrierController::class, 'getAuctionEvaluationData']);
     });
 
 Route::middleware(['auth:sanctum', EnsureUserIsAuctioneerMiddleware::class ])->prefix('auctioneer-frontend')
