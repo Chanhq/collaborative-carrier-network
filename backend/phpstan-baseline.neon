@@ -46,11 +46,6 @@ parameters:
 			path: app/Http/Controllers/CarrierController.php
 
 		-
-			message: "#^Cannot call method isEmpty\\(\\) on array\\<Illuminate\\\\Database\\\\Eloquent\\\\Builder\\>\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\.$#"
-			count: 1
-			path: app/Http/Controllers/CarrierController.php
-
-		-
 			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$is_auctioneer\\.$#"
 			count: 1
 			path: app/Http/Middleware/Authorization/EnsureUserIsAuctioneerMiddleware.php
