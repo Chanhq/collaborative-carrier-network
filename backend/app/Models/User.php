@@ -25,7 +25,6 @@ use Laravel\Sanctum\HasApiTokens;
  * @property int $transport_request_cost_variable
  * @property int $transport_request_price_base
  * @property int $transport_request_price_variable
- * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Laravel\Sanctum\PersonalAccessToken> $tokens
  * @property-read int|null $tokens_count

@@ -61,7 +61,7 @@
         ],
 
         "test": "./vendor/bin/phpunit",
-        "stan": "vendor/bin/phpstan analyse --generate-baseline phpstan-baseline.neon --memory-limit 512M  app database -c phpstan.neon",
+        "stan": "vendor/bin/phpstan analyse --memory-limit 512M  app database -c phpstan.neon",
         "cs-check": "vendor/bin/phpcs --standard=psr12 --extensions=php --tab-width=4 -sp app tests routes database config",
         "cs-fix": "vendor/bin/phpcbf --standard=psr12 --extensions=php --tab-width=4 -sp app tests routes database config",
         "lint": "./vendor/bin/parallel-lint .",
