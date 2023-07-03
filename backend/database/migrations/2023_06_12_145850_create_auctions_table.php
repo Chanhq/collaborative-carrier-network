@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('auctions', function (Blueprint $table) {
             $table->id();
-            $table->enum('status', ['inactive', 'active'])->default('active');
+            $table->enum('status', ['inactive', 'active', 'completed'])->default('active');
             $table->timestamps();
         });
     }

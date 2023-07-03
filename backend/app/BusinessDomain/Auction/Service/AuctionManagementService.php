@@ -33,14 +33,11 @@ class AuctionManagementService
      * @throws Throwable|OngoingAuctionFoundException
      * @return array<int, float> maps user_id to the price he has to pay for bought transport requests in the auction
      */
-    public function auctionTransportRequests(): array
+    public function auctionTransportRequests(Auction $startedAuction): array
     {
         DB::beginTransaction();
         try {
             $eligibleTransportRequests = $this->getTransportRequestEligibleForAuction();
-
-            $startedAuction = new Auction();
-            $startedAuction->save();
 
             foreach ($eligibleTransportRequests as $transportRequest) {
                 $transportRequest->status = TransportRequestStatusEnum::Selected;
@@ -53,6 +50,7 @@ class AuctionManagementService
             $startedAuction->save();
         } catch (\Throwable $e) {
             DB::rollBack();
+            $startedAuction->delete();
             throw $e;
         }
         DB::commit();

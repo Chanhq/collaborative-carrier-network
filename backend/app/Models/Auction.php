@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Builder;
 
 /**
  * @method static Builder active()
+ * @method static Builder inactive()
+ * @method static Builder completed()
  */
 class Auction extends Model
 {
@@ -47,6 +49,23 @@ class Auction extends Model
 
     public function scopeActive(Builder $query): Builder
     {
-        return $query->where('status', AuctionStatusEnum::Active->value);
+        return $query->where('status', AuctionStatusEnum::Active);
+    }
+
+    public function scopeInactive(Builder $query): Builder
+    {
+        return $query->where('status', AuctionStatusEnum::Inactive);
+    }
+
+    public function scopeCompleted(Builder $query): Builder
+    {
+        return $query->where('status', AuctionStatusEnum::Completed);
+    }
+
+    public function setInactive(): Auction
+    {
+        $this->status = AuctionStatusEnum::Inactive;
+        $this->save();
+        return $this;
     }
 }

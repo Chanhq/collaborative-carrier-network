@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Jobs\StartAuction;
 use App\Models\Auction;
+use App\Models\Enum\AuctionStatusEnum;
 use App\Models\Enum\TransportRequestStatusEnum;
 use App\Models\TransportRequest;
 use Illuminate\Http\JsonResponse;
@@ -12,19 +13,40 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AuctioneerController extends Controller
 {
-    public function getForAuctionSelectedTransportRequests(): JsonResponse
+    public function getAuctionData(): JsonResponse
     {
-        $transportRequests = TransportRequest::select(['id', 'origin_node', 'destination_node', 'status'])
-            ->where('status', TransportRequestStatusEnum::Sold)
-            ->orWhere('status', TransportRequestStatusEnum::Unsold)
-            ->get()
-            ->toArray();
+        if (Auction::inactive()->get()->isNotEmpty()) {
+            $transportRequests = TransportRequest::select(['id', 'origin_node', 'destination_node', 'status'])
+                ->where('status', TransportRequestStatusEnum::Sold)
+                ->orWhere('status', TransportRequestStatusEnum::Unsold)
+                ->get()
+                ->toArray();
+
+            return new JsonResponse([
+                'status' => 'success',
+                'message' => '',
+                'data' => [
+                    'auction_status' => AuctionStatusEnum::Inactive,
+                    'transport_requests' => $transportRequests,
+                ]
+            ]);
+        }
+
+        if (Auction::active()->get()->isNotEmpty()) {
+            return new JsonResponse([
+                'status' => 'success',
+                'message' => '',
+                'data' => [
+                    'auction_status' => AuctionStatusEnum::Active,
+                ]
+            ]);
+        }
 
         return new JsonResponse([
             'status' => 'success',
             'message' => '',
             'data' => [
-                'transport_requests' => $transportRequests
+                'auction_status' => AuctionStatusEnum::Completed,
             ]
         ]);
     }
