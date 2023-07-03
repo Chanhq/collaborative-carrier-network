@@ -8,6 +8,33 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * App\Models\TransportRequest
+ *
+ * @property int $id
+ * @property int $user_id
+ * @property int $origin_node
+ * @property int $destination_node
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property TransportRequestStatusEnum $status
+ * @property int|null $auction_id
+ * @property-read \App\Models\Auction|null $auction
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\AuctionBid> $bids
+ * @property-read int|null $bids_count
+ * @property-read \App\Models\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder|TransportRequest newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|TransportRequest newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|TransportRequest query()
+ * @method static \Illuminate\Database\Eloquent\Builder|TransportRequest whereAuctionId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TransportRequest whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TransportRequest whereDestinationNode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TransportRequest whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TransportRequest whereOriginNode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TransportRequest whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TransportRequest whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TransportRequest whereUserId($value)
+ */
 class TransportRequest extends Model
 {
     use HasFactory;

@@ -7,6 +7,7 @@ use App\Models\Auction;
 use App\Models\Enum\AuctionStatusEnum;
 use App\Models\Enum\TransportRequestStatusEnum;
 use App\Models\TransportRequest;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,7 +16,10 @@ class AuctioneerController extends Controller
 {
     public function getAuctionData(): JsonResponse
     {
-        if (Auction::inactive()->get()->isNotEmpty()) {
+        /** @var Collection $inactiveAuctions */
+        $inactiveAuctions = Auction::inactive()->get();
+
+        if ($inactiveAuctions->isNotEmpty()) {
             $transportRequests = TransportRequest::select(['id', 'origin_node', 'destination_node', 'status'])
                 ->where('status', TransportRequestStatusEnum::Sold)
                 ->orWhere('status', TransportRequestStatusEnum::Unsold)
@@ -32,7 +36,10 @@ class AuctioneerController extends Controller
             ]);
         }
 
-        if (Auction::active()->get()->isNotEmpty()) {
+        /** @var Collection $activeAuctions */
+        $activeAuctions = Auction::active()->get();
+
+        if ($activeAuctions->isNotEmpty()) {
             return new JsonResponse([
                 'status' => 'success',
                 'message' => '',
