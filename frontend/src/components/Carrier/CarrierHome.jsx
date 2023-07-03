@@ -12,13 +12,19 @@ import carrierApi from '../../lib/api/carrier';
 function CarrierHome() {
 	const {user, authenticated} = useContext(AuthContext);
 	const [transportRequests, setTransportRequests] = useState(null);
+	const [auctionEvaluationData, setAuctionEvaluationData] = useState(null);
 	const fetchData = async () => {
 		if (user) {
 			try {
 				const transportRequestsData = await carrierApi.getTransportRequest(user.token);
+				const auctionEvaluationResponse = await carrierApi.getAuctionEvaluationData(user.token);
 				if (transportRequestsData) {
 					setTransportRequests(transportRequestsData);
-					console.log('TRs', transportRequestsData);
+				}
+				if (auctionEvaluationResponse.status === 204) {
+					setAuctionEvaluationData([]);
+				} else if (auctionEvaluationResponse.status === 200) {
+					setAuctionEvaluationData(auctionEvaluationResponse.data.data);
 				}
 			} catch (error) {
 				console.log(error);
@@ -47,7 +53,6 @@ function CarrierHome() {
         		transportRequests &&
 				<Drawer
 					sx={{
-						width: '200px',
 						flexShrink: 0,
 						'& .MuiDrawer-paper': {
 							width: '200px',
@@ -66,6 +71,36 @@ function CarrierHome() {
 						))}
 					</List>
 				</Drawer>
+        	}
+        	{
+        		auctionEvaluationData &&
+				<Drawer
+					sx={{
+						flexShrink: 0,
+						'& .MuiDrawer-paper': {
+							width: '325px',
+							boxSizing: 'border-box',
+						},
+					}}
+					variant="permanent"
+					anchor="right"
+				>
+					<Typography align="center" variant="h6">Auction Evaluations</Typography>
+					{
+						auctionEvaluationData.length === 0 &&
+						<div style={{marginLeft: '12px'}}>No auctioned transport requests detected</div>
+					}
+					{
+						auctionEvaluationData.length !== 0 &&
+						<List sx={{marginLeft: '12px'}}>
+							{auctionEvaluationData.map((recapData) => (
+								<ListItem key={recapData.auction_id} disablePadding>
+									Auction: {recapData.auction_id}, Revenue Gain: {recapData.revenue_gain}, Price: {recapData.price_to_pay}
+								</ListItem>
+							))}
+						</List>
+					}
+				</Drawer>	
         	}
         	<Navbar/>
         	<MapVisualizer/>
