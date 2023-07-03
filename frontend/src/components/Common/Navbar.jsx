@@ -32,6 +32,9 @@ function NavBar() {
 					alert('Successfully started auction transport requests selection process.');
 				}
 			});
+			setTimeout(function(){
+				window.location.reload(false);
+			}, 1500);
 		}
 	};
 

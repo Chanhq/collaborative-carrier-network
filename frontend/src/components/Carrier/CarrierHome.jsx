@@ -32,8 +32,15 @@ function CarrierHome() {
 		}
 	};
 
+	const reloadPage = () => {
+		window.location.reload(false);
+	};
+
 	useEffect(() => {
 		fetchData();
+		const id = setInterval(reloadPage, 20000);
+
+		return () => clearInterval(id);
 	}, [user]);
 
 	return (

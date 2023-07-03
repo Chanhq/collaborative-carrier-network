@@ -25,7 +25,7 @@ function TransportRequestsTable() {
 
 	const pollAuctionData = async () => {
 		setAuctionData();
-		const id = setInterval(setAuctionData, 30000);
+		const id = setInterval(setAuctionData, 3000);
 
 		return () => clearInterval(id);
 	};
