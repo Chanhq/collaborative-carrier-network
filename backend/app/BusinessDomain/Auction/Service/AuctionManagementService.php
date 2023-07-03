@@ -81,7 +81,7 @@ class AuctionManagementService
                 $transportRequestArray,
                 $user
             )
-                - $user->transportRequestSetRevenuePreAuction();
+            - $user->transportRequestSetRevenuePreAuction();
 
             $bidEvaluation = new AuctionEvaluation([
                 'auction_id' => $currentlyOngoingAuction->id(),
@@ -155,6 +155,7 @@ class AuctionManagementService
      * Calculate and submit bids for carriers
      *
      * @param TransportRequest $transportRequest
+     * @throws \JsonException
      */
     private function submitBids(TransportRequest $transportRequest): void
     {
