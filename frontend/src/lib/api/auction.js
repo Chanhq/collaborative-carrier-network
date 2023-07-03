@@ -10,12 +10,12 @@ export default {
 			return error;
 		}
 	},
-	getSelectedTransportRequests: async (token) => {
+	getAuctionData: async (token) => {
 		try {
 			let client = httpClient;
 			client.defaults.headers.get['Authorization'] = 'Bearer ' + token;
 			const response =  await client.get('api/auctioneer-frontend/auction/transport-requests');
-			return response.data.data.transport_requests;
+			return response.data.data;
 		} catch (error) {
 			return error;
 		}

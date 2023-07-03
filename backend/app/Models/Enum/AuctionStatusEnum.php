@@ -6,4 +6,5 @@ enum AuctionStatusEnum: string
 {
     case Active = 'active';
     case Inactive = 'inactive';
+    case Completed = 'completed';
 }

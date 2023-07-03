@@ -4,26 +4,56 @@ namespace App\Http\Controllers;
 
 use App\Jobs\StartAuction;
 use App\Models\Auction;
+use App\Models\Enum\AuctionStatusEnum;
 use App\Models\Enum\TransportRequestStatusEnum;
 use App\Models\TransportRequest;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 class AuctioneerController extends Controller
 {
-    public function getForAuctionSelectedTransportRequests(): JsonResponse
+    public function getAuctionData(): JsonResponse
     {
-        $transportRequests = TransportRequest::select(['id', 'origin_node', 'destination_node'])
-            ->where('status', TransportRequestStatusEnum::Selected)
-            ->get()
-            ->toArray();
+        /** @var Collection $inactiveAuctions */
+        $inactiveAuctions = Auction::inactive()->get();
+
+        if ($inactiveAuctions->isNotEmpty()) {
+            $transportRequests = TransportRequest::select(['id', 'origin_node', 'destination_node', 'status'])
+                ->where('status', TransportRequestStatusEnum::Sold)
+                ->orWhere('status', TransportRequestStatusEnum::Unsold)
+                ->get()
+                ->toArray();
+
+            return new JsonResponse([
+                'status' => 'success',
+                'message' => '',
+                'data' => [
+                    'auction_status' => AuctionStatusEnum::Inactive,
+                    'transport_requests' => $transportRequests,
+                ]
+            ]);
+        }
+
+        /** @var Collection $activeAuctions */
+        $activeAuctions = Auction::active()->get();
+
+        if ($activeAuctions->isNotEmpty()) {
+            return new JsonResponse([
+                'status' => 'success',
+                'message' => '',
+                'data' => [
+                    'auction_status' => AuctionStatusEnum::Active,
+                ]
+            ]);
+        }
 
         return new JsonResponse([
             'status' => 'success',
             'message' => '',
             'data' => [
-                'transport_requests' => $transportRequests
+                'auction_status' => AuctionStatusEnum::Completed,
             ]
         ]);
     }

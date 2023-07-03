@@ -9,7 +9,24 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Builder;
 
 /**
+ * App\Models\Auction
+ *
  * @method static Builder active()
+ * @method static Builder inactive()
+ * @method static Builder completed()
+ * @property int $id
+ * @property AuctionStatusEnum $status
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\TransportRequest> $transportRequests
+ * @property-read int|null $transport_requests_count
+ * @method static Builder|Auction newModelQuery()
+ * @method static Builder|Auction newQuery()
+ * @method static Builder|Auction query()
+ * @method static Builder|Auction whereCreatedAt($value)
+ * @method static Builder|Auction whereId($value)
+ * @method static Builder|Auction whereStatus($value)
+ * @method static Builder|Auction whereUpdatedAt($value)
  */
 class Auction extends Model
 {
@@ -47,6 +64,23 @@ class Auction extends Model
 
     public function scopeActive(Builder $query): Builder
     {
-        return $query->where('status', AuctionStatusEnum::Active->value);
+        return $query->where('status', AuctionStatusEnum::Active);
+    }
+
+    public function scopeInactive(Builder $query): Builder
+    {
+        return $query->where('status', AuctionStatusEnum::Inactive);
+    }
+
+    public function scopeCompleted(Builder $query): Builder
+    {
+        return $query->where('status', AuctionStatusEnum::Completed);
+    }
+
+    public function setInactive(): Auction
+    {
+        $this->status = AuctionStatusEnum::Inactive;
+        $this->save();
+        return $this;
     }
 }

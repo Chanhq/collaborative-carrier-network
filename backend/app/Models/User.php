@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Eloquent;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -9,7 +10,42 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
 /**
+ * App\Models\User
+ *
  * @method static User|null find(int $id)
+ * @property int $id
+ * @property string $username
+ * @property string $password
+ * @property float $transport_request_set_revenue_pre_auction
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property bool $is_auctioneer
+ * @property int $transport_request_minimum_revenue
+ * @property int $transport_request_cost_base
+ * @property int $transport_request_cost_variable
+ * @property int $transport_request_price_base
+ * @property int $transport_request_price_variable
+ * @property-read int|null $notifications_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Laravel\Sanctum\PersonalAccessToken> $tokens
+ * @property-read int|null $tokens_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\TransportRequest> $transportRequests
+ * @property-read int|null $transport_requests_count
+ * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|User query()
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereIsAuctioneer($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User wherePassword($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereTransportRequestCostBase($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereTransportRequestCostVariable($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereTransportRequestMinimumRevenue($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereTransportRequestPriceBase($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereTransportRequestPriceVariable($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereTransportRequestSetRevenuePreAuction($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereUsername($value)
  */
 class User extends Authenticatable
 {
@@ -58,7 +94,7 @@ class User extends Authenticatable
         return $this->id;
     }
 
-    public function transportRequestSetRevenuePreAuction(): int
+    public function transportRequestSetRevenuePreAuction(): float
     {
         return $this->transport_request_set_revenue_pre_auction;
     }

@@ -40,7 +40,7 @@ Route::middleware(['auth:sanctum', EnsureUserIsAuctioneerMiddleware::class ])->p
     ->group(function () {
         Route::get(
             '/auction/transport-requests',
-            [AuctioneerController::class, 'getForAuctionSelectedTransportRequests']
+            [AuctioneerController::class, 'getAuctionData']
         );
         Route::post('/auction/start', [AuctioneerController::class, 'startAuction']);
     });

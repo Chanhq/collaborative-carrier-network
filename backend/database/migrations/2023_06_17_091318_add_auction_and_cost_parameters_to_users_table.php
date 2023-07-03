@@ -27,9 +27,21 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('transport_request_minimum_revenue');
+        });
+
+        Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('transport_request_cost_base');
+        });
+
+        Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('transport_request_cost_variable');
+        });
+
+        Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('transport_request_price_base');
+        });
+
+        Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('transport_request_price_variable');
         });
     }
