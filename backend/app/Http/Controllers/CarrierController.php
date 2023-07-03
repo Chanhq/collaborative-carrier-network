@@ -155,7 +155,12 @@ class CarrierController extends Controller
                 ], Response::HTTP_CONFLICT);
             }
 
-            if (Auction::active()->get()->isNotEmpty() || Auction::inactive()->get()->isNotEmpty()) {
+            /** @var Collection $activeAuctionsCollection */
+            $activeAuctionsCollection = Auction::active()->get();
+            /** @var Collection $inActiveAuctionsCollection */
+            $inActiveAuctionsCollection = Auction::inactive()->get();
+
+            if ($inActiveAuctionsCollection->isNotEmpty() || $activeAuctionsCollection->isNotEmpty()) {
                 return new JsonResponse([
                     'status' => 'error',
                     'message' => 'Can not add transport requests when there is an ongoing auction.',
