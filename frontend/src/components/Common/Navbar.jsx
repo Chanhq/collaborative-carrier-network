@@ -1,6 +1,6 @@
-import {useContext} from 'react';
-import {AuthContext} from '../../lib/context/AuthContext';
-import {SpeedDial, SpeedDialAction, SpeedDialIcon} from '@mui/material';
+import { useContext } from 'react';
+import { AuthContext } from '../../lib/context/AuthContext';
+import { SpeedDial, SpeedDialAction, SpeedDialIcon } from '@mui/material';
 import PriceChangeIcon from '@mui/icons-material/PriceChange';
 import LogoutIcon from '@mui/icons-material/Logout';
 import authApi from '../../lib/api/auth';
@@ -8,6 +8,7 @@ import windowLocationHelper from '../../lib/helper/window-location';
 import StartIcon from '@mui/icons-material/Start';
 import React from 'react';
 import auctionApi from '../../lib/api/auction';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 function NavBar() {
   const { user, authenticated } = useContext(AuthContext);
@@ -40,6 +41,8 @@ function NavBar() {
 
   const completeTransportRequests = async () => {
     if (user !== null) {
+      // Call the completeTransportRequests endpoint in the CarrierController here
+      // You can use the carrierApi or any other method to make the API request
       try {
         await carrierApi.completeTransportRequests(user.token);
         alert('Transport requests completed successfully');
@@ -60,7 +63,7 @@ function NavBar() {
     actions.push({ icon: <StartIcon />, name: 'Start auction', onClick: startAuction });
   }
 
-  actions.push({ icon: <YourButtonIcon />, name: 'Complete Transport Requests', onClick: completeTransportRequests });
+  actions.push({ icon: <CheckCircleIcon />, name: 'Complete Transport Requests', onClick: completeTransportRequests });
 
   return (
     authenticated &&
