@@ -47,12 +47,12 @@ export default {
 		}
 	},
 	completeTransportRequests: async (token) => {
-        try {
-          let client = httpClient;
-          client.defaults.headers.put['Authorization'] = 'Bearer ' + token;
-          return client.post('api/carrier-frontend/complete-transport-requests');
-        } catch (error) {
-          console.log(error);
-        }
-      },
+		try {
+			let client = httpClient;
+			client.defaults.headers.post['Authorization'] = 'Bearer ' + token;
+			return client.post('api/carrier-frontend/transport-requests/complete');
+		} catch (error) {
+			return error;
+		}
+	},
 };

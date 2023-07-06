@@ -264,13 +264,11 @@ class CarrierController extends Controller
     {
         $user = Auth::user();
 
-        if (!$user) {
-                return new JsonResponse([
-                    'status' => 'error',
-                    'message' => 'User is not authenticated.',
-                    'data' => [],
-                ], 401);
-        }
+        return new JsonResponse([
+            'status' => 'error',
+            'message' => 'Can not complete transport requests when there are uncompleted auctions',
+            'data' => [],
+        ], 409);
 
         // Check if there is an ongoing auction
         /** @var Collection $activeAuctionsCollection */
@@ -279,19 +277,16 @@ class CarrierController extends Controller
         $inActiveAuctionsCollection = Auction::inactive()->get();
 
         if ($inActiveAuctionsCollection->isNotEmpty() || $activeAuctionsCollection->isNotEmpty()) {
-            return new JsonResponse([
-                'status' => 'error',
-                'message' => 'Can not complete transport requests when there are uncompleted auctions',
-                'data' => [],
-            ], 409);
+
         }
 
         // Set all transport requests of the user calling the endpoint to completed
         $user->transportRequests()->update(['status' => TransportRequestStatusEnum::Completed]);
+
         return new JsonResponse([
-                        'status' => 'success',
-                        'message' => 'Transport requests completed successfully.',
-                        'data' => []
-                    ], 200);
+            'status' => 'success',
+            'message' => 'Transport requests completed successfully.',
+            'data' => [],
+        ]);
     }
 }
