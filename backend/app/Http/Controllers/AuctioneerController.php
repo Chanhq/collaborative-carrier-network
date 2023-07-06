@@ -60,9 +60,12 @@ class AuctioneerController extends Controller
 
     public function startAuction(): JsonResponse
     {
-        $activeAuction = Auction::active()->get()->first();
+        /** @var Collection $activeAuctions */
+        $activeAuctions = Auction::active()->get();
+        /** @var Collection $inActiveAuctions */
+        $inActiveAuctions = Auction::inactive()->get();
 
-        if ($activeAuction !== null) {
+        if ($activeAuctions->first() !== null || $inActiveAuctions->first() !== null) {
             return new  JsonResponse([
                 'status' => 'error',
                 'message' => 'There is already an ongoing auction.',

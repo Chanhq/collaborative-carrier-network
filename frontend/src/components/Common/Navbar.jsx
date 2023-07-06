@@ -56,6 +56,7 @@ function NavBar() {
 		if (user !== null) {
 			carrierApi.completeTransportRequests(user.token).then(() => {
 				alert('Completed transport request! New dispatching period started.');
+				window.location.reload(false);
 			}).catch((error) => {
 				alert(error.response.data.message);
 			});
