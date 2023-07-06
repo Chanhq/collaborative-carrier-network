@@ -13,6 +13,7 @@ use App\Models\Auction;
 use App\Models\AuctionEvaluation;
 use App\Models\TransportRequest;
 use App\Models\User;
+use App\Models\Enum\AuctionStatusEnum;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\JsonResponse;
@@ -258,4 +259,18 @@ class CarrierController extends Controller
 
         return $transportRequest;
     }
+    public function completeTransportRequests()
+        {
+            // Check if there is an ongoing auction
+            $ongoingAuction = Auction::active()->first();
+
+            if ($ongoingAuction) {
+                return response()->json(['message' => 'Cannot complete transport requests during an ongoing auction.'], 400);
+            }
+
+            // Set all transport requests of the user calling the endpoint to completed
+            TransportRequest::where('user_id', auth()->id())->update(['completed' => true]);
+
+            return response()->json(['message' => 'Transport requests completed successfully.'], 200);
+        }
 }
