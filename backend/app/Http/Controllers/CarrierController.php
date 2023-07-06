@@ -260,7 +260,7 @@ class CarrierController extends Controller
 
         return $transportRequest;
     }
-    public function completeTransportRequests():void
+    public function completeTransportRequests():JsonResponse
     {
         $user = Auth::user();
         // Check if there is an ongoing auction
