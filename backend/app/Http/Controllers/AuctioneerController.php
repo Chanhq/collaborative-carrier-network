@@ -78,4 +78,27 @@ class AuctioneerController extends Controller
             'data' => [],
         ]);
     }
+
+    public function endAuction(): JsonResponse
+    {
+        $inActiveAuctionModel = Auction::inactive();
+        /** @var Collection $inactiveAuctionCollection */
+        $inactiveAuctionCollection = $inActiveAuctionModel->get();
+
+        if ($inactiveAuctionCollection->first() === null) {
+            return new  JsonResponse([
+                'status' => 'error',
+                'message' => 'There is no auction to be ended.',
+                'data' => [],
+            ], Response::HTTP_CONFLICT);
+        }
+
+        $inActiveAuctionModel->update(['status' => AuctionStatusEnum::Completed]);
+
+        return new JsonResponse([
+            'status' => 'success',
+            'message' => '',
+            'data' => [],
+        ]);
+    }
 }

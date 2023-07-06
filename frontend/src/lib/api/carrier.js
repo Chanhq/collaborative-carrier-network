@@ -32,7 +32,7 @@ export default {
 		try {
 			let client = httpClient;
 			client.defaults.headers.get['Authorization'] = 'Bearer ' + token;
-			return (await client.get('api/carrier-frontend/transport-request')).data.data.transport_requests;
+			return client.get('api/carrier-frontend/transport-request');
 		} catch (error) {
 			return error;
 		}
@@ -41,7 +41,7 @@ export default {
 		try {
 			let client = httpClient;
 			client.defaults.headers.get['Authorization'] = 'Bearer ' + token;
-			return (await client.get('api/carrier-frontend/auction-evaluation'));
+			return client.get('api/carrier-frontend/auction-evaluation');
 		} catch (error) {
 			return error;
 		}
