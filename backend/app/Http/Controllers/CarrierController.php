@@ -14,6 +14,7 @@ use App\Models\AuctionEvaluation;
 use App\Models\TransportRequest;
 use App\Models\User;
 use App\Models\Enum\AuctionStatusEnum;
+use App\Enums\TransportRequestStatusEnum;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\JsonResponse;
@@ -259,8 +260,9 @@ class CarrierController extends Controller
 
         return $transportRequest;
     }
-    public function completeTransportRequests()
+    public function completeTransportRequests():void
     {
+        $user = Auth::user();
         // Check if there is an ongoing auction
         /** @var Collection $activeAuctionsCollection */
         $activeAuctionsCollection = Auction::active()->get();
