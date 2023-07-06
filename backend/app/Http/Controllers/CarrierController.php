@@ -270,12 +270,11 @@ class CarrierController extends Controller
                     'message' => 'User is not authenticated.',
                     'data' => [],
                 ], 401);
-            }
+        }
 
         // Check if there is an ongoing auction
         /** @var Collection $activeAuctionsCollection */
         $activeAuctionsCollection = Auction::active()->get();
-
         /** @var Collection $inActiveAuctionsCollection */
         $inActiveAuctionsCollection = Auction::inactive()->get();
 
