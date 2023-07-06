@@ -76,7 +76,7 @@ function CarrierHome() {
         			}}
         		></AirportShuttleIcon>
         	</Typography>
-        	{	
+        	{
         		transportRequests &&
 				<Drawer
 					sx={{
@@ -127,7 +127,7 @@ function CarrierHome() {
 							))}
 						</List>
 					}
-				</Drawer>	
+				</Drawer>
         	}
         	<Navbar/>
         	<MapVisualizer/>

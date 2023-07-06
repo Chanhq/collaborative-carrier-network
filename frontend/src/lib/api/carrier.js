@@ -46,4 +46,13 @@ export default {
 			return error;
 		}
 	},
+	completeTransportRequests: async (token) => {
+		try {
+			let client = httpClient;
+			client.defaults.headers.post['Authorization'] = 'Bearer ' + token;
+			return client.post('api/carrier-frontend/transport-requests/complete');
+		} catch (error) {
+			return error;
+		}
+	},
 };

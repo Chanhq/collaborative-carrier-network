@@ -1,6 +1,6 @@
-import {useContext} from 'react';
-import {AuthContext} from '../../lib/context/AuthContext';
-import {SpeedDial, SpeedDialAction, SpeedDialIcon} from '@mui/material';
+import { useContext } from 'react';
+import { AuthContext } from '../../lib/context/AuthContext';
+import { SpeedDial, SpeedDialAction, SpeedDialIcon } from '@mui/material';
 import PriceChangeIcon from '@mui/icons-material/PriceChange';
 import DoDisturbIcon from '@mui/icons-material/DoDisturb';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -9,6 +9,8 @@ import windowLocationHelper from '../../lib/helper/window-location';
 import StartIcon from '@mui/icons-material/Start';
 import React from 'react';
 import auctionApi from '../../lib/api/auction';
+import carrierApi from '../../lib/api/carrier';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 function NavBar() {
 	const { user, authenticated } = useContext(AuthContext);
@@ -50,12 +52,24 @@ function NavBar() {
 		}
 	};
 
+	const completeTransportRequests = async () => {
+		if (user !== null) {
+			carrierApi.completeTransportRequests(user.token).then(() => {
+				alert('Completed transport request! New dispatching period started.');
+				window.location.reload(false);
+			}).catch((error) => {
+				alert(error.response.data.message);
+			});
+		}
+	};
+
 	let actions = [
-		{ icon: <LogoutIcon />, name: 'Logout', onClick: handleLogoutClick},
+		{ icon: <LogoutIcon />, name: 'Logout', onClick: handleLogoutClick },
 	];
 
 	if (!user.isAuctioneer) {
-		actions.push({ icon: <PriceChangeIcon />, name: 'Cost/Price-Model Settings', onClick: handleSettingsClick});
+		actions.push({ icon: <PriceChangeIcon />, name: 'Cost/Price-Model Settings', onClick: handleSettingsClick });
+		actions.push({ icon: <CheckCircleIcon />, name: 'Complete Transport Requests', onClick: completeTransportRequests });
 	} else {
 		actions.push({ icon: <StartIcon />, name: 'Start auction', onClick: startAuction});
 		actions.push({ icon: <DoDisturbIcon />, name: 'End auction', onClick: endAuction});

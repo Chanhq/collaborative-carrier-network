@@ -26,11 +26,6 @@ parameters:
 			path: app/Http/Controllers/AuctioneerController.php
 
 		-
-			message: "#^Cannot call method first\\(\\) on array\\<Illuminate\\\\Database\\\\Eloquent\\\\Builder\\>\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\.$#"
-			count: 1
-			path: app/Http/Controllers/AuctioneerController.php
-
-		-
 			message: "#^Call to an undefined static method App\\\\Models\\\\User\\:\\:create\\(\\)\\.$#"
 			count: 1
 			path: app/Http/Controllers/AuthenticationController.php
@@ -39,6 +34,16 @@ parameters:
 			message: "#^Cannot call method tokens\\(\\) on Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\|null\\.$#"
 			count: 1
 			path: app/Http/Controllers/AuthenticationController.php
+
+		-
+			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\:\\:update\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Controllers/CarrierController.php
+
+		-
+			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\:\\:where\\(\\)\\.$#"
+			count: 2
+			path: app/Http/Controllers/CarrierController.php
 
 		-
 			message: "#^Call to an undefined static method App\\\\Models\\\\TransportRequest\\:\\:where\\(\\)\\.$#"
