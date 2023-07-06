@@ -265,7 +265,8 @@ class CarrierController extends Controller
         $ongoingAuction = Auction::active()->first();
 
         if ($ongoingAuction) {
-            return response()->json(['message' => 'Cannot complete transport requests during an ongoing auction.'], 400);
+            return response()->json(['message' =>
+            'Cannot complete transport requests during an ongoing auction.'], 400);
         }
 
         // Set all transport requests of the user calling the endpoint to completed
