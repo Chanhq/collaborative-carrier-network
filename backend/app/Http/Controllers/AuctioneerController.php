@@ -78,4 +78,13 @@ class AuctioneerController extends Controller
             'data' => [],
         ]);
     }
+
+    public function endAuction(): JsonResponse
+    {
+        return new JsonResponse([
+            'status' => 'success',
+            'message' => '',
+            'data' => [],
+        ]);
+    }
 }
