@@ -146,7 +146,7 @@ class CarrierController extends Controller
                 'data' => [
                     'transport_requests' => $user
                         ->transportRequests()
-                        ->where('staus', '!=', TransportRequestStatusEnum::Completed)
+                        ->where('status', '!=', TransportRequestStatusEnum::Completed)
                         ->get()->toArray(),
                 ]
             ]);
