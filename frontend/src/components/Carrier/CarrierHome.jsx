@@ -15,20 +15,41 @@ function CarrierHome() {
 	const [auctionEvaluationData, setAuctionEvaluationData] = useState(null);
 	const fetchData = async () => {
 		if (user) {
-			try {
-				const transportRequestsData = await carrierApi.getTransportRequest(user.token);
-				const auctionEvaluationResponse = await carrierApi.getAuctionEvaluationData(user.token);
-				if (transportRequestsData) {
-					setTransportRequests(transportRequestsData);
-				}
-				if (auctionEvaluationResponse.status === 204) {
+			const transportRequestsResponse = carrierApi.getTransportRequest(user.token);
+			const auctionEvaluationResponse = carrierApi.getAuctionEvaluationData(user.token);
+
+			transportRequestsResponse.then((response) => {
+				const transportRequestsData = response.data.data.transport_requests;
+				setTransportRequests(transportRequestsData);
+			});
+
+			auctionEvaluationResponse.then((response) => {
+				if (response.status === 204) {
 					setAuctionEvaluationData([]);
-				} else if (auctionEvaluationResponse.status === 200) {
-					setAuctionEvaluationData(auctionEvaluationResponse.data.data);
+				} else if (response.status === 200) {
+					setAuctionEvaluationData(response.data.data);
 				}
-			} catch (error) {
-				console.log(error);
-			}
+			});
+		}
+	};
+
+	const reFetchData = async () => {
+		if (user) {
+			const transportRequestsResponse = carrierApi.getTransportRequest(user.token);
+			const auctionEvaluationResponse = carrierApi.getAuctionEvaluationData(user.token);
+
+			transportRequestsResponse.then((response) => {
+				const transportRequestsData = response.data.data.transport_requests;
+				setTransportRequests(transportRequestsData);
+			});
+
+			auctionEvaluationResponse.then((response) => {
+				if (response.status === 204) {
+					setAuctionEvaluationData([]);
+				} else if (response.status === 200) {
+					reloadPage();
+				}
+			});
 		}
 	};
 
@@ -37,12 +58,11 @@ function CarrierHome() {
 	};
 
 	useEffect(() => {
-		fetchData();
-		const id = setInterval(reloadPage, 20000);
+		fetchData().then();
+		const id = setInterval(reFetchData, 20000);
 
 		return () => clearInterval(id);
 	}, [user]);
-
 	return (
 		(authenticated && !user.isAuctioneer) &&
         <>
