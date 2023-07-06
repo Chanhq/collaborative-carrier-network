@@ -50,7 +50,7 @@ export default {
         try {
           let client = httpClient;
           client.defaults.headers.put['Authorization'] = 'Bearer ' + token;
-          return client.put('api/carrier-frontend/complete-transport-requests');
+          return client.post('api/carrier-frontend/complete-transport-requests');
         } catch (error) {
           console.log(error);
         }

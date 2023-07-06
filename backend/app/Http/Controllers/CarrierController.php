@@ -262,15 +262,26 @@ class CarrierController extends Controller
     public function completeTransportRequests()
     {
         // Check if there is an ongoing auction
-        $ongoingAuction = Auction::active()->first();
+        /** @var Collection $activeAuctionsCollection */
+        $activeAuctionsCollection = Auction::active()->get();
 
-        if ($ongoingAuction) {
-            return response()->json(['message' =>
-            'Cannot complete transport requests during an ongoing auction.'], 400);
+        /** @var Collection $inActiveAuctionsCollection */
+        $inActiveAuctionsCollection = Auction::inactive()->get();
+
+        if ($inActiveAuctionsCollection->isNotEmpty() || $activeAuctionsCollection->isNotEmpty()) {
+            return new JsonResponse([
+                'status' => 'error',
+                'message' => 'Can not complete transport requests when there are uncompleted auctions',
+                'data' => [],
+            ], 409);
         }
 
         // Set all transport requests of the user calling the endpoint to completed
-        TransportRequest::where('user_id', auth()->id())->update(['completed' => true]);
-        return response()->json(['message' => 'Transport requests completed successfully.'], 200);
+        $user->transportRequests()->update(['status' => TransportRequestStatusEnum::Completed]);
+        return new JsonResponse([
+                        'status': 'success',
+                        'message': 'Transport requests completed successfully.',
+                        'data': []
+                    ], 200);
     }
 }
