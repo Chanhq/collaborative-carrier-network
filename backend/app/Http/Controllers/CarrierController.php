@@ -40,9 +40,24 @@ class CarrierController extends Controller
         $transportRequests = [];
 
         /** @var TransportRequest $transportRequest */
-        foreach ($user->transportRequests()->get() as $transportRequest) {
+        foreach (
+            $user->transportRequests()
+                ->where('status', '!=', TransportRequestStatusEnum::Completed)
+                ->get() as $transportRequest
+        ) {
             $transportRequests[] = $transportRequest;
         }
+
+        if (empty($transportRequests)) {
+            return new JsonResponse([
+                'status' => 'success',
+                'message' => '',
+                'data' => [
+                    'map' => $this->responseMapper->mapResponse($map, []),
+                ]
+            ]);
+        }
+
         try {
             $optimalPath = $this->vehicleRoutingService->findOptimalPath($transportRequests);
         } catch (\JsonException $e) {
@@ -129,7 +144,10 @@ class CarrierController extends Controller
                 'status' => 'success',
                 'message' => '',
                 'data' => [
-                    'transport_requests' => $user->transportRequests()->get()->toArray(),
+                    'transport_requests' => $user
+                        ->transportRequests()
+                        ->where('staus', '!=', TransportRequestStatusEnum::Completed)
+                        ->get()->toArray(),
                 ]
             ]);
         } catch (\Throwable $e) {
@@ -264,29 +282,34 @@ class CarrierController extends Controller
     {
         $user = Auth::user();
 
-        return new JsonResponse([
-            'status' => 'error',
-            'message' => 'Can not complete transport requests when there are uncompleted auctions',
-            'data' => [],
-        ], 409);
-
         // Check if there is an ongoing auction
         /** @var Collection $activeAuctionsCollection */
         $activeAuctionsCollection = Auction::active()->get();
         /** @var Collection $inActiveAuctionsCollection */
         $inActiveAuctionsCollection = Auction::inactive()->get();
+        /** @var Collection $completedAuctionsCollection */
+        $completedAuctionsCollection = Auction::completed()->get();
 
-        if ($inActiveAuctionsCollection->isNotEmpty() || $activeAuctionsCollection->isNotEmpty()) {
 
+        if (
+            $activeAuctionsCollection->isEmpty()
+            && $inActiveAuctionsCollection->isEmpty()
+            && $completedAuctionsCollection->isNotEmpty()
+        ) {
+            // Set all transport requests of the user calling the endpoint to completed
+            $user->transportRequests()->update(['status' => TransportRequestStatusEnum::Completed]);
+
+            return new JsonResponse([
+                'status' => 'success',
+                'message' => 'Transport requests completed successfully.',
+                'data' => [],
+            ]);
         }
 
-        // Set all transport requests of the user calling the endpoint to completed
-        $user->transportRequests()->update(['status' => TransportRequestStatusEnum::Completed]);
-
         return new JsonResponse([
-            'status' => 'success',
-            'message' => 'Transport requests completed successfully.',
+            'status' => 'error',
+            'message' => 'Can not complete transport requests when there is an ongoing auction or no completed auction',
             'data' => [],
-        ]);
+        ], 409);
     }
 }
