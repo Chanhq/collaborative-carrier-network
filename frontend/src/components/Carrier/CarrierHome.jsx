@@ -107,7 +107,7 @@ function CarrierHome() {
             >
               <Typography align="center" variant="h6">
                 Auction Evaluations
-              </Typography
+              </Typography>
               {auctionEvaluationData.length === 0 && (
                 <div style={{ marginLeft: '12px' }}>No auctioned transport requests detected</div>
               )}

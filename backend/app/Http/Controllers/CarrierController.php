@@ -279,7 +279,7 @@ class CarrierController extends Controller
         // Set all transport requests of the user calling the endpoint to completed
         $user->transportRequests()->update(['status' => TransportRequestStatusEnum::Completed]);
         return new JsonResponse([
-                        'status': 'success',
+                        'status' => 'success',
                         'message': 'Transport requests completed successfully.',
                         'data': []
                     ], 200);
