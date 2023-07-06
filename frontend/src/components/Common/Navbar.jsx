@@ -2,6 +2,7 @@ import {useContext} from 'react';
 import {AuthContext} from '../../lib/context/AuthContext';
 import {SpeedDial, SpeedDialAction, SpeedDialIcon} from '@mui/material';
 import PriceChangeIcon from '@mui/icons-material/PriceChange';
+import DoDisturbIcon from '@mui/icons-material/DoDisturb';
 import LogoutIcon from '@mui/icons-material/Logout';
 import authApi from '../../lib/api/auth';
 import windowLocationHelper from '../../lib/helper/window-location';
@@ -38,6 +39,21 @@ function NavBar() {
 		}
 	};
 
+	const endAuction = async () => {
+		if (user !== null) {
+			auctionApi.endAuction(user.token).then((r) => {
+				if (r.response.status === 409) {
+					alert('There is already an ongoing auction');
+				} else {
+					alert('Successfully started auction transport requests selection process.');
+				}
+			});
+			setTimeout(function(){
+				window.location.reload(false);
+			}, 1500);
+		}
+	};
+
 	let actions = [
 		{ icon: <LogoutIcon />, name: 'Logout', onClick: handleLogoutClick},
 	];
@@ -46,6 +62,8 @@ function NavBar() {
 		actions.push({ icon: <PriceChangeIcon />, name: 'Cost/Price-Model Settings', onClick: handleSettingsClick});
 	} else {
 		actions.push({ icon: <StartIcon />, name: 'Start auction', onClick: startAuction});
+		actions.push({ icon: <DoDisturbIcon />, name: 'End auction', onClick: endAuction});
+
 	}
 
 
