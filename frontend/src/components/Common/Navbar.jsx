@@ -57,12 +57,9 @@ function NavBar() {
 
   if (!user.isAuctioneer) {
     actions.push({ icon: <PriceChangeIcon />, name: 'Cost/Price-Model Settings', onClick: handleSettingsClick });
+    actions.push({ icon: <CheckCircleIcon />, name: 'Complete Transport Requests', onClick: completeTransportRequests });
   } else {
     actions.push({ icon: <StartIcon />, name: 'Start auction', onClick: startAuction });
-  }
-
-  if (!user.isAuctioneer) {
-    actions.push({ icon: <CheckCircleIcon />, name: 'Complete Transport Requests', onClick: completeTransportRequests });
   }
 
   return (
