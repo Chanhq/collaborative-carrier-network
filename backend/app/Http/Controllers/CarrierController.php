@@ -263,6 +263,15 @@ class CarrierController extends Controller
     public function completeTransportRequests(): JsonResponse
     {
         $user = Auth::user();
+
+        if (!$user) {
+                return new JsonResponse([
+                    'status' => 'error',
+                    'message' => 'User is not authenticated.',
+                    'data' => [],
+                ], 401);
+            }
+
         // Check if there is an ongoing auction
         /** @var Collection $activeAuctionsCollection */
         $activeAuctionsCollection = Auction::active()->get();
