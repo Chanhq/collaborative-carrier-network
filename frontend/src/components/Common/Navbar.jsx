@@ -10,62 +10,75 @@ import React from 'react';
 import auctionApi from '../../lib/api/auction';
 
 function NavBar() {
-	const { user, authenticated } = useContext(AuthContext);
+  const { user, authenticated } = useContext(AuthContext);
 
-	const handleLogoutClick = async () => {
-		authApi.logout(user.token).then(() => {
-			alert('Logout successful!');
-			windowLocationHelper.redirectToAuthPage();
-		});
-	};
+  const handleLogoutClick = async () => {
+    authApi.logout(user.token).then(() => {
+      alert('Logout successful!');
+      windowLocationHelper.redirectToAuthPage();
+    });
+  };
 
-	const handleSettingsClick = () => {
-		windowLocationHelper.redirectTo('/settings');
-	};
+  const handleSettingsClick = () => {
+    windowLocationHelper.redirectTo('/settings');
+  };
 
-	const startAuction = async () => {
-		if (user !== null) {
-			auctionApi.startAuction(user.token).then((r) => {
-				if (r.response.status === 409) {
-					alert('There is already an ongoing auction');
-				} else {
-					alert('Successfully started auction transport requests selection process.');
-				}
-			});
-			setTimeout(function(){
-				window.location.reload(false);
-			}, 1500);
-		}
-	};
+  const startAuction = async () => {
+    if (user !== null) {
+      auctionApi.startAuction(user.token).then((r) => {
+        if (r.response.status === 409) {
+          alert('There is already an ongoing auction');
+        } else {
+          alert('Successfully started auction transport requests selection process.');
+        }
+      });
+      setTimeout(function () {
+        window.location.reload(false);
+      }, 1500);
+    }
+  };
 
-	let actions = [
-		{ icon: <LogoutIcon />, name: 'Logout', onClick: handleLogoutClick},
-	];
+  const completeTransportRequests = async () => {
+    if (user !== null) {
+      try {
+        await carrierApi.completeTransportRequests(user.token);
+        alert('Transport requests completed successfully');
+      } catch (error) {
+        console.log(error);
+        alert('Error completing transport requests');
+      }
+    }
+  };
 
-	if (!user.isAuctioneer) {
-		actions.push({ icon: <PriceChangeIcon />, name: 'Cost/Price-Model Settings', onClick: handleSettingsClick});
-	} else {
-		actions.push({ icon: <StartIcon />, name: 'Start auction', onClick: startAuction});
-	}
+  let actions = [
+    { icon: <LogoutIcon />, name: 'Logout', onClick: handleLogoutClick },
+  ];
 
+  if (!user.isAuctioneer) {
+    actions.push({ icon: <PriceChangeIcon />, name: 'Cost/Price-Model Settings', onClick: handleSettingsClick });
+  } else {
+    actions.push({ icon: <StartIcon />, name: 'Start auction', onClick: startAuction });
+  }
 
-	return(
-		authenticated &&
-        <SpeedDial
-        	ariaLabel="SpeedDial basic example"
-        	sx={{ zIndex: '10000', position: 'absolute', bottom: 16, right: 16 }}
-        	icon={<SpeedDialIcon />}
-        >
-        	{actions.map((action) => (
-        		<SpeedDialAction
-        			key={action.name}
-        			icon={action.icon}
-        			tooltipTitle={action.name}
-        			onClick={action.onClick}
-        		/>
-        	))}
-        </SpeedDial>
-	);
+  actions.push({ icon: <YourButtonIcon />, name: 'Complete Transport Requests', onClick: completeTransportRequests });
+
+  return (
+    authenticated &&
+    <SpeedDial
+      ariaLabel="SpeedDial basic example"
+      sx={{ zIndex: '10000', position: 'absolute', bottom: 16, right: 16 }}
+      icon={<SpeedDialIcon />}
+    >
+      {actions.map((action) => (
+        <SpeedDialAction
+          key={action.name}
+          icon={action.icon}
+          tooltipTitle={action.name}
+          onClick={action.onClick}
+        />
+      ))}
+    </SpeedDial>
+  );
 }
 
 export default NavBar;
