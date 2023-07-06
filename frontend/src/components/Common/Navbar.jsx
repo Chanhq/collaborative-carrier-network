@@ -41,8 +41,6 @@ function NavBar() {
 
   const completeTransportRequests = async () => {
     if (user !== null) {
-      // Call the completeTransportRequests endpoint in the CarrierController here
-      // You can use the carrierApi or any other method to make the API request
       try {
         await carrierApi.completeTransportRequests(user.token);
         alert('Transport requests completed successfully');
@@ -63,7 +61,9 @@ function NavBar() {
     actions.push({ icon: <StartIcon />, name: 'Start auction', onClick: startAuction });
   }
 
-  actions.push({ icon: <CheckCircleIcon />, name: 'Complete Transport Requests', onClick: completeTransportRequests });
+  if (!user.isAuctioneer) {
+    actions.push({ icon: <CheckCircleIcon />, name: 'Complete Transport Requests', onClick: completeTransportRequests });
+  }
 
   return (
     authenticated &&
