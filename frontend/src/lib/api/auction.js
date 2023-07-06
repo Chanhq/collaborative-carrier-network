@@ -20,4 +20,14 @@ export default {
 			return error;
 		}
 	},
+	endAuction: async (token) => {
+		try {
+			let client = httpClient;
+			client.defaults.headers.post['Authorization'] = 'Bearer ' + token;
+			const response =  await client.post('api/auctioneer-frontend/auction/end');
+			return response.data.data;
+		} catch (error) {
+			return error;
+		}
+	}
 };

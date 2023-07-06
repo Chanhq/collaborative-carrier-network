@@ -43,9 +43,9 @@ function NavBar() {
 		if (user !== null) {
 			auctionApi.endAuction(user.token).then((r) => {
 				if (r.response.status === 409) {
-					alert('There is already an ongoing auction');
+					alert(r.response.message);
 				} else {
-					alert('Successfully started auction transport requests selection process.');
+					alert('Successfully ended current auction.');
 				}
 			});
 			setTimeout(function(){
@@ -63,7 +63,6 @@ function NavBar() {
 	} else {
 		actions.push({ icon: <StartIcon />, name: 'Start auction', onClick: startAuction});
 		actions.push({ icon: <DoDisturbIcon />, name: 'End auction', onClick: endAuction});
-
 	}
 
 

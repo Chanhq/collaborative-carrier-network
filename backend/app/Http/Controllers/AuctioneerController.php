@@ -81,6 +81,18 @@ class AuctioneerController extends Controller
 
     public function endAuction(): JsonResponse
     {
+        $inActiveAuction = Auction::inactive();
+
+        if ($inActiveAuction->get()->first() === null) {
+            return new  JsonResponse([
+                'status' => 'error',
+                'message' => 'There is no auction to be ended.',
+                'data' => [],
+            ], Response::HTTP_CONFLICT);
+        }
+
+        $inActiveAuction->update(['status' => AuctionStatusEnum::Completed]);
+
         return new JsonResponse([
             'status' => 'success',
             'message' => '',
