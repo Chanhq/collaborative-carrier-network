@@ -29,13 +29,8 @@ function NavBar() {
 			auctionApi.startAuction(user.token).then((r) => {
 				if (r.response.status === 409) {
 					alert('There is already an ongoing auction');
-				} else {
-					alert('Successfully started auction transport requests selection process.');
 				}
 			});
-			setTimeout(function(){
-				window.location.reload(false);
-			}, 1500);
 		}
 	};
 
@@ -43,14 +38,15 @@ function NavBar() {
 		if (user !== null) {
 			auctionApi.endAuction(user.token).then((r) => {
 				if (r.response.status === 409) {
-					alert(r.response.message);
+					alert(r.response.data.message);
 				} else {
 					alert('Successfully ended current auction.');
+					setTimeout(function(){
+						window.location.reload(false);
+					}, 1500);
 				}
 			});
-			setTimeout(function(){
-				window.location.reload(false);
-			}, 1500);
+
 		}
 	};
 
