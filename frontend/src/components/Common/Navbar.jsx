@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import { AuthContext } from '../../lib/context/AuthContext';
 import { SpeedDial, SpeedDialAction, SpeedDialIcon } from '@mui/material';
 import PriceChangeIcon from '@mui/icons-material/PriceChange';
+import DoDisturbIcon from '@mui/icons-material/DoDisturb';
 import LogoutIcon from '@mui/icons-material/Logout';
 import authApi from '../../lib/api/auth';
 import windowLocationHelper from '../../lib/helper/window-location';
@@ -30,13 +31,24 @@ function NavBar() {
 			auctionApi.startAuction(user.token).then((r) => {
 				if (r.response.status === 409) {
 					alert('There is already an ongoing auction');
-				} else {
-					alert('Successfully started auction transport requests selection process.');
 				}
 			});
-			setTimeout(function () {
-				window.location.reload(false);
-			}, 1500);
+		}
+	};
+
+	const endAuction = async () => {
+		if (user !== null) {
+			auctionApi.endAuction(user.token).then((r) => {
+				if (r.response.status === 409) {
+					alert(r.response.data.message);
+				} else {
+					alert('Successfully ended current auction.');
+					setTimeout(function(){
+						window.location.reload(false);
+					}, 1500);
+				}
+			});
+
 		}
 	};
 
@@ -58,26 +70,27 @@ function NavBar() {
 		actions.push({ icon: <PriceChangeIcon />, name: 'Cost/Price-Model Settings', onClick: handleSettingsClick });
 		actions.push({ icon: <CheckCircleIcon />, name: 'Complete Transport Requests', onClick: completeTransportRequests });
 	} else {
-		actions.push({ icon: <StartIcon />, name: 'Start auction', onClick: startAuction });
+		actions.push({ icon: <StartIcon />, name: 'Start auction', onClick: startAuction});
+		actions.push({ icon: <DoDisturbIcon />, name: 'End auction', onClick: endAuction});
 	}
 
 
-	return (
+	return(
 		authenticated &&
-    <SpeedDial
-    	ariaLabel="SpeedDial basic example"
-    	sx={{ zIndex: '10000', position: 'absolute', bottom: 16, right: 16 }}
-    	icon={<SpeedDialIcon />}
-    >
-    	{actions.map((action) => (
-    		<SpeedDialAction
-    			key={action.name}
-    			icon={action.icon}
-    			tooltipTitle={action.name}
-    			onClick={action.onClick}
-    		/>
-    	))}
-    </SpeedDial>
+        <SpeedDial
+        	ariaLabel="SpeedDial basic example"
+        	sx={{ zIndex: '10000', position: 'absolute', bottom: 16, right: 16 }}
+        	icon={<SpeedDialIcon />}
+        >
+        	{actions.map((action) => (
+        		<SpeedDialAction
+        			key={action.name}
+        			icon={action.icon}
+        			tooltipTitle={action.name}
+        			onClick={action.onClick}
+        		/>
+        	))}
+        </SpeedDial>
 	);
 }
 

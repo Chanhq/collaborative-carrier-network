@@ -45,4 +45,5 @@ Route::middleware(['auth:sanctum', EnsureUserIsAuctioneerMiddleware::class ])->p
             [AuctioneerController::class, 'getAuctionData']
         );
         Route::post('/auction/start', [AuctioneerController::class, 'startAuction']);
+        Route::post('/auction/end', [AuctioneerController::class, 'endAuction']);
     });
